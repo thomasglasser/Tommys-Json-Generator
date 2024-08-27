@@ -101,6 +101,7 @@ export function SourcePanel({ name, model, blockStates, doCopy, doDownload, doIm
 					fontSize: 14,
 					showFoldWidgets: false,
 					highlightSelectedWord: false,
+					scrollPastEnd: 0.5,
 				})
 				braceEditor.$blockScrolling = Infinity
 				braceEditor.on('blur', () => onImport.current())
@@ -152,7 +153,7 @@ export function SourcePanel({ name, model, blockStates, doCopy, doDownload, doIm
 	useEffect(() => {
 		if (!editor.current || !retransform.current) return
 		if (!highlighting || braceLoaded) {
-			editor.current.configure(indent, format)
+			editor.current.configure(indent, format === 'snbt' ? 'yaml' : format)
 			retransform.current()
 		}
 	}, [indent, format, highlighting, braceLoaded])
