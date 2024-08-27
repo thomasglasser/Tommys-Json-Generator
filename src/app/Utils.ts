@@ -8,7 +8,10 @@ import { quat, vec2 } from 'gl-matrix'
 import yaml from 'js-yaml'
 import { route } from 'preact-router'
 import rfdc from 'rfdc'
+import type { ConfigGenerator } from './Config.js'
 import config from './Config.js'
+import type { VersionId } from './services/index.js'
+import { checkVersion } from './services/index.js'
 
 export function isPromise(obj: any): obj is Promise<any> {
 	return typeof (obj as any)?.then === 'function' 
@@ -544,4 +547,49 @@ export function composeMatrix(translation: Vector, leftRotation: quat, scale: Ve
 		.mul(Matrix4.fromQuat(leftRotation))
 		.scale(scale)
 		.mul(Matrix4.fromQuat(rightRotation))
+}
+
+export interface PatchLine {
+	line: string
+	before?: number
+	after?: number
+}
+
+export function parseGitPatch(patch: string) {
+	const source = patch.split('\n')
+	const result: PatchLine[] = []
+	let before = 1
+	let after = 1
+	for (let i = 0; i < source.length; i += 1) {
+		const line = source[i]
+		if (line.startsWith('@')) {
+			const match = line.match(/^@@ -(\d+)(?:,(?:\d+))? \+(\d+)(?:,(?:\d+))? @@/)
+			if (!match) throw new Error(`Invalid patch pattern at line ${i+1}: ${line}`)
+			result.push({ line })
+			before = Number(match[1])
+			after = Number(match[2])
+		} else if (line.startsWith(' ')) {
+			result.push({ line, before, after })
+			before += 1
+			after += 1
+		} else if (line.startsWith('+')) {
+			result.push({ line, after })
+			after += 1
+		} else if (line.startsWith('-')) {
+			result.push({ line, before })
+			before += 1
+		} else if (!line.startsWith('\\')) {
+			throw new Error(`Invalid patch, got ${line.charAt(0)} at line ${i+1}`)
+		}
+	}
+	return result
+}
+
+const legacyFolders = new Set(['loot_table', 'predicate', 'item_modifier', 'advancement', 'recipe', 'tag/function', 'tag/item', 'tag/block', 'tag/fluid', 'tag/entity_type', 'tag/game_event'])
+export function genPath(gen: ConfigGenerator, version: VersionId) {
+	const path = gen.path ?? gen.id
+	if (!checkVersion(version, '1.21') && legacyFolders.has(gen.id)) {
+		return path + 's'
+	}
+	return path
 }

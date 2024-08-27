@@ -16,11 +16,4 @@ export function initSherdsApi(schemas: SchemaRegistry, collections: CollectionRe
 		pattern: Opt(StringNode({ validator: 'resource', params: { pool: '$decorated_pot_pattern' } })),
 	}, {context: `${ID}:sherd`}), {
 	}))
-
-	schemas.register(`${ID}:sherd-4.x`, Mod(ObjectNode({
-		item: StringNode({ validator: 'resource', params: { pool: 'item' } }),
-		// @ts-ignore
-		pattern: StringNode({ validator: 'resource', params: { pool: '$decorated_pot_pattern' } }),
-	}, {context: `${ID}:sherd-4.x`}), {
-	}))
 }
