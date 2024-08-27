@@ -27,20 +27,22 @@ export function Versions({}: Props) {
 
 	return <main>
 		{error && <ErrorPanel error={error} />}
-		{selectedId ? <div class="p-4">
-			<div class="navigation">
-				<BtnLink link="/versions/" icon="three_bars" label={locale('versions.all')} />
-				<BtnLink link={previousVersion ? `/versions/?id=${previousVersion.id}${tab ? `&tab=${tab}` : ''}` : undefined}
-					icon="arrow_left" label={locale('versions.previous')} />
-				<BtnLink link={nextVersion ? `/versions/?id=${nextVersion.id}${tab ? `&tab=${tab}` : ''}` : undefined} 
-					icon="arrow_right" label={locale('versions.next')} swapped />
-			</div>
-			<VersionDetail id={selectedId} version={selected} />
-		</div> : <div class="legacy-container">
-			<VersionList versions={versions} link={id => `/versions/?id=${id}`} navigation={(
-				<BtnLink link="/changelog" icon="git_commit" label={locale('versions.changelog')} />
-			)} />
-		</div>}
+		<div class="container">
+			{selectedId ? <>
+				<div class="navigation">
+					<BtnLink link="/versions/" icon="three_bars" label={locale('versions.all')} />
+					<BtnLink link={previousVersion ? `/versions/?id=${previousVersion.id}${tab ? `&tab=${tab}` : ''}` : undefined}
+						icon="arrow_left" label={locale('versions.previous')} />
+					<BtnLink link={nextVersion ? `/versions/?id=${nextVersion.id}${tab ? `&tab=${tab}` : ''}` : undefined} 
+						icon="arrow_right" label={locale('versions.next')} swapped />
+				</div>
+				<VersionDetail id={selectedId} version={selected} />
+			</> : <>
+				<VersionList versions={versions} link={id => `/versions/?id=${id}`} navigation={(
+					<BtnLink link="/changelog" icon="git_commit" label={locale('versions.technical_changes')} />
+				)} />
+			</>}
+		</div>
 		<Footer donate={false} />
 	</main>
 }

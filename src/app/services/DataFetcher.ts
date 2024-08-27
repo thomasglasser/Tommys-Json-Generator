@@ -20,8 +20,7 @@ const mcmetaUrl = 'https://raw.githubusercontent.com/misode/mcmeta'
 const mcmetaTarballUrl = 'https://github.com/misode/mcmeta/tarball'
 const changesUrl = 'https://raw.githubusercontent.com/misode/technical-changes'
 const fixesUrl = 'https://raw.githubusercontent.com/misode/mcfixes'
-const versionDiffUrl = 'https://mcmeta-diff.misode.workers.dev'
-const whatsNewUrl = 'https://whats-new.misode.workers.dev'
+const whatsNewUrl = 'https://whats-new.misode.workers.dev/'
 
 type McmetaTypes = 'summary' | 'data' | 'data-json' | 'assets' | 'assets-json' | 'registries' | 'atlas'
 
@@ -55,12 +54,12 @@ export async function fetchData(versionId: string, collectionTarget: CollectionR
 	await validateCache(version)
 
 	await Promise.all([
-		_fetchRegistries(version, collectionTarget),
-		_fetchBlockStateMap(version, blockStateTarget),
+		fetchRegistries(version, collectionTarget),
+		fetchBlockStateMap(version, blockStateTarget),
 	])
 }
 
-async function _fetchRegistries(version: Version, target: CollectionRegistry) {
+async function fetchRegistries(version: Version, target: CollectionRegistry) {
 	console.debug(`[fetchRegistries] ${version.id}`)
 	try {
 		const data = await cachedFetch<any>(`${mcmeta(version, 'summary')}/registries/data.min.json`)
@@ -72,7 +71,7 @@ async function _fetchRegistries(version: Version, target: CollectionRegistry) {
 	}
 }
 
-async function _fetchBlockStateMap(version: Version, target: BlockStateRegistry) {
+async function fetchBlockStateMap(version: Version, target: BlockStateRegistry) {
 	console.debug(`[fetchBlockStateMap] ${version.id}`)
 	try {
 		const data = await cachedFetch<any>(`${mcmeta(version, 'summary')}/blocks/data.min.json`)
@@ -84,21 +83,6 @@ async function _fetchBlockStateMap(version: Version, target: BlockStateRegistry)
 		}
 	} catch (e) {
 		console.warn('Error occurred while fetching block state map:', message(e))
-	}
-}
-
-export async function fetchRegistries(versionId: VersionId) {
-	console.debug(`[fetchRegistries] ${versionId}`)
-	const version = config.versions.find(v => v.id === versionId)!
-	try {
-		const data = await cachedFetch<any>(`${mcmeta(version, 'summary')}/registries/data.min.json`)
-		const result = new Map<string, string[]>()
-		for (const id in data) {
-			result.set(id, data[id].map((e: string) => 'minecraft:' + e))
-		}
-		return result
-	} catch (e) {
-		throw new Error(`Error occurred while fetching registries (2): ${message(e)}`)
 	}
 }
 
@@ -289,46 +273,12 @@ export interface Bugfix {
 	votes: number,
 }
 
-export async function fetchBugfixes(version: string): Promise<Bugfix[]> {
+export async function fetchBugfixes(version: VersionId): Promise<Bugfix[]> {
 	try {
 		const fixes = await cachedFetch<Bugfix[]>(`${fixesUrl}/main/versions/${version}.json`, { refresh: true })
 		return fixes
 	} catch (e) {
-		throw new Error(`Error occured while fetching bugfixes for version ${version}: ${message(e)}`)
-	}
-}
-
-export interface GitHubCommitFile {
-	sha: string,
-	filename: string,
-	previous_filename?: string,
-	status: 'added' | 'modified' | 'removed' | 'renamed',
-	additions: number,
-	deletions: number,
-	changes: number,
-	patch: string,
-}
-
-export interface GitHubCommit {
-	sha: string,
-	html_url: string,
-	parents: {
-		sha: string,
-	}[],
-	stats: {
-		total: number,
-		additions: number,
-		deletions: number,
-	},
-	files: GitHubCommitFile[],
-}
-
-export async function fetchVersionDiff(version: string) {
-	try {
-		const diff = await cachedFetch<GitHubCommit>(`${versionDiffUrl}/${version}`, { refresh: true })
-		return diff
-	} catch (e) {
-		throw new Error(`Error occured while fetching diff for version ${version}: ${message(e)}`)
+		throw new Error(`Error occured while fetching bugfixes: ${message(e)}`)
 	}
 }
 

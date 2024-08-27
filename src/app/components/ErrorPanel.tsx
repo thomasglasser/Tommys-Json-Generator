@@ -9,20 +9,18 @@ import { Octicon } from './index.js'
 
 type ErrorPanelProps = {
 	error: string | Error,
-	prefix?: string,
 	reportable?: boolean,
 	onDismiss?: () => unknown,
 	body?: string,
 	children?: ComponentChildren,
 }
-export function ErrorPanel({ error, prefix, reportable, onDismiss, body: body_, children }: ErrorPanelProps) {
+export function ErrorPanel({ error, reportable, onDismiss, body: body_, children }: ErrorPanelProps) {
 	const { version } = useVersion()
 	const [stackVisible, setStackVisible] = useState(false)
 	const [stack, setStack] = useState<string | undefined>(undefined)
 
 	const gen = getGenerator(getCurrentUrl())
 	const source = gen ? Store.getBackup(gen.id) : undefined
-	const name = (prefix ?? '') + (error instanceof Error ? error.message : error)
 
 	useEffect(() => {
 		if (error instanceof Error) {
@@ -43,8 +41,7 @@ export function ErrorPanel({ error, prefix, reportable, onDismiss, body: body_, 
 
 	const url = useMemo(() => {
 		let url ='https://github.com/misode/misode.github.io/issues/new'
-		const fullName = (error instanceof Error ? `${error.name}: ` : '') + name
-		url += `?title=${encodeURIComponent(fullName)}`
+		url += `?title=${encodeURIComponent(error instanceof Error ? `${error.name}: ${error.message}` : error.toString())}`
 		let body = ''
 		body += `## Crash report\n * Page url: \`${location.href}\`\n`
 		if (gen) {
@@ -53,7 +50,7 @@ export function ErrorPanel({ error, prefix, reportable, onDismiss, body: body_, 
 		body += ` * Current version: \`${version}\`\n`
 		body += ` * Latest version: \`${latestVersion}\`\n`
 		if (error instanceof Error && stack) {
-			body += `\n### Stack trace\n\`\`\`\n${fullName}\n${stack}\n\`\`\`\n`
+			body += `\n### Stack trace\n\`\`\`\n${error.name}: ${error.message}\n${stack}\n\`\`\`\n`
 		}
 		if (source) {
 			body += `\n### Generator JSON\n<details>\n<pre>\n${JSON.stringify(source, null, 2)}\n</pre>\n</details>\n`
@@ -63,12 +60,12 @@ export function ErrorPanel({ error, prefix, reportable, onDismiss, body: body_, 
 		}
 		url += `&body=${encodeURIComponent(body)}`
 		return url
-	}, [error, name, body_, version, stack, source, gen?.id])
+	}, [error, body_, version, stack, source, gen?.id])
 
 	return <div class="error">
 		{onDismiss && <div class="error-dismiss" onClick={onDismiss}>{Octicon.x}</div>}
-		<h3 class="font-bold text-xl !my-[10px]">
-			{(prefix ?? '') + (error instanceof Error ? error.message : error)}
+		<h3>
+			{error instanceof Error ? error.message : error}
 			{stack && <span onClick={() => setStackVisible(!stackVisible)}>
 				{Octicon.info}
 			</span>}

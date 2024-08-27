@@ -9,8 +9,8 @@ export function Partners({}: Props) {
 	useTitle(locale('title.partners'))
 
 	return <main>
-		<div class="legacy-container">
-			<GeneratorList predicate={gen => gen.tags?.includes('partners')} />
+		<div class="container">
+			<GeneratorList predicate={gen => gen.partner !== undefined} />
 		</div>
 		<Footer donate={false} />
 	</main>

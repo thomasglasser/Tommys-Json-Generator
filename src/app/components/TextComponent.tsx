@@ -1,5 +1,4 @@
 import { useMemo } from 'preact/hooks'
-import { useLocale } from '../contexts/Locale.jsx'
 import { useVersion } from '../contexts/Version.jsx'
 import { useAsync } from '../hooks/useAsync.js'
 import { getLanguage, replaceTranslation } from '../services/Resources.js'
@@ -26,7 +25,6 @@ interface Props {
 }
 export function TextComponent({ component, base = { color: 'white' }, shadow = true }: Props) {
 	const { version } = useVersion()
-	const { lang } = useLocale()
 
 	const state = JSON.stringify(component)
 	const parts = useMemo(() => {
@@ -35,7 +33,7 @@ export function TextComponent({ component, base = { color: 'white' }, shadow = t
 		return parts
 	}, [state, base])
 
-	const { value: language } = useAsync(() => getLanguage(version, lang), [version, lang])
+	const { value: language } = useAsync(() => getLanguage(version), [version])
 
 	return <div class="text-component">
 		{shadow && <div>

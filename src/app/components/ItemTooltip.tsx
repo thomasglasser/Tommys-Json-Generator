@@ -1,11 +1,10 @@
 import type { ItemStack } from 'deepslate/core'
 import { AttributeModifierOperation, Enchantment, Identifier, MobEffectInstance, Potion } from 'deepslate/core'
 import { NbtList, NbtType } from 'deepslate/nbt'
-import { useLocale } from '../contexts/Locale.jsx'
+import { message } from '../Utils.js'
 import { useVersion } from '../contexts/Version.jsx'
 import { useAsync } from '../hooks/useAsync.js'
 import { getLanguage, getTranslation } from '../services/Resources.js'
-import { message } from '../Utils.js'
 import { TextComponent } from './TextComponent.jsx'
 
 interface Props {
@@ -14,9 +13,8 @@ interface Props {
 }
 export function ItemTooltip({ item, advanced }: Props) {
 	const { version } = useVersion()
-	const { lang } = useLocale()
 
-	const { value: language } = useAsync(() => getLanguage(version, lang), [version, lang])
+	const { value: language } = useAsync(() => getLanguage(version), [version])
 
 	const isPotion = item.is('potion') || item.is('splash_potion') || item.is('lingering_potion')
 	let displayName = item.tag.getCompound('display').getString('Name')

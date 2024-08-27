@@ -1,15 +1,15 @@
-import { Link } from 'preact-router'
 import { useEffect, useMemo } from 'preact/hooks'
 import { useLocale } from '../../contexts/index.js'
 import { useAsync } from '../../hooks/useAsync.js'
 import { useSearchParam } from '../../hooks/useSearchParam.js'
 import type { VersionMeta } from '../../services/index.js'
 import { fetchChangelogs, getArticleLink } from '../../services/index.js'
+import { Giscus } from '../Giscus.js'
 import { Octicon } from '../Octicon.js'
-import { ChangelogList, IssueList, VersionDiff, VersionMetaData } from './index.js'
+import { ChangelogList } from './ChangelogList.js'
+import { IssueList, VersionMetaData } from './index.js'
 
-const Tabs = ['changelog', 'diff', 'fixes']
-const WIKI_PAGE_PREFIX = 'https://minecraft.wiki/w/Java_Edition_'
+const Tabs = ['changelog', 'discussion', 'fixes']
 
 interface Props {
 	id: string,
@@ -32,7 +32,6 @@ export function VersionDetail({ id, version }: Props) {
 	[id, changes])
 
 	const articleLink = version && getArticleLink(version.id)
-	const wikiPageLink = version && WIKI_PAGE_PREFIX + version.name
 
 	return <>
 		<div class="version-detail">
@@ -52,21 +51,17 @@ export function VersionDetail({ id, version }: Props) {
 				</p>}
 			</div>
 			<div class="tabs">
-				{Tabs.map(t => <Link key={t} class={tab === t ? 'selected' : ''} href={`/versions/?id=${id}&tab=${t}`}>
-					{locale(`versions.${t}`)}
-				</Link>)}
+				<span class={tab === 'changelog' ? 'selected' : ''} onClick={() => setTab('changelog')}>{locale('versions.technical_changes')}</span>
+				<span class={tab === 'discussion' ? 'selected' : ''} onClick={() => setTab('discussion')}>{locale('versions.discussion')}</span>
+				<span class={tab === 'fixes' ? 'selected' : ''} onClick={() => setTab('fixes')}>{locale('versions.fixes')}</span>
 				{articleLink && <a href={articleLink} target="_blank">
 					{locale('versions.article')}
-					{Octicon.link_external}
-				</a>}
-				{wikiPageLink && <a href={wikiPageLink} target="_blank">
-					{locale('versions.wiki')}
 					{Octicon.link_external}
 				</a>}
 			</div>
 			<div class="version-tab">
 				{tab === 'changelog' && <ChangelogList changes={filteredChangelogs} defaultOrder="asc" />}
-				{tab === 'diff' && <VersionDiff version={id} />}
+				{tab === 'discussion' && <Giscus term={`version/${id}/`} />}
 				{tab === 'fixes' && <IssueList version={id} />}
 			</div>
 		</div>

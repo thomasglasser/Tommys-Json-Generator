@@ -1,9 +1,9 @@
 import type { ComponentChildren } from 'preact'
 import { createContext } from 'preact'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'preact/hooks'
+import { useCallback, useContext, useEffect, useState } from 'preact/hooks'
 import { Analytics } from '../Analytics.js'
-import { Store } from '../Store.js'
 import { useMediaQuery } from '../hooks/index.js'
+import { Store } from '../Store.js'
 
 interface Theme {
 	theme: string,
@@ -25,6 +25,10 @@ export function ThemeProvider({ children }: { children: ComponentChildren }) {
 	const prefersLight = useMediaQuery('(prefers-color-scheme: light)')
 	const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
 
+	useEffect(() => {
+		document.documentElement.setAttribute('data-theme', theme)
+	}, [theme])
+
 	const changeTheme = useCallback((newTheme: string) => {
 		Analytics.changeTheme(theme, newTheme)
 		Store.setTheme(newTheme)
@@ -35,17 +39,13 @@ export function ThemeProvider({ children }: { children: ComponentChildren }) {
 		Analytics.setPrefersColorScheme(prefersLight ? 'light' : prefersDark ? 'dark' : 'none')
 	}, [prefersLight, prefersDark])
 
-	const actualTheme = useMemo(() => {
-		return theme === 'light' || (theme !== 'dark' && prefersLight) ? 'light' : 'dark'
-	}, [theme, prefersLight])
-
 	useEffect(() => {
-		document.documentElement.classList.toggle('dark', actualTheme === 'dark')
-	}, [actualTheme])
+		Analytics.setTheme(theme)
+	}, [])
 
 	const value: Theme = {
 		theme,
-		actualTheme,
+		actualTheme: theme === 'light' || (theme !== 'dark' && prefersLight) ? 'light' : 'dark',
 		changeTheme,
 	}
 

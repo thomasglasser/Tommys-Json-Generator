@@ -1,32 +1,4 @@
 :root {
-  --node-border: #bcbfc3;
-  --node-background-label: #e4e4e4;
-  --node-background-input: #ffffff;
-  --node-background-hover: #e7e7e7;
-  --node-text: #000000;
-  --node-text-dimmed: #2c2c2c;
-  --node-selected: #f0e65e;
-  --node-selected-hover: #faf06c;
-  --node-selected-border: #b9a327;
-  --node-add: #9bd464;
-  --node-add-hover: #a5dd70;
-  --node-add-border: #498d09;
-  --node-remove: #e76f51;
-  --node-remove-hover: #f57656;
-  --node-remove-border: #be4b2e;
-  --node-indent-border: #b9b9b9;
-  --category-predicate: #65b5b8;
-  --category-predicate-border: #187e81;
-  --category-predicate-background: #95c5c7;
-  --category-function: #979fa7;
-  --category-function-border: #788086;
-  --category-function-background: #dce0e4;
-  --category-pool: #76b865;
-  --category-pool-border: #398118;
-  --category-pool-background: #b1d6a6;
-}
-
-:root.dark {
   --node-border: #3f3f3f;
   --node-background-label: #1b1b1b;
   --node-background-input: #272727;
@@ -54,6 +26,63 @@
   --category-pool-background: #21331d;
 }
 
+:root[data-theme=light] {
+  --node-border: #bcbfc3;
+  --node-background-label: #e4e4e4;
+  --node-background-input: #ffffff;
+  --node-background-hover: #e7e7e7;
+  --node-text: #000000;
+  --node-text-dimmed: #2c2c2c;
+  --node-selected: #f0e65e;
+  --node-selected-hover: #faf06c;
+  --node-selected-border: #b9a327;
+  --node-add: #9bd464;
+  --node-add-hover: #a5dd70;
+  --node-add-border: #498d09;
+  --node-remove: #e76f51;
+  --node-remove-hover: #f57656;
+  --node-remove-border: #be4b2e;
+  --node-indent-border: #b9b9b9;
+  --category-predicate: #65b5b8;
+  --category-predicate-border: #187e81;
+  --category-predicate-background: #95c5c7;
+  --category-function: #979fa7;
+  --category-function-border: #788086;
+  --category-function-background: #dce0e4;
+  --category-pool: #76b865;
+  --category-pool-border: #398118;
+  --category-pool-background: #b1d6a6;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme=system] {
+    --node-border: #bcbfc3;
+    --node-background-label: #e4e4e4;
+    --node-background-input: #ffffff;
+    --node-background-hover: #e7e7e7;
+    --node-text: #000000;
+    --node-text-dimmed: #2c2c2c;
+    --node-selected: #f0e65e;
+    --node-selected-hover: #faf06c;
+    --node-selected-border: #b9a327;
+    --node-add: #9bd464;
+    --node-add-hover: #a5dd70;
+    --node-add-border: #498d09;
+    --node-remove: #e76f51;
+    --node-remove-hover: #f57656;
+    --node-remove-border: #be4b2e;
+    --node-indent-border: #b9b9b9;
+    --category-predicate: #65b5b8;
+    --category-predicate-border: #187e81;
+    --category-predicate-background: #95c5c7;
+    --category-function: #979fa7;
+    --category-function-border: #788086;
+    --category-function-background: #dce0e4;
+    --category-pool: #76b865;
+    --category-pool-border: #398118;
+    --category-pool-background: #b1d6a6;
+  }
+}
 /* Node headers */
 
 .node-header {
@@ -136,7 +165,7 @@
   background-color: var(--node-background-input);
 }
 
-.object-node > .node-header > .node-collapse {
+.object-node > .node-header > .collapse {
   cursor: pointer;
 }
 
@@ -186,37 +215,40 @@ button:not([disabled]).selected:hover {
   background-color: var(--node-selected-hover);
 }
 
-.node-collapse svg {
+.collapse svg {
   fill: var(--node-text);
 }
 
-.node-collapse.closed,
+.collapse.closed,
 button.add {
   background-color: var(--node-add);
   border-color: var(--node-add-border);
 }
 
-.node-collapse:not([disabled]).closed:hover,
+.collapse:not([disabled]).closed:hover,
 button:not([disabled]).add:hover {
   background-color: var(--node-add-hover);
 }
 
-.node-collapse.open,
+.collapse.open,
 button.remove {
   background-color: var(--node-remove);
   border-color: var(--node-remove-border);
 }
 
-.node-collapse:not([disabled]).open:hover,
+.collapse:not([disabled]).open:hover,
 button:not([disabled]).remove:hover {
   background-color: var(--node-remove-hover);
 }
 
 .node-header > button svg {
+  display: inline-block;
+  position: relative;
+  top: 2px;
   fill: var(--node-text);
 }
 
-.node-header > button.node-collapse:last-child,
+.node-header > button.collapse:last-child,
 .node-header > button.add:last-child {
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;

@@ -22,9 +22,7 @@ export interface CustomizedModel {
 	noiseCaves: boolean,
 	carverCaves: boolean,
 	ravines: boolean,
-	// Biomes
 	biomeSize: number,
-	biomeReplacements: Record<string, string>,
 	// Structures
 	ancientCities: boolean,
 	buriedTreasures: boolean,
@@ -87,9 +85,7 @@ export namespace CustomizedModel {
 			noiseCaves: true,
 			carverCaves: true,
 			ravines: true,
-
 			biomeSize: 4,
-			biomeReplacements: {},
 
 			ancientCities: true,
 			buriedTreasures: true,
