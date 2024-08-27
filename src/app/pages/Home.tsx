@@ -52,8 +52,10 @@ function PopularGenerators() {
 	return <ToolGroup title={locale('generators.popular')} link="/generators/">
 		<GeneratorCard minimal id="power" />
 		<GeneratorCard minimal id="minejago_recipe" />
+		<GeneratorCard minimal id="focus_modifier_blockstate" />
+		<GeneratorCard minimal id="focus_modifier_entity" />
+		<GeneratorCard minimal id="focus_modifier_itemstack" />
 		<GeneratorCard minimal id="sherd" />
-		<GeneratorCard minimal id="sherd-4.x" />
 		<ToolCard title={locale('generators.all')} link="/generators/" titleIcon="arrow_right" />
 	</ToolGroup>
 }

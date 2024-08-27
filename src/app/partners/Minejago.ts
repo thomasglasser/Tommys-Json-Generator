@@ -1,4 +1,4 @@
-import type { CollectionRegistry, SchemaRegistry} from '@mcschema/core'
+import {CollectionRegistry, MapNode, SchemaRegistry} from '@mcschema/core'
 import {BooleanNode, Case, ListNode, Mod, NumberNode, ObjectNode, Opt, Switch} from '@mcschema/core'
 import {Reference as RawReference} from '@mcschema/core/lib/nodes/Reference.js'
 import {StringNode as RawStringNode} from '@mcschema/core/lib/nodes/StringNode.js'
@@ -62,4 +62,37 @@ export function initMinejago(schemas: SchemaRegistry, collections: CollectionReg
 		default: () => ({
 		}),
 	}))
+
+	schemas.register(`${ID}:focus_modifier_blockstate`, Mod(ObjectNode({
+		state: Opt(Reference('block_state')),
+		block: Opt(StringNode({ validator: 'resource', params: { pool: 'block' } })),
+		modifier: NumberNode({ integer: false }),
+		operation: StringNode({ enum: ['addition', 'subtraction', 'multiplication', 'division'] }),
+	}, { context: `${ID}:focus_modifier_blockstate` }), {
+		default: () => ({
+		}),
+	}))
+
+	schemas.register(`${ID}:focus_modifier_entity`, Mod(ObjectNode({
+		entity_type: StringNode({ validator: 'resource', params: { pool: 'entity_type' } }),
+		nbt: Opt(MapNode(
+			StringNode(),
+			StringNode(),
+		)),
+		modifier: NumberNode({ integer: false }),
+		operation: StringNode({ enum: ['addition', 'subtraction', 'multiplication', 'division'] }),
+	}, { context: `${ID}:focus_modifier_entity` }), {
+		default: () => ({
+		}),
+	}))
+
+	// schemas.register(`${ID}:focus_modifier_itemstack`, Mod(ObjectNode({
+	// 	stack: Opt(Reference('item_stack')),
+	// 	item: Opt(StringNode({ validator: 'resource', params: { pool: 'item' } })),
+	// 	modifier: NumberNode({ integer: false }),
+	// 	operation: StringNode({ enum: ['addition', 'subtraction', 'multiplication', 'division'] }),
+	// }, { context: `${ID}:focus_modifier_itemstack` }), {
+	// 	default: () => ({
+	// 	}),
+	// }))
 }
