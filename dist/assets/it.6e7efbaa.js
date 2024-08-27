@@ -1,2 +1,0 @@
-const e=JSON.parse(`{"copy":"Copia","download":"Scarica","fields":"Campi","generator.advancement":"Avanzamento","generator.dimension":"Dimensione","generator.dimension_type":"Tipo di Dimensione","generator.item_modifier":"Modificatore d'Oggetti","generator.loot_table":"Tavola del Bottino","generator.predicate":"Predica","language":"Lingua","redo":"Rifai"}`);export{e as default};
-//# sourceMappingURL=it.6e7efbaa.js.map
