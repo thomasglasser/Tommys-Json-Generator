@@ -44,8 +44,6 @@ export function Home({}: Props) {
 					</div>}
 				</>}
 			</div>
-			<Contributors />
-			<Giscus />
 			<Footer />
 		</div>
 	</main>
