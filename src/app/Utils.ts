@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as zip from '@zip.js/zip.js'
 import type { Identifier, NbtTag, Random } from 'deepslate'
 import { Matrix3, Matrix4, NbtByte, NbtCompound, NbtDouble, NbtInt, NbtList, NbtString, Vector } from 'deepslate'

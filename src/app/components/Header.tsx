@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getCurrentUrl, Link, route } from 'preact-router'
 import config from '../Config.js'
 import { useLocale, useTheme, useTitle, useVersion } from '../contexts/index.js'

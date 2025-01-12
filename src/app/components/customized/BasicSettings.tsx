@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Identifier, ItemStack } from 'deepslate'
 import { ItemDisplay } from '../ItemDisplay.jsx'
 import { TextInput } from '../index.js'

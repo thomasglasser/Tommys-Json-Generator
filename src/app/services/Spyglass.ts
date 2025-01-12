@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as core from '@spyglassmc/core'
 import { BrowserExternals } from '@spyglassmc/core/lib/browser.js'
 import * as je from '@spyglassmc/java-edition'

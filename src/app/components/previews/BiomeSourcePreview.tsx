@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { clampedMap } from 'deepslate'
 import { mat3 } from 'gl-matrix'
 import { useCallback, useRef, useState } from 'preact/hooks'

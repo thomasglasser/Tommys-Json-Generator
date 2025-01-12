@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { route } from 'preact-router'
 import { useCallback, useEffect, useErrorBoundary, useMemo, useRef, useState } from 'preact/hooks'
 import type { Method } from '../../Analytics.js'

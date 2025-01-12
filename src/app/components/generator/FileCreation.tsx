@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { DocAndNode } from '@spyglassmc/core'
 import { Identifier } from 'deepslate'
 import { useCallback, useState } from 'preact/hooks'

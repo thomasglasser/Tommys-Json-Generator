@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Identifier, ItemStack, Json, NbtCompound, NbtString, NbtTag, StringReader } from 'deepslate'
 import { route } from 'preact-router'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'

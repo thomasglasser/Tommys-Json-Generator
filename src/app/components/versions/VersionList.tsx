@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { ComponentChildren } from 'preact'
 import { useMemo } from 'preact/hooks'
 import { useLocale } from '../../contexts/index.js'

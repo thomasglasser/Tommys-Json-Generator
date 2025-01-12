@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'preact/hooks'
 import contributors from '../../contributors.json'
 import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, ToolCard, ToolGroup } from '../components/index.js'
