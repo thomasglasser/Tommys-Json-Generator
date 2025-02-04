@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { route } from 'preact-router'
 import { useCallback, useEffect, useErrorBoundary, useMemo, useRef, useState } from 'preact/hooks'
 import type { Method } from '../../Analytics.js'
@@ -14,7 +13,8 @@ import { checkVersion, fetchDependencyMcdoc, fetchPreset, fetchRegistries, getSn
 import { DEPENDENCY_URI } from '../../services/Spyglass.js'
 import { Store } from '../../Store.js'
 import { cleanUrl, genPath } from '../../Utils.js'
-import { Btn, BtnMenu, ErrorPanel, FileCreation, FileView, Footer, HasPreview, Octicon, PreviewPanel, ProjectPanel, SearchList, SourcePanel, TextInput, VersionSwitcher } from '../index.js'
+import { FancyMenu } from '../FancyMenu.jsx'
+import { Ad, Btn, BtnMenu, ErrorPanel, FileCreation, FileView, Footer, HasPreview, Octicon, PreviewPanel, ProjectPanel, SourcePanel, TextInput, VersionSwitcher } from '../index.js'
 import { getRootDefault } from './McdocHelpers.js'
 
 export const SHARE_KEY = 'share'
@@ -200,6 +200,23 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 		return entries.map(e => e.startsWith('minecraft:') ? e.slice(10) : e)
 	}, [version, gen.id])
 
+	const getPresets = useCallback((search: string, close: () => void) => {
+		if (presets === undefined) {
+			return <span class="w-80 note">{locale('loading')}</span>
+		}
+		if (!presets || presets.length === 0) {
+			return <span class="w-80 note">{locale('presets.no_results')}</span>
+		}
+		const terms = search.trim().split(' ')
+		const results = presets?.filter(v => terms.every(t => v.includes(t))).slice(0, 100) ?? []
+		if (results.length === 0) {
+			return <span class="w-80 note">{locale('presets.no_results_for_query')}</span>
+		}
+		return results.map(r => <button class="w-80 flex items-center cursor-pointer no-underline rounded p-1"  onClick={() => {selectPreset(r); close()}}>
+			{r}
+		</button>)
+	}, [presets])
+
 	const selectPreset = (id: string) => {
 		Analytics.loadPreset(gen.id, id)
 		setSharedSnippetId(undefined, true)
@@ -367,14 +384,15 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 
 	return <>
 		<main class={`${previewShown ? 'has-preview' : ''} ${projectShown ? 'has-project' : ''}`} style={`--project-panel-width: ${realPanelWidth}px`}>
+			{!gen.tags?.includes('partners') && <Ad id="data-pack-generator" type="text" />}
 			<div class="controls generator-controls">
 				{gen.wiki && <a class="btn btn-link tooltipped tip-se" aria-label={locale('learn_on_the_wiki')} href={gen.wiki} target="_blank">
 					{Octicon.mortar_board}
 					<span>{locale('wiki')}</span>
 				</a>}
-				<BtnMenu icon="archive" label={locale('presets')} relative={false}>
-					<SearchList searchPlaceholder={locale('search')} noResults={locale('no_presets')} values={presets} onSelect={selectPreset}/>
-				</BtnMenu>
+				<FancyMenu placeholder={locale('search')} getResults={getPresets} relative={false} class="right-0 mt-2">
+					<Btn icon="archive" label={locale('presets')} />
+				</FancyMenu>
 				<VersionSwitcher value={version} onChange={selectVersion} allowed={allowedVersions} />
 				<BtnMenu icon="kebab_horizontal" tooltip={locale('more')}>
 					<Btn icon="history" label={locale('reset_default')} onClick={reset} />
