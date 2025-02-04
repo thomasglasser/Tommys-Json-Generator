@@ -277,6 +277,33 @@
       "minVersion": "1.21.5"
     },
     {
+      "id": "cat_variant",
+      "url": "cat-variant",
+      "minVersion": "1.21.5"
+    },
+    {
+      "id": "frog_variant",
+      "url": "frog-variant",
+      "minVersion": "1.21.5"
+    },
+    {
+      "id": "cow_variant",
+      "url": "cow-variant",
+      "minVersion": "1.21.5"
+    },
+    {
+      "id": "test_instance",
+      "url": "test-instance",
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Test_instance_definition"
+    },
+    {
+      "id": "test_environment",
+      "url": "test-environment",
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Test_environment_definition"
+    },
+    {
       "id": "text_component",
       "url": "text-component",
       "noPath": true,
@@ -560,6 +587,7 @@
       "url": "assets/item",
       "path": "items",
       "tags": ["assets"],
+      "aliases": ["item model"],
       "minVersion": "1.21.4",
       "wiki": "https://minecraft.wiki/w/Items_model_definition"
     },

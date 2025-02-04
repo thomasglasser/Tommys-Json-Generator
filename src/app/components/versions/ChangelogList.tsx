@@ -9,6 +9,7 @@ import { Btn, TextInput } from '../index.js'
 import { ChangelogEntry } from './ChangelogEntry.js'
 
 const SEARCH_KEY = 'search'
+const REPO = 'https://github.com/misode/technical-changes'
 
 interface Props {
 	changes: Change[] | undefined,
@@ -76,6 +77,9 @@ export function ChangelogList({ changes, defaultOrder, limit, navigation }: Prop
 			{hiddenChanges > 0 && (
 				<Btn label={locale('changelog.show_more', `${hiddenChanges}`)} onClick={() => setLimitActive(false)}/>
 			)}
+			<span class="note py-2">
+				<a href={REPO} target="_blank">{locale('changelog.edit_on_github')}</a>
+			</span>
 		</div>
 	</>
 }
