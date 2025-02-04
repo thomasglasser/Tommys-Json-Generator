@@ -384,7 +384,6 @@ export function SchemaGenerator({ gen, allowedVersions }: Props) {
 
 	return <>
 		<main class={`${previewShown ? 'has-preview' : ''} ${projectShown ? 'has-project' : ''}`} style={`--project-panel-width: ${realPanelWidth}px`}>
-			{!gen.tags?.includes('partners') && <Ad id="data-pack-generator" type="text" />}
 			<div class="controls generator-controls">
 				{gen.wiki && <a class="btn btn-link tooltipped tip-se" aria-label={locale('learn_on_the_wiki')} href={gen.wiki} target="_blank">
 					{Octicon.mortar_board}
