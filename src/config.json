@@ -645,7 +645,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_miraculous_lucky_charms",
@@ -655,7 +655,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_kamikotization_lucky_charms",
@@ -665,7 +665,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:ability",
@@ -675,7 +675,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/abilities/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/abilities/"
     },
     {
       "id": "mineraculous:miraculous",
@@ -685,7 +685,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/miraculous/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/miraculous/"
     },
     {
       "id": "mineraculous:kamikotization",
@@ -695,7 +695,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
+      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
     },
     {
       "id": "neoforge:biome_modifier",
