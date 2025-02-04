@@ -1,0 +1,181 @@
+use ::java::server::util::block_state::BlockState
+use ::java::data::advancement::predicate::BlockPredicate
+use ::java::server::world::item::ItemStack
+use ::java::data::advancement::predicate::ItemPredicate
+use ::java::data::advancement::predicate::EntityPredicate
+use ::java::server::util::text::TextColor
+use ::java::server::world::item::SingleItem
+
+// Data Maps
+
+type DataMap<K, V> = struct {
+	replace?: boolean,
+	values: struct DataMapValues {
+		[K]: (
+			V |
+			struct ReplaceableValue {
+				replace?: boolean,
+				value: V,
+			} |
+		)
+	},
+	remove?: [K],
+}
+
+type LuckyCharms = (
+    struct {
+            loot_table: #[id="loot_table"] string,
+    } |
+    struct {
+            items: (#[id(registry="item",tags="allowed")] string | [#[id="item"] string]),
+    } |
+)
+
+dispatch minecraft:resource[mineraculous:data_map_entity_lucky_charms] to DataMap<#[id(registry="entity_type",tags="allowed")] string, (
+	#[id="loot_table"] string |
+	LuckyCharms
+)>
+
+dispatch minecraft:resource[mineraculous:data_map_miraculous_lucky_charms] to DataMap<#[id(registry="mineraculous:miraculous",tags="allowed")] string, (
+	#[id="loot_table"] string |
+	LuckyCharms
+)>
+
+dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization",tags="allowed")] string, (
+	#[id="loot_table"] string |
+	LuckyCharms
+)>
+
+// Abilities
+
+dispatch minecraft:resource[mineraculous:ability] to struct Ability {
+	type: #[id] AbilityType,
+	...mineraculous:ability[[type]],
+}
+
+enum(string) AbilityType {
+    Empty = "mineraculous:empty",
+	ApplyInfiniteEffectsOrDestroy = "mineraculous:apply_infinite_effects_or_destroy",
+	ContextAware = "mineraculous:context_aware",
+	Drag = "mineraculous:drag",
+	LuckyCharmWorldRecovery = "mineraculous:lucky_charm_world_recovery",
+	NightVision = "mineraculous:night_vision",
+	RandomSpread = "mineraculous:random_spread",
+	ReplaceItemsInHand = "mineraculous:replace_items_in_hand",
+	RightHandParticles = "mineraculous:right_hand_particles",
+	SetCameraEntity = "mineraculous:set_camera_entity",
+	SetOwner = "mineraculous:set_owner",
+	SummonLuckyCharm = "mineraculous:summon_lucky_charm",
+}
+
+struct AbilityBase {
+	start_sound?: #[id="sound_event"] string,
+	override_active?: boolean,
+}
+
+dispatch mineraculous:ability[mineraculous:empty] to struct {
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:apply_infinite_effects_or_destroy] to struct {
+	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
+	drop_item?: #[id="item"] string,
+	damage_type?: #[id="damage_type"] string,
+	blame_tag?: string,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:context_aware] to struct {
+	block?: Ability,
+	entity?: Ability,
+	item?: Ability,
+	air?: Ability,
+	passive?: [Ability],
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:drag] to struct {
+	ability: Ability,
+	drag_ticks?: int @ 1..,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:lucky_charm_world_recovery] to struct {
+	require_in_hand?: boolean,
+	spread_particle?: #[id="particle_type"] string,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:night_vision] to struct {
+	shader?: string,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:random_spread] to struct {
+	state: BlockState,
+	valid_blocks?: BlockPredicate,
+	invalid_blocks?: BlockPredicate,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:replace_items_in_hand] to struct {
+	replacement?: ItemStack,
+	hurt_and_break?: boolean,
+	valid_items?: ItemPredicate,
+	invalid_items?: ItemPredicate,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:right_hand_particles] to struct {
+	particle: #[id="particle_type"] string,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:set_camera_entity] to struct {
+	entity: EntityPredicate,
+	shader?: string,
+	toggle_tag?: string,
+	must_be_tamed?: boolean,
+	override_owner?: boolean,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:set_owner] to struct {
+	max_of_types?: int @ 1..,
+	valid_entities?: EntityPredicate,
+	invalid_entities?: EntityPredicate,
+	...AbilityBase,
+}
+
+dispatch mineraculous:ability[mineraculous:summon_lucky_charm] to struct {
+	require_tool?: boolean,
+	...AbilityBase,
+}
+
+// Miraculous
+
+dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
+	color: (
+		#[color="hex_rgb"] string |
+		#[color="named"] TextColor |
+	),
+	acceptable_slot: string,
+	transformation_frames?: int @ 0..,
+	tool?: SingleItem,
+	tool_slot?: string,
+	active_ability?: #[id="mineraculous:ability"] string,
+	passive_abilities?: [#[id="mineraculous:ability"] string],
+	transform_sound?: #[id="sound_event"] string,
+	detransform_sound?: #[id="sound_event"] string,
+	timer_beep_sound?: #[id="sound_event"] string,
+	timer_end_sound?: #[id="sound_event"] string,
+}
+
+// Kamikotization
+
+dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotization {
+	default_name: string,
+	item_predicate?: ItemPredicate,
+	active_ability?: #[id="mineraculous:ability"] string,
+	passive_abilities?: [#[id="mineraculous:ability"] string],
+}
