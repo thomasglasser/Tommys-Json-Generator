@@ -5,6 +5,9 @@ use ::java::data::advancement::predicate::ItemPredicate
 use ::java::data::advancement::predicate::EntityPredicate
 use ::java::server::util::text::TextColor
 use ::java::server::world::item::SingleItem
+use ::java::data::advancement::trigger::Conditions
+use ::java::data::advancement::trigger::TriggerBase
+use ::java::data::util::NumberProvider
 
 // Data Maps
 
@@ -178,4 +181,69 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 	item_predicate?: ItemPredicate,
 	active_ability?: #[id="mineraculous:ability"] string,
 	passive_abilities?: [#[id="mineraculous:ability"] string],
+}
+
+// Advancement Triggers
+
+dispatch minecraft:trigger[mineraculous:transformed_miraculous] to Conditions<struct TransformedMiraculous {
+	...TriggerBase,
+	type: #[id="mineraculous:miraculous"] string,
+}>
+
+enum(string) UsedPowerContext {
+	Empty = "empty",
+	Block = "block",
+	Entity = "entity",
+	LivingEntity = "living_entity",
+	Item = "item",
+}
+
+dispatch minecraft:trigger[mineraculous:used_miraculous_power] to Conditions<struct UsedMiraculousPower {
+	...TriggerBase,
+	type: #[id="mineraculous:miraculous"] string,
+	contexts?: [UsedPowerContext],
+}>
+
+dispatch minecraft:trigger[mineraculous:kamikotized_player] to Conditions<struct KamikotizedPlayer {
+	...TriggerBase,
+	type?: #[id="mineraculous:kamikotization"] string,
+}>
+
+dispatch minecraft:trigger[mineraculous:transformed_kamikotization] to Conditions<struct TransformedKamikotization {
+	...TriggerBase,
+	type?: #[id="mineraculous:kamikotization"] string,
+	self?: boolean,
+}>
+
+dispatch minecraft:trigger[mineraculous:used_kamikotization_power] to Conditions<struct UsedKamikotizationPower {
+	...TriggerBase,
+	type: #[id="mineraculous:kamikotization"] string,
+	contexts?: [UsedPowerContext],
+}>
+
+dispatch minecraft:trigger[mineraculous:released_purified_kamiko] to Conditions<struct ReleasedPurifiedKamiko {
+	...TriggerBase,
+	count?: int @ 1..,
+}>
+
+// Advancement Predicates
+
+dispatch minecraft:entity_sub_predicate[mineraculous:kamikotization] to struct KamikotizationPredicate {
+	kamikotizations?: (#[id(registry="mineraculous:kamikotization",tags="allowed")] string | [#[id="mineraculous:kamikotization"] string])
+}
+
+// Loot Conditions
+
+dispatch minecraft:loot_condition[mineraculous:has_ammo] to struct HasAmmo {
+	has_ammo?: boolean,
+}
+
+dispatch minecraft:loot_condition[mineraculous:shooter_matches] to struct ShooterMatches {
+	predicate?: ItemPredicate,
+}
+
+// Number Providers
+
+dispatch minecraft:number_provider[mineraculous:power_level_multiplier] to struct PowerLevelMultiplier {
+	base: NumberProvider,
 }
