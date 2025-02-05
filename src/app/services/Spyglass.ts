@@ -408,6 +408,36 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		registrar: je.dependency.symbolRegistrar(summary, release),
 	})
 
+	let mineraculousRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/registries.json')
+	mineraculousRegistries = await mineraculousRegistries.json();
+
+	const parsedRegistries = mineraculousRegistries;
+
+	meta.registerSymbolRegistrar('mineraculous-summary', {
+		checksum: versionChecksum,
+		registrar: (symbols) => {
+			for (const key in parsedRegistries) {
+				if (parsedRegistries.hasOwnProperty(key)) {
+					const entryIds: string[] = parsedRegistries[key];
+					for (const entryId of entryIds) {
+						symbols.query('mineraculous://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
+							.enter({ usage: { type: 'declaration' } });
+					}
+				}
+			}
+		}
+	})
+
+	// meta.registerSymbolRegistrar('modid-summary', {
+	// 	checksum: versionChecksum,
+	// 	registrar: (symbols) => {
+	// 		for (const entryId of ['modid:foo', 'modid:bar']) {
+	// 			symbols.query('modid://summary/registries.json', 'item', core.ResourceLocation.lengthen(entryId))
+	// 				.enter({ usage: { type: 'declaration' } })
+	// 		}
+	// 	}
+	// })
+
 	registerAttributes(meta, release, versions)
 
 	json.initialize(ctx)
