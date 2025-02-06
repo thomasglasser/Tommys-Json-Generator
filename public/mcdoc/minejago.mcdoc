@@ -106,8 +106,8 @@ enum(string) Weather {
 dispatch minejago:focus_modifier[minejago:world] to struct {
     day_time?: MinMaxBounds<IntRange>,
     weather?: Weather,
-    y?: MinMaxBounds<IntRange>,
-    temperature?: MinMaxBounds<IntRange>,
+    y?: MinMaxBounds<int>,
+    temperature?: MinMaxBounds<int>,
     ...FocusModifierBase,
 }
 
@@ -183,5 +183,5 @@ dispatch minecraft:recipe_serializer[minejago:teapot_brewing] to struct TeapotBr
     ingredient: Ingredient,
     result: #[id="potion"] string,
     experience: float,
-    brewing_time: IntProvider,
+    brewing_time: IntProvider<int>,
 }
