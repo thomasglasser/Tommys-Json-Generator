@@ -301,7 +301,7 @@ dispatch minecraft:data_component[mineraculous:butterfly_cane_ability] to enum(s
 	Throw = "throw",
 }
 
-dispatch minecraft:data_component[mineraculous:kamikot_data] to struct KamikotData {
+dispatch minecraft:data_component[mineraculous:kamiko_data] to struct KamikoData {
 	uuid: int[] @ 4,
 	owner: int[] @ 4,
 	name_color: int,

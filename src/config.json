@@ -698,6 +698,46 @@
       "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
     },
     {
+      "id": "minejago:data_map_potion_fillables",
+      "url": "minejago/data-map-potion-fillables",
+      "path": "minejago/data_map_potion_fillables",
+      "tags": ["partners"],
+      "dependency": "minejago",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://minejago-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "minejago:data_map_potion_drainables",
+      "url": "minejago/data-map-potion-drainables",
+      "path": "minejago/data_map_potion_drainables",
+      "tags": ["partners"],
+      "dependency": "minejago",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://minejago-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "minejago:focus_modifier",
+      "url": "minejago/focus-modifier",
+      "path": "minejago/focus_modifier",
+      "tags": ["partners"],
+      "dependency": "minejago",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://minejago-snapshot.wiki.thomasglasser.dev/category/apis/entry/focus_modifiers/"
+    },
+    {
+      "id": "minejago:power",
+      "url": "minejago/power",
+      "path": "minejago/power",
+      "tags": ["partners"],
+      "dependency": "minejago",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://minejago-snapshot.wiki.thomasglasser.dev/category/apis/entry/powers/"
+    },
+    {
       "id": "neoforge:biome_modifier",
       "url": "neoforge/biome-modifier",
       "path": "neoforge/biome_modifier",

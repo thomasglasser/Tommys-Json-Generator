@@ -1,0 +1,187 @@
+use ::java::server::world::item::SingleItem
+use ::java::data::advancement::predicate::BlockPredicate
+use ::java::data::advancement::predicate::EntityPredicate
+use ::java::data::advancement::predicate::ItemPredicate
+use ::java::data::advancement::predicate::LocationPredicate
+use ::java::data::util::MinMaxBounds
+use ::java::data::util::IntRange
+use ::java::server::util::text::Text
+use ::java::server::util::text::TextColor
+use ::java::data::advancement::trigger::Conditions
+use ::java::data::advancement::trigger::TriggerBase
+use ::java::data::recipe::Ingredient
+use ::java::data::worldgen::IntProvider
+
+// Data Maps
+
+type DataMap<K, V> = struct {
+	replace?: boolean,
+	values: struct DataMapValues {
+		[K]: (
+			V |
+			struct ReplaceableValue {
+				replace?: boolean,
+				value: V,
+			} |
+		)
+	},
+	remove?: [K],
+}
+
+type PotionFillable = struct {
+    cups: int @ 1..,
+    filled: SingleItem,
+}
+
+dispatch minecraft:resource[minejago:data_map_potion_fillables] to DataMap<#[id(registry="item",tags="allowed")] string, (
+	PotionFillable
+)>
+
+type PotionDrainable = struct {
+    potion?: #[id="potion"] string,
+    cups: int @ 1..,
+    remainder: SingleItem,
+}
+
+dispatch minecraft:resource[minejago:data_map_potion_drainables] to DataMap<#[id(registry="item",tags="allowed")] string, (
+	PotionDrainable
+)>
+
+// Focus Modifiers
+
+dispatch minecraft:resource[minejago:focus_modifier] to struct FocusModifier {
+	type: #[id] FocusModifierType,
+	...minejago:focus_modifier[[type]],
+}
+
+enum(string) FocusModifierType {
+    Block = "minejago:block",
+    Entity = "minejago:entity",
+    Item = "minejago:item",
+    Location = "minejago:location",
+    World = "minejago:world",
+}
+
+enum(string) FocusOperation {
+    Addition = "addition",
+    Subtraction = "subtraction",
+    Multiplication = "multiplication",
+    Division = "division",
+}
+
+struct FocusModifierBase {
+	operation: FocusOperation,
+    modifier: double,
+}
+
+dispatch minejago:focus_modifier[minejago:block] to struct {
+    block: BlockPredicate,
+    ...FocusModifierBase,
+}
+
+dispatch minejago:focus_modifier[minejago:entity] to struct {
+    entity: EntityPredicate,
+    self?: boolean,
+    ...FocusModifierBase,
+}
+
+dispatch minejago:focus_modifier[minejago:item] to struct {
+    item: ItemPredicate,
+    ...FocusModifierBase,
+}
+
+dispatch minejago:focus_modifier[minejago:location] to struct {
+    location: LocationPredicate,
+    ...FocusModifierBase,
+}
+
+enum(string) Weather {
+    Clear = "clear",
+    Rain = "rain",
+    ThunderRain = "thunder_rain",
+    Snow = "snow",
+    ThunderSnow = "thunder_snow",
+}
+
+dispatch minejago:focus_modifier[minejago:world] to struct {
+    day_time?: MinMaxBounds<IntRange>,
+    weather?: Weather,
+    y?: MinMaxBounds<IntRange>,
+    temperature?: MinMaxBounds<IntRange>,
+    ...FocusModifierBase,
+}
+
+// Powers
+
+type PowerDisplay = struct {
+    lore?: Text,
+    description?: Text,
+}
+
+dispatch minecraft:resource[minejago:power] to struct Power {
+	color?: (
+		#[color="hex_rgb"] string |
+		#[color="named"] TextColor |
+	),
+    tagline?: Text,
+    border_particle?: #[id="particle_type"] string,
+    has_sets?: boolean,
+    display?: PowerDisplay,
+    is_special?: boolean,
+}
+
+// Advancement Triggers
+
+dispatch minecraft:trigger[minejago:did_spinjitzu] to Conditions<struct DidSpinjitzu {
+	...TriggerBase,
+}>
+
+dispatch minecraft:trigger[minejago:got_power] to Conditions<struct GotPower {
+    ...TriggerBase,
+    power?: #[id="minejago:power"] string,
+}>
+
+dispatch minecraft:trigger[minejago:brewed_tea] to Conditions<struct BrewedTea {
+    ...TriggerBase,
+    potion?: #[id="potion"] string,
+}>
+
+enum(string) SkulkinRaidStatus {
+    Started = "started",
+    Won = "won",
+}
+
+dispatch minecraft:trigger[minejago:skulkin_raid_status_changed] to Conditions<struct SkulkinRaidStatusChanged {
+    ...TriggerBase,
+    status?: SkulkinRaidStatus,
+}>
+
+enum(string) Skill {
+    Agility = "agility",
+    Stealth = "stealth",
+    Dexterity = "dexterity",
+    ToolProficiency = "tool_proficiency",
+}
+
+dispatch minecraft:trigger[minejago:increased_skill] to Conditions<struct IncreasedSkill {
+    ...TriggerBase,
+    type?: Skill,
+    level?: int @ 0..,
+}>
+
+// Data Components
+
+dispatch minecraft:data_component[minejago:power] to #[id="minejago:power"] string
+
+dispatch minecraft:data_component[minejago:golden_weapons_map] to struct {}
+
+// Recipe Serializers
+
+dispatch minecraft:recipe_serializer[minejago:teapot_brewing] to struct TeapotBrewing {
+    group?: string,
+    base: #[id="potion"] string,
+    ingredient: Ingredient,
+    result: #[id="potion"] string,
+    experience: float,
+    brewing_time: IntProvider,
+}
