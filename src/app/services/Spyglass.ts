@@ -408,22 +408,78 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		registrar: je.dependency.symbolRegistrar(summary, release),
 	})
 
+	// Registries
 	let mineraculousRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/registries.json')
 	mineraculousRegistries = await mineraculousRegistries.json();
 
-	const parsedRegistries = mineraculousRegistries;
+	// Reloadable Registries
+	let mineraculousLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/loot_tables.json')
+	mineraculousLootTables = await mineraculousLootTables.json();
+	let mineraculousRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipes.json')
+	mineraculousRecipes = await mineraculousRecipes.json();
+	let mineraculousRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
+	mineraculousRecipeAdvancements = await mineraculousRecipeAdvancements.json();
+	let mineraculousAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/advancements.json')
+	mineraculousAdvancements = await mineraculousAdvancements.json();
+
+	// Tags
+	let mineraculousBlockTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/block.json')
+	mineraculousBlockTags = await mineraculousBlockTags.json();
+	let mineraculousDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
+	mineraculousDamageTypeTags = await mineraculousDamageTypeTags.json();
+	let mineraculousItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
+	mineraculousItemTags = await mineraculousItemTags.json();
+	let mineraculousMiraculousTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/mineraculous/miraculous.json')
+	mineraculousMiraculousTags = await mineraculousMiraculousTags.json();
 
 	meta.registerSymbolRegistrar('mineraculous-summary', {
 		checksum: versionChecksum,
 		registrar: (symbols) => {
-			for (const key in parsedRegistries) {
-				if (parsedRegistries.hasOwnProperty(key)) {
-					const entryIds: string[] = parsedRegistries[key];
+			// Registries
+			for (const key in mineraculousRegistries) {
+				if (mineraculousRegistries.hasOwnProperty(key)) {
+					const entryIds: string[] = mineraculousRegistries[key];
 					for (const entryId of entryIds) {
 						symbols.query('mineraculous://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
-							.enter({ usage: { type: 'declaration' } });
+							.enter({usage: {type: 'declaration'}});
 					}
 				}
+			}
+
+			// Reloadable Registries
+			for (const entryId in mineraculousLootTables) {
+				symbols.query('mineraculous://summary/registries.json', 'loot_table', core.ResourceLocation.lengthen(mineraculousLootTables[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousRecipes) {
+				symbols.query('mineraculous://summary/registries.json', 'recipe', core.ResourceLocation.lengthen(mineraculousRecipes[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousRecipeAdvancements) {
+				symbols.query('mineraculous://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousRecipeAdvancements[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousAdvancements) {
+				symbols.query('mineraculous://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousAdvancements[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+
+			// Tags
+			for (const entryId in mineraculousBlockTags) {
+				symbols.query('mineraculous://summary/registries.json', 'tag/block', core.ResourceLocation.lengthen(mineraculousBlockTags[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousDamageTypeTags) {
+				symbols.query('mineraculous://summary/registries.json', 'tag/damage_type', core.ResourceLocation.lengthen(mineraculousDamageTypeTags[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousItemTags) {
+				symbols.query('mineraculous://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(mineraculousItemTags[entryId]))
+					.enter({ usage: { type: 'declaration' } });
+			}
+			for (const entryId in mineraculousMiraculousTags) {
+				symbols.query('mineraculous://summary/registries.json', 'tag/mineraculous:miraculous', core.ResourceLocation.lengthen(mineraculousMiraculousTags[entryId]))
+					.enter({ usage: { type: 'declaration' } });
 			}
 		}
 	})
