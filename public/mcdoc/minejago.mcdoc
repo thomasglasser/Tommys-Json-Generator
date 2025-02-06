@@ -11,6 +11,7 @@ use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::recipe::Ingredient
 use ::java::data::worldgen::IntProvider
+use ::java::data::tag::Tag
 
 // Data Maps
 
@@ -185,3 +186,8 @@ dispatch minecraft:recipe_serializer[minejago:teapot_brewing] to struct TeapotBr
     experience: float,
     brewing_time: IntProvider<int>,
 }
+
+// Tags
+
+dispatch minecraft:resource[minejago:tag/focus_modifier] to Tag<#[id="minejago:focus_modifier"] string>
+dispatch minecraft:resource[minejago:tag/power] to Tag<#[id="minejago:power"] string>

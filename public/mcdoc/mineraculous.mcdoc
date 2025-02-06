@@ -8,6 +8,7 @@ use ::java::server::world::item::SingleItem
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::util::NumberProvider
+use ::java::data::tag::Tag
 
 // Data Maps
 
@@ -306,3 +307,9 @@ dispatch minecraft:data_component[mineraculous:kamiko_data] to struct KamikoData
 	owner: int[] @ 4,
 	name_color: int,
 }
+
+// Tags
+
+dispatch minecraft:resource[mineraculous:tag/ability] to Tag<#[id="mineraculous:ability"] string>
+dispatch minecraft:resource[mineraculous:tag/miraculous] to Tag<#[id="mineraculous:miraculous"] string>
+dispatch minecraft:resource[mineraculous:tag/kamikotization] to Tag<#[id="mineraculous:kamikotization"] string>
