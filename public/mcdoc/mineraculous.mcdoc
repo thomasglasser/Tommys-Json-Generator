@@ -247,3 +247,62 @@ dispatch minecraft:loot_condition[mineraculous:shooter_matches] to struct Shoote
 dispatch minecraft:number_provider[mineraculous:power_level_multiplier] to struct PowerLevelMultiplier {
 	base: NumberProvider,
 }
+
+// Data Components
+
+dispatch minecraft:data_component[mineraculous:powered] to struct {}
+
+dispatch minecraft:data_component[mineraculous:kwami_data] to struct KwamiData {
+	uuid: int[] @ 4,
+	charged: boolean,
+}
+
+dispatch minecraft:data_component[mineraculous:tool_id] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:hide_enchantments] to struct {}
+
+dispatch minecraft:data_component[mineraculous:miraculous] to #[id="mineraculous:miraculous"] string
+
+dispatch minecraft:data_component[mineraculous:kamikotization] to #[id="mineraculous:kamikotization"] string
+
+dispatch minecraft:data_component[mineraculous:lucky_charm] to struct LuckyCharm {
+	target?: int[] @ 4,
+	id: int @ 0..,
+}
+
+dispatch minecraft:data_component[mineraculous:recoverable_item_id] to int[] @ 4
+
+dispatch minecraft:data_component[mineraculous:transformation_frames] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:detransformed_frames] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:remaining_ticks] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:active] to struct {}
+
+dispatch minecraft:data_component[mineraculous:ladybug_yoyo_ability] to enum(string) {
+	Block = "block",
+	Lasso = "lasso",
+	Purify = "purify",
+	Travel = "travel",
+}
+
+dispatch minecraft:data_component[mineraculous:cat_staff_ability] to enum(string) {
+	Block = "block",
+	Perch = "perch",
+	Throw = "throw",
+	Travel = "travel",
+}
+
+dispatch minecraft:data_component[mineraculous:butterfly_cane_ability] to enum(string) {
+	Blade = "blade",
+	Block = "block",
+	KamikoStore = "kamiko_store",
+	Throw = "throw",
+}
+
+dispatch minecraft:data_component[mineraculous:kamikot_data] to struct KamikotData {
+	uuid: int[] @ 4,
+	owner: int[] @ 4,
+	name_color: int,
+}
