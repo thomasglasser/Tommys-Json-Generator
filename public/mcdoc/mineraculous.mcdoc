@@ -1,3 +1,4 @@
+use ::java::server::util::particle::Particle
 use ::java::server::util::block_state::BlockState
 use ::java::data::advancement::predicate::BlockPredicate
 use ::java::server::world::item::ItemStack
@@ -106,7 +107,7 @@ dispatch mineraculous:ability[mineraculous:drag] to struct {
 
 dispatch mineraculous:ability[mineraculous:lucky_charm_world_recovery] to struct {
 	require_in_hand?: boolean,
-	spread_particle?: #[id="particle_type"] string,
+	spread_particle?: Particle,
 	...AbilityBase,
 }
 
@@ -131,7 +132,7 @@ dispatch mineraculous:ability[mineraculous:replace_items_in_hand] to struct {
 }
 
 dispatch mineraculous:ability[mineraculous:right_hand_particles] to struct {
-	particle: #[id="particle_type"] string,
+	particle: Particle,
 	...AbilityBase,
 }
 
