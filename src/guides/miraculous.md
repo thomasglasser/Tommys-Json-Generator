@@ -57,6 +57,13 @@ you'll need to register it if it exists or create it if it doesn't.
 See the [Curios Wiki](https://docs.illusivesoulworks.com/category/slots) for information on how to do this.
 One difference is that you must add `mineraculous:miraculous` to the item tag for the slot.
 
+### Adding a Lucky Charm Loot Table
+
+It's recommended, but not required, to add a lucky charm loot table to assist in defeating your miraculous should it fall into the wrong hands.
+You can create a loot table [here](https://snapshot-jsons.thomasglasser.dev/loot-table/).
+You should then add the loot table or a list of items to the miraculous lucky charms data map with [this generator](https://snapshot-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms).
+This file should be placed in `data/<namespace>/data_maps/mineraculous/miraculous/lucky_charms.json`.
+
 ## Creating the Resource Pack
 
 Once you have created the assets, you must create a resource pack to display them.
