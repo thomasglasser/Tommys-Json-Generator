@@ -88,8 +88,8 @@ function Guides() {
 	const { locale } = useLocale()
 
 	return <ToolGroup title={locale('guides')} link="/guides/" titleIcon="arrow_right">
-		<GuideCard minimal id="test" />
-		<GuideCard minimal id="noise-router" />
+		{/*<GuideCard minimal id="test" />*/}
+		{/*<GuideCard minimal id="noise-router" />*/}
 	</ToolGroup>
 }
 
