@@ -877,42 +877,5 @@
       "minVersion": "1.20.2",
       "wiki": "https://github.com/neoforged/NeoForge/blob/1.21.x/src/main/java/net/neoforged/neoforge/common/world/StructureModifiers.java"
     }
-  ],
-  "legacyGuides": [
-    {
-      "id": "adding-custom-structures",
-      "title": "Adding custom structures",
-      "link": "Tutorials/Custom_structures"
-    },
-    {
-      "id": "custom-armor-trims",
-      "title": "Trim patterns and materials",
-      "link": "Tutorials/Adding_custom_trims"
-    },
-    {
-      "id": "density-functions",
-      "title": "Density function types and their configuration",
-      "link": "Density_function"
-    },
-    {
-      "id": "feature-order-cycle",
-      "title": "How to fix feature order cycles",
-      "link": "Custom_biome"
-    },
-    {
-      "id": "heightmap-types",
-      "title": "The different heightmap types explained",
-      "link": "Heightmap"
-    },
-    {
-      "id": "noise-router",
-      "title": "How terrain is generated using the noise router",
-      "link": "Noise_router#Final_density"
-    },
-    {
-      "id": "placed-features",
-      "title": "Placed features and their configuration",
-      "link": "Placed_feature"
-    }
   ]
 }
