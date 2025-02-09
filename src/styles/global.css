@@ -413,25 +413,25 @@ main > .controls {
 
 .skeleton {
 	opacity: 1;
-  background-image: linear-gradient(90deg, var(--background-2) 0px, var(--background-2-shimmer) 38px, var(--background-2-shimmer) 42px, var(--background-2) 80px);
-  background-size: 600px;
-  animation: skeleton-shimmer 2.5s infinite linear, skeleton-fade-in 1s forwards linear;
+	background-image: linear-gradient(90deg, var(--background-2) 0px, var(--background-2-shimmer) 38px, var(--background-2-shimmer) 42px, var(--background-2) 80px);
+	background-size: 600px;
+	animation: skeleton-shimmer 2.5s infinite linear, skeleton-fade-in 1s forwards linear;
 }
 
 .skeleton-2 {
 	opacity: 1;
-  background-image: linear-gradient(90deg, var(--background-4) 0px, var(--background-4-shimmer) 38px, var(--background-4-shimmer) 42px, var(--background-4) 80px);
-  background-size: 600px;
-  animation: skeleton-shimmer 2.5s infinite linear, skeleton-fade-in 1s forwards linear;
+	background-image: linear-gradient(90deg, var(--background-4) 0px, var(--background-4-shimmer) 38px, var(--background-4-shimmer) 42px, var(--background-4) 80px);
+	background-size: 600px;
+	animation: skeleton-shimmer 2.5s infinite linear, skeleton-fade-in 1s forwards linear;
 }
 
 @keyframes skeleton-shimmer {
-  0% {
-    background-position: -110px;
-  }
-  40%, 100% {
-    background-position: 300px;
-  }
+	0% {
+		background-position: -110px;
+	}
+	40%, 100% {
+		background-position: 300px;
+	}
 }
 
 @keyframes skeleton-fade-in {
@@ -711,7 +711,7 @@ main.has-project {
 }
 
 .customized .version-switcher {
-	padding: 6px 0;	
+	padding: 6px 0;
 }
 
 .customized-tab {
@@ -1394,7 +1394,7 @@ main.has-project {
 .tooltipped.tip-n::before,
 .tooltipped.tip-nw::before {
 	bottom: auto;
-  top: -7px;
+	top: -7px;
 	border-top-color: var(--background-6);
 }
 
@@ -1402,7 +1402,7 @@ main.has-project {
 .tooltipped.tip-s::before,
 .tooltipped.tip-sw::before {
 	top: auto;
-  bottom: -7px;
+	bottom: -7px;
 	border-bottom-color: var(--background-6);
 }
 
@@ -1419,10 +1419,10 @@ main.has-project {
 	position: absolute;
 	z-index: 101;
 	display: none;
-  right: 50%;
+	right: 50%;
 	width: 0;
 	height: 0;
-  margin-right: -8px;
+	margin-right: -8px;
 	pointer-events: none;
 	border: 8px solid transparent;
 	opacity: 0;
@@ -1734,7 +1734,7 @@ hr {
 }
 
 .item-display > img {
-  width: 88.888%;
+	width: 88.888%;
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-crisp-edges;
 	image-rendering: crisp-edges;
@@ -1746,9 +1746,9 @@ hr {
 }
 
 .item-display > svg:not(.item-count):not(.item-durability) {
-  width: 81.25%;
-  height: 62.5%;
-  fill: var(--node-text-dimmed);
+	width: 81.25%;
+	height: 62.5%;
+	fill: var(--node-text-dimmed);
 }
 
 .item-display > svg.item-count,
@@ -1859,7 +1859,7 @@ hr {
 	font-family: MinecraftSeven, sans-serif;
 	font-size: 20px;
 	position: relative;
-  white-space: pre;
+	white-space: pre;
 	line-height: 1.1	;
 }
 
@@ -1997,14 +1997,14 @@ hr {
 }
 
 .tree-view .entry-menu::after {
-  content: '';
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  margin-left: 6px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent var(--background-4) transparent;
+	content: '';
+	position: absolute;
+	bottom: 100%;
+	left: 0;
+	margin-left: 6px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent var(--background-4) transparent;
 }
 
 .tree-view .entry-menu .action {
@@ -2096,13 +2096,13 @@ hr {
 }
 
 .sound-config {
-  display: grid;
-  grid-template-columns: min-content 2fr min-content min-content min-content 1fr min-content 1fr min-content min-content;
-  align-items: center;
-  gap: 12px 8px;
-  padding: 10px;
-  background-color: var(--background-2);
-  border-radius: 5px;
+	display: grid;
+	grid-template-columns: min-content 2fr min-content min-content min-content 1fr min-content 1fr min-content min-content;
+	align-items: center;
+	gap: 12px 8px;
+	padding: 10px;
+	background-color: var(--background-2);
+	border-radius: 5px;
 }
 
 .sound-config:not(:last-child) {
@@ -2119,58 +2119,58 @@ hr {
 
 .sound-config label {
 	color: var(--text-2);
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .sound-config .delay {
-  width: 50px;
-  padding: 4px;
+	width: 50px;
+	padding: 4px;
 }
 
 .sound-config input[type=range] {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 	appearance: none;
-  width: 100%;
-  background: transparent;
+	width: 100%;
+	background: transparent;
 }
 
 .sound-config input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 	appearance: none;
 }
 
 .sound-config input[type=range]:focus {
-  outline: none;
+	outline: none;
 }
 
 .sound-config input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 	appearance: none;
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: var(--text-3);
-  cursor: pointer;
-  margin-top: -5px;
+	border: none;
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	background: var(--text-3);
+	cursor: pointer;
+	margin-top: -5px;
 }
 
 .sound-config input[type=range]::-moz-range-thumb {
-  border: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: var(--text-3);
-  cursor: pointer;
+	border: none;
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	background: var(--text-3);
+	cursor: pointer;
 }
 
 .sound-config input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 8px;
-  cursor: pointer;
-  background: var(--background-4);
-  border-radius: 2px;
-  border: none;
+	width: 100%;
+	height: 8px;
+	cursor: pointer;
+	background: var(--background-4);
+	border-radius: 2px;
+	border: none;
 }
 
 .sound-config input[type=range]:focus::-webkit-slider-runnable-track {
@@ -2178,12 +2178,12 @@ hr {
 }
 
 .sound-config input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 8px;
-  cursor: pointer;
-  background: var(--background-4);
-  border-radius: 2px;
-  border: none;
+	width: 100%;
+	height: 8px;
+	cursor: pointer;
+	background: var(--background-4);
+	border-radius: 2px;
+	border: none;
 }
 
 .sound-config input[type=range]:focus::-moz-range-track {
@@ -2191,20 +2191,20 @@ hr {
 }
 
 .sound-config .copy[data-command] {
-  position: relative;
+	position: relative;
 }
 
 .sound-config .copy[data-command]::after {
-  content: attr(data-command);
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 6px;
-  padding: 8px 12px;
-  background-color: var(--background-3);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px var(--background-1);
-  cursor: initial;
+	content: attr(data-command);
+	position: absolute;
+	top: 100%;
+	right: 0;
+	margin-top: 6px;
+	padding: 8px 12px;
+	background-color: var(--background-3);
+	border-radius: 5px;
+	box-shadow: 0 2px 4px var(--background-1);
+	cursor: initial;
 }
 
 .sound-config.invalid .play,
@@ -2213,31 +2213,31 @@ hr {
 }
 
 .sound-config.playing {
-  background-color: var(--background-3);
+	background-color: var(--background-3);
 }
 
 .sound-config.playing .play {
-  background-image: linear-gradient(110deg, var(--accent-sounds-3), var(--accent-sounds-3) 45%, var(--accent-sounds-4) 47%, var(--accent-sounds-4) 53%, var(--accent-sounds-3) 55%);
-  background-size: 300%;
-  background-position: right;
-  animation: playing 1s infinite;
+	background-image: linear-gradient(110deg, var(--accent-sounds-3), var(--accent-sounds-3) 45%, var(--accent-sounds-4) 47%, var(--accent-sounds-4) 53%, var(--accent-sounds-3) 55%);
+	background-size: 300%;
+	background-position: right;
+	animation: playing 1s infinite;
 }
 
 @keyframes playing {
-  0% {
-    background-position: left;
-  }
-  100% {
-    background-position: right;
-  }
+	0% {
+		background-position: left;
+	}
+	100% {
+		background-position: right;
+	}
 }
 
 .sound-config.loading:not(.invalid) .play svg {
-  animation: spinning 2s infinite linear;
+	animation: spinning 2s infinite linear;
 }
 
 .sound-config.invalid .sound {
-  color: var(--invalid-text);
+	color: var(--invalid-text);
 }
 
 .changelog {
@@ -2852,6 +2852,34 @@ hr {
 	text-overflow: ellipsis;
 }
 
+.guide {
+	padding-left: 32px;
+	padding-right: 32px;
+}
+.guide > .badges-list {
+	margin-top: 12px;
+}
+.guide-share.active {
+	fill: var(--accent-success);
+	color: var(--text-2);
+}
+.guide .ad {
+	margin: 12px 0 8px;
+}
+.guide .ad[data-ea-type="image"] {
+	float: right;
+	margin-left: 12px;
+}
+.guide-toc {
+	display: inline-block;
+	border: 2px solid var(--background-6);
+	border-radius: 6px;
+	padding: 8px 16px;
+	line-height: 1.2;
+	font-size: 90%;
+	list-style-type: decimal;
+}
+
 .markdown-content {
 	color: var(--text-2);
 	margin-top: 12px;
@@ -3015,34 +3043,34 @@ hr {
 		flex-wrap: wrap;
 	}
 
-  .sounds .btn {
-    padding: 8px 10px;
-  }
+	.sounds .btn {
+		padding: 8px 10px;
+	}
 
 	.sounds .btn svg {
-    margin-right: 0 !important;
-  }
+		margin-right: 0 !important;
+	}
 
 	.sounds .btn span {
 		display: none;
 	}
 
-  .sound-config {
-    grid-template-columns: min-content min-content 1fr min-content 1fr min-content;
-    grid-template-areas:
+	.sound-config {
+		grid-template-columns: min-content min-content 1fr min-content 1fr min-content;
+		grid-template-areas:
       "play sound sound sound sound copy"
       "pitch-label pitch-label pitch volume-label volume remove";
-  }
-  .sound-config .play { grid-area: play; }
-  .sound-config .sound { grid-area: sound; }
-  .sound-config .delay-label { display: none; }
-  .sound-config .delay { display: none; }
-  .sound-config .pitch-label { grid-area: pitch-label; }
-  .sound-config .pitch { grid-area: pitch; }
-  .sound-config .volume-label { grid-area: volume-label; }
-  .sound-config .volume { grid-area: volume; }
-  .sound-config .copy { grid-area: copy; }
-  .sound-config .remove { grid-area: remove; }
+	}
+	.sound-config .play { grid-area: play; }
+	.sound-config .sound { grid-area: sound; }
+	.sound-config .delay-label { display: none; }
+	.sound-config .delay { display: none; }
+	.sound-config .pitch-label { grid-area: pitch-label; }
+	.sound-config .pitch { grid-area: pitch; }
+	.sound-config .volume-label { grid-area: volume-label; }
+	.sound-config .volume { grid-area: volume; }
+	.sound-config .copy { grid-area: copy; }
+	.sound-config .remove { grid-area: remove; }
 
 	.version-entry {
 		grid-template-columns: 1fr 1fr;
@@ -3128,7 +3156,7 @@ hr {
 
 	.btn.btn.large-input,
 	.btn-menu .result-list {
-		width: calc(100vw - 32px); 
+		width: calc(100vw - 32px);
 	}
 
 	.version-metadata-hide {

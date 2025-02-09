@@ -18,14 +18,6 @@ export function Worldgen({}: Props) {
 					<GeneratorCard minimal id="worldgen/configured_feature" />
 					<GeneratorCard minimal id="worldgen/placed_feature" />
 				</ToolGroup>
-				<ToolGroup title={locale('guides')} link="/guides/" titleIcon="arrow_right">
-					<a class="tool-card minecraft-wiki" href="/guides/">
-						<img src="https://minecraft.wiki/images/Wiki@2x.png" alt="Minecraft Wiki Logo" />
-						<div>
-							The guides have moved to the <em>Minecraft Wiki</em>!
-						</div>
-					</a>
-				</ToolGroup>
 			</div>
 			<GeneratorList predicate={gen => gen.tags?.includes('worldgen')} />
 		</div>

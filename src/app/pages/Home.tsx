@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo } from 'preact/hooks'
 import contributors from '../../contributors.json'
-import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, ToolCard, ToolGroup } from '../components/index.js'
+import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, GuideCard, ToolCard, ToolGroup } from '../components/index.js'
 import { WhatsNewTime } from '../components/whatsnew/WhatsNewTime.jsx'
 import { useLocale, useTitle } from '../contexts/index.js'
 import { useAsync } from '../hooks/useAsync.js'
@@ -28,6 +28,7 @@ export function Home({}: Props) {
 				{smallScreen ? /* mobile */ <>
 					<PopularGenerators />
 					<FavoriteGenerators />
+					<Guides />
 					<WhatsNew />
 					<Changelog />
 					<Versions />
@@ -40,6 +41,7 @@ export function Home({}: Props) {
 					</div>
 					{!smallScreen && <div class="card-column">
 						<FavoriteGenerators />
+						<Guides />
 						<WhatsNew />
 						<Tools />
 					</div>}
@@ -82,28 +84,37 @@ function FavoriteGenerators() {
 	</ToolGroup>
 }
 
+function Guides() {
+	const { locale } = useLocale()
+
+	return <ToolGroup title={locale('guides')} link="/guides/" titleIcon="arrow_right">
+		{/*<GuideCard minimal id="test" />*/}
+		{/*<GuideCard minimal id="noise-router" />*/}
+	</ToolGroup>
+}
+
 function Tools() {
 	const { locale } = useLocale()
 
 	return <ToolGroup title={locale('tools')}>
 		<ToolCard title="Converter" icon="convert"
-			link="/convert/"
-			desc="Turn /give commands into loot tables" />
+				  link="/convert/"
+				  desc="Turn /give commands into loot tables" />
 		<ToolCard title="Customized Worlds" icon="customized"
-			link="/customized/"
-			desc="Create data packs to customize your world" />
+				  link="/customized/"
+				  desc="Create data packs to customize your world" />
 		<ToolCard title="Report Inspector" icon="report"
-			link="https://misode.github.io/report/"
-			desc="Analyse your performance reports" />
+				  link="https://misode.github.io/report/"
+				  desc="Analyse your performance reports" />
 		<ToolCard title="Minecraft Sounds" icon="sounds"
-			link="/sounds/"
-			desc="Browse through and mix all the vanilla sounds" />
+				  link="/sounds/"
+				  desc="Browse through and mix all the vanilla sounds" />
 		<ToolCard title="Transformation preview"
-			link="/transformation/"
-			desc="Visualize transformations for display entities" />
+				  link="/transformation/"
+				  desc="Visualize transformations for display entities" />
 		<ToolCard title="Template Placer"
-			link="https://misode.github.io/template-placer/"
-			desc="Automatically place all the structure pieces in your world" />
+				  link="https://misode.github.io/template-placer/"
+				  desc="Automatically place all the structure pieces in your world" />
 	</ToolGroup>
 }
 

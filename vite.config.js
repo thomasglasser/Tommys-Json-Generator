@@ -4,10 +4,29 @@ import { env } from 'process'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import glob from 'fast-glob'
+import fs from 'fs'
+import yaml from 'js-yaml'
 const config = require('./src/config.json')
 const English = require('./src/locales/en.json')
 
 const convertFormats = ['give-command', 'loot-table', 'item-modifier', 'recipe-output']
+
+const guides = glob.sync('src/guides/**/*.md').flatMap(g => {
+	const content = fs.readFileSync(g).toString('utf-8')
+	if (!content.startsWith('---')) return []
+	try {
+		const frontMatter = yaml.load(content.substring(3, content.indexOf('---', 3)))
+		if (typeof frontMatter !== 'object') return []
+		return [{
+			id: g.replace('src/guides/', '').replace('.md', ''),
+			...frontMatter,
+		}]
+	} catch (e) {
+		console.warn('Failed loading guide', g, e.message)
+		return []
+	}
+})
 
 export default defineConfig({
 	server: {
@@ -51,11 +70,13 @@ export default defineConfig({
 					title: `${English[`convert.format.${s}`]} to ${English[`convert.format.${t}`]} Converter - ${getVersions({ minVersion: '1.20.5' })}`,
 					template,
 				})),
-				...config.legacyGuides.map(g => html({
-					fileName: `guides/${g.id}/index.html`,
-					title: `${g.title} - ${getVersions()}`,
-					template,
-				})),
+				...guides.map(g => {
+					return html({
+						fileName: `guides/${g.id}/index.html`,
+						title: `${g.title} - Minecraft${g.versions ? ` ${g.versions.join(' ')}` : ''}`,
+						template,
+					})
+				}),
 			],
 		},
 	},
@@ -64,6 +85,7 @@ export default defineConfig({
 	},
 	define: {
 		__LATEST_VERSION__: env.latest_version,
+		__GUIDES__: guides,
 	},
 	plugins: [
 		preact(),
@@ -71,9 +93,24 @@ export default defineConfig({
 			targets: [
 				{ src: 'src/styles/giscus.css', dest: 'assets' },
 				{ src: 'src/styles/giscus-burn.css', dest: 'assets' },
+				{ src: 'src/guides/*', dest: 'guides' },
 			],
 		}),
 		visualizer({ open: true }),
+		{
+			name: 'watch-guides',
+			enforce: 'post',
+			handleHotUpdate({ file, server }) {
+				const match = file.match(/src\/guides\/([a-z0-9-]+)\.md/)
+				if (match && match[1]) {
+					server.ws.send({
+						type: 'custom',
+						event: 'guide-update',
+						data: match[1],
+					})
+				}
+			},
+		},
 	],
 })
 
