@@ -4,7 +4,6 @@ versions:
     - 1.21
 tags:
     - mineraculous
-    - miraculous
 ---
 
 This guide will walk you through the process of creating a custom miraculous.

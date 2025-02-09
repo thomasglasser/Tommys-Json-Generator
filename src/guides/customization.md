@@ -4,7 +4,6 @@ versions:
     - 1.21
 tags:
     - mineraculous
-    - customization
 ---
 
 For advanced personalization, you can create custom suits, hidden miraculous, and kamikotizations and load them into the game, either for yourself or for the entire server.
