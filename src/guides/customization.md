@@ -13,7 +13,10 @@ For advanced personalization, you can create custom suits, hidden miraculous, an
 
 First, you must create a GeckoLib model.
 A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
-You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous/tree/models)
+You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous/tree/models).
+
+You must then choose an ID for your look.
+This ID must be unique and can only contain lowercase letters and underscores.
 All files related to one look must share the same ID.
 
 ### Suits
