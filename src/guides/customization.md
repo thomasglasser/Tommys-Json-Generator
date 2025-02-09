@@ -26,7 +26,7 @@ Each suit look must provide a texture with the name `<id>.png`.
 Each suit look can also provide a model with the name `<id>.geo.json`.
 Each suit look can also provide a glowmask with the name `<id>_glowmask.png`.
 Each suit look can also provide transformation frames with the name `<id>_<frame>.png`, starting at 1,
-and glowmask transformation frames with the name `<id>_glowmask_<frame>.png`, starting at 1.
+and glowmask transformation frames with the name `<id>_<frame>_glowmask.png`, starting at 1.
 
 ### Hidden Miraculous
 
