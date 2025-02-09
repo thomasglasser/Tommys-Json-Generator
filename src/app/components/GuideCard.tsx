@@ -18,7 +18,7 @@ export function GuideCard({ id, minimal, activeTags, toggleTag }: Props) {
         e.stopImmediatePropagation()
     }
 
-    return <Card title={title} overlay={!minimal && versions?.join(' • ')} link={`/guides/${id}/`}>
+    return <Card title={title} overlay={!minimal && versions?.join(' • ') || ''} link={`/guides/${id}/`}>
         <div class="badges-list">
             {tags?.sort().map(tag => <Badge label={tag} onClick={onToggleTag(tag)} active={activeTags?.includes(tag)} />)}
         </div>

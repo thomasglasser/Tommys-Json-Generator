@@ -18,9 +18,9 @@ export function Guides({}: Props) {
 	const [versionFilter, setVersionFiler] = useState(false)
 
 	const versionedGuides = useMemo(() => {
-		if (versionFilter === false) return getGuides()
+		if (!versionFilter) return getGuides()
 		return getGuides().filter(guide => {
-			return guide.versions?.includes(version)
+			return guide.versions?.includes(version) || true
 		})
 	}, [version, versionFilter])
 
