@@ -2852,6 +2852,34 @@ hr {
 	text-overflow: ellipsis;
 }
 
+.guide {
+	padding-left: 32px;
+	padding-right: 32px;
+}
+.guide > .badges-list {
+	margin-top: 12px;
+}
+.guide-share.active {
+	fill: var(--accent-success);
+	color: var(--text-2);
+}
+.guide .ad {
+	margin: 12px 0 8px;
+}
+.guide .ad[data-ea-type="image"] {
+	float: right;
+	margin-left: 12px;
+}
+.guide-toc {
+	display: inline-block;
+	border: 2px solid var(--background-6);
+	border-radius: 6px;
+	padding: 8px 16px;
+	line-height: 1.2;
+	font-size: 90%;
+	list-style-type: decimal;
+}
+
 .markdown-content {
 	color: var(--text-2);
 	margin-top: 12px;

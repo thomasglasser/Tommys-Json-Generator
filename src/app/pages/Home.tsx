@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo } from 'preact/hooks'
 import contributors from '../../contributors.json'
-import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, ToolCard, ToolGroup } from '../components/index.js'
+import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, GuideCard, ToolCard, ToolGroup } from '../components/index.js'
 import { WhatsNewTime } from '../components/whatsnew/WhatsNewTime.jsx'
 import { useLocale, useTitle } from '../contexts/index.js'
 import { useAsync } from '../hooks/useAsync.js'
@@ -28,6 +28,7 @@ export function Home({}: Props) {
 				{smallScreen ? /* mobile */ <>
 					<PopularGenerators />
 					<FavoriteGenerators />
+					<Guides />
 					<WhatsNew />
 					<Changelog />
 					<Versions />
@@ -40,6 +41,7 @@ export function Home({}: Props) {
 					</div>
 					{!smallScreen && <div class="card-column">
 						<FavoriteGenerators />
+						<Guides />
 						<WhatsNew />
 						<Tools />
 					</div>}
@@ -79,6 +81,14 @@ function FavoriteGenerators() {
 
 	return <ToolGroup title={locale('generators.recent')}>
 		{favorites.map(f => <GeneratorCard minimal id={f} />)}
+	</ToolGroup>
+}
+
+function Guides() {
+	const { locale } = useLocale()
+
+	return <ToolGroup title={locale('guides')} link="/guides/" titleIcon="arrow_right">
+		<GuideCard minimal id="using" />
 	</ToolGroup>
 }
 

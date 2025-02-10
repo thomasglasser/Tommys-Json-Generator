@@ -3,6 +3,7 @@ import { Store } from '../Store.js'
 import { message } from '../Utils.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
+import * as core from '@spyglassmc/core'
 
 const CACHE_NAME = 'misode-v2'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
@@ -79,6 +80,165 @@ export async function fetchRegistries(versionId: VersionId) {
 		for (const id in data) {
 			result.set(id, data[id].map((e: string) => 'minecraft:' + e))
 		}
+
+		// Mineraculous
+
+		// Registries
+		let mineraculousRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/registries.json')
+		mineraculousRegistries = await mineraculousRegistries.json()
+		for (const key in mineraculousRegistries) {
+			if (mineraculousRegistries.hasOwnProperty(key)) {
+				// @ts-ignore
+				const entryIds: string[] = mineraculousRegistries[key]
+				result.set(key, entryIds)
+			}
+		}
+
+		// Reloadable Registries
+		let mineraculousLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/loot_tables.json')
+		mineraculousLootTables = await mineraculousLootTables.json()
+		for (const entryId in mineraculousLootTables) {
+			// @ts-ignore
+			result.get('loot_table')?.push(mineraculousLootTables[entryId])
+		}
+		let mineraculousRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipes.json')
+		mineraculousRecipes = await mineraculousRecipes.json()
+		for (const entryId in mineraculousRecipes) {
+			// @ts-ignore
+			result.get('recipe')?.push(mineraculousRecipes[entryId])
+		}
+		let mineraculousRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
+		mineraculousRecipeAdvancements = await mineraculousRecipeAdvancements.json()
+		for (const entryId in mineraculousRecipeAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(mineraculousRecipeAdvancements[entryId])
+		}
+		let mineraculousAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/advancements.json')
+		mineraculousAdvancements = await mineraculousAdvancements.json()
+		for (const entryId in mineraculousAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(mineraculousAdvancements[entryId])
+		}
+
+		// Tags
+		let mineraculousBlockTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/block.json')
+		mineraculousBlockTags = await mineraculousBlockTags.json()
+		for (const entryId in mineraculousBlockTags) {
+			// @ts-ignore
+			result.get('tag/block')?.push(mineraculousBlockTags[entryId])
+		}
+		let mineraculousDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
+		mineraculousDamageTypeTags = await mineraculousDamageTypeTags.json()
+		for (const entryId in mineraculousDamageTypeTags) {
+			// @ts-ignore
+			result.get('tag/damage_type')?.push(mineraculousDamageTypeTags[entryId])
+		}
+		let mineraculousItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
+		mineraculousItemTags = await mineraculousItemTags.json()
+		for (const entryId in mineraculousItemTags) {
+			// @ts-ignore
+			result.get('tag/item')?.push(mineraculousItemTags[entryId])
+		}
+		const mineraculousMiraculousTagList = []
+		let mineraculousMiraculousTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/mineraculous/miraculous.json')
+		mineraculousMiraculousTags = await mineraculousMiraculousTags.json()
+		for (const entryId in mineraculousMiraculousTags) {
+			// @ts-ignore
+			mineraculousMiraculousTagList.push(mineraculousMiraculousTags[entryId])
+		}
+		result.set('mineraculous:tag/miraculous', mineraculousMiraculousTagList)
+
+		// Minejago
+
+		// Registries
+		let minejagoRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/registries.json')
+		minejagoRegistries = await minejagoRegistries.json()
+		for (const key in minejagoRegistries) {
+			if (minejagoRegistries.hasOwnProperty(key)) {
+				// @ts-ignore
+				const entryIds: string[] = minejagoRegistries[key]
+				result.set(key, entryIds)
+			}
+		}
+
+		// Reloadable Registries
+		let minejagoLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/loot_tables.json')
+		minejagoLootTables = await minejagoLootTables.json()
+		for (const entryId in minejagoLootTables) {
+			// @ts-ignore
+			result.get('loot_table')?.push(minejagoLootTables[entryId])
+		}
+		let minejagoRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/recipes.json')
+		minejagoRecipes = await minejagoRecipes.json()
+		for (const entryId in minejagoRecipes) {
+			// @ts-ignore
+			result.get('recipe')?.push(minejagoRecipes[entryId])
+		}
+		let minejagoRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
+		minejagoRecipeAdvancements = await minejagoRecipeAdvancements.json()
+		for (const entryId in minejagoRecipeAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(minejagoRecipeAdvancements[entryId])
+		}
+		let minejagoAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/advancements.json')
+		minejagoAdvancements = await minejagoAdvancements.json()
+		for (const entryId in minejagoAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(minejagoAdvancements[entryId])
+		}
+
+		// Tags
+		let minejagoBiomeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/worldgen/biome.json')
+		minejagoBiomeTags = await minejagoBiomeTags.json()
+		for (const entryId in minejagoBiomeTags) {
+			// @ts-ignore
+			result.get('tag/biome')?.push(minejagoBiomeTags[entryId])
+		}
+		let minejagoStructureTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/worldgen/structure.json')
+		minejagoStructureTags = await minejagoStructureTags.json()
+		for (const entryId in minejagoStructureTags) {
+			// @ts-ignore
+			result.get('tag/structure')?.push(minejagoStructureTags[entryId])
+		}
+		let minejagoBannerPatternTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/banner_pattern.json')
+		minejagoBannerPatternTags = await minejagoBannerPatternTags.json()
+		for (const entryId in minejagoBannerPatternTags) {
+			// @ts-ignore
+			result.get('tag/banner_pattern')?.push(minejagoBannerPatternTags[entryId])
+		}
+		let minejagoBlockTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/block.json')
+		minejagoBlockTags = await minejagoBlockTags.json()
+		for (const entryId in minejagoBlockTags) {
+			// @ts-ignore
+			result.get('tag/block')?.push(minejagoBlockTags[entryId])
+		}
+		let minejagoDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
+		minejagoDamageTypeTags = await minejagoDamageTypeTags.json()
+		for (const entryId in minejagoDamageTypeTags) {
+			// @ts-ignore
+			result.get('tag/damage_type')?.push(minejagoDamageTypeTags[entryId])
+		}
+		let minejagoEntityTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/entity_type.json')
+		minejagoEntityTypeTags = await minejagoEntityTypeTags.json()
+		for (const entryId in minejagoEntityTypeTags) {
+			// @ts-ignore
+			result.get('tag/entity_type')?.push(minejagoEntityTypeTags[entryId])
+		}
+		let minejagoItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
+		minejagoItemTags = await minejagoItemTags.json()
+		for (const entryId in minejagoItemTags) {
+			// @ts-ignore
+			result.get('tag/item')?.push(minejagoItemTags[entryId])
+		}
+		const minejagoPowerTagList = []
+		let minejagoPowerTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/power.json')
+		minejagoPowerTags = await minejagoPowerTags.json()
+		for (const entryId in minejagoPowerTags) {
+			// @ts-ignore
+			minejagoPowerTagList.push(minejagoPowerTags[entryId])
+		}
+		result.set('minejago:tag/power', minejagoPowerTagList)
+
 		return result
 	} catch (e) {
 		throw new Error(`Error occurred while fetching registries: ${message(e)}`)
@@ -138,8 +298,20 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 	await validateCache(version)
 	try {
 		let url
-		if (id.startsWith('immersive_weathering:')) {
-			url = `https://raw.githubusercontent.com/AstralOrdana/Immersive-Weathering/main/src/main/resources/data/immersive_weathering/block_growths/${id.slice(21)}.json`
+		if (id.startsWith('mineraculous:')) {
+			if (registry.includes('tag'))
+				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/tags/${core.ResourceLocation.shorten(registry).replace('tags/', '')}/${id.slice(13)}.json`
+			else if (registry.startsWith('mineraculous:'))
+				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/mineraculous/${registry.slice(13)}/${id.slice(13)}.json`
+			else
+				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/${core.ResourceLocation.shorten(registry)}/${id.slice(13)}.json`
+		} else if (id.startsWith('minejago:')) {
+			if (registry.includes('tag'))
+				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/tags/${core.ResourceLocation.shorten(registry).replace('tags/', '')}/${id.slice(9)}.json`
+			else if (registry.startsWith('minejago:'))
+				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/minejago/${registry.slice(9)}/${id.slice(9)}.json`
+			else
+				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/${core.ResourceLocation.shorten(registry)}/${id.slice(9)}.json`
 		} else {
 			const type = ['atlases', 'blockstates', 'items', 'font', 'lang', 'models', 'equipment', 'post_effect'].includes(registry) ? 'assets' : 'data'
 			url = `${mcmeta(version, type)}/${type}/minecraft/${registry}/${id}.json`
