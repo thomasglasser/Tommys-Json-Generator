@@ -238,11 +238,7 @@ dispatch minecraft:entity_sub_predicate[mineraculous:kamikotization] to struct K
 
 // Loot Conditions
 
-dispatch minecraft:loot_condition[mineraculous:has_ammo] to struct HasAmmo {
-	has_ammo?: boolean,
-}
-
-dispatch minecraft:loot_condition[mineraculous:shooter_matches] to struct ShooterMatches {
+dispatch minecraft:loot_condition[mineraculous:has_item] to struct HasItem {
 	predicate?: ItemPredicate,
 }
 
