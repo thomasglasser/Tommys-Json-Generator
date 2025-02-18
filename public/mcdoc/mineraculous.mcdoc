@@ -66,6 +66,7 @@ dispatch minecraft:resource[mineraculous:ability] to struct Ability {
 
 enum(string) AbilityType {
     Empty = "mineraculous:empty",
+    ApplyEffectsWhileTransformed = "mineraculous:apply_effects_while_transformed",
 	ApplyInfiniteEffectsOrDestroy = "mineraculous:apply_infinite_effects_or_destroy",
 	ContextAware = "mineraculous:context_aware",
 	Drag = "mineraculous:drag",
