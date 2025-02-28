@@ -17,7 +17,7 @@ and a GeckoLib entity model for the kwami.
 A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
 You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous/tree/models).
 
-The suit can have a glowmask and transformation frames.
+The suit can have a glowmask, transformation frames, and animations.
 The miraculous can have a glowmask and item transforms.
 
 You must then choose a namespace for your addon and an ID for your miraculous.
@@ -113,8 +113,9 @@ The hungry kwami texture must be named `<id>_hungry.png` and located in `assets/
 
 ### Animations
 
-You can add animations for the miraculous, suit, and kwami.
+You can add animations for the suit and kwami.
 
-The miraculous animations must be named `<id>.animation.json` located in the `assets/<namespace>/animations/item/miraculous/<id>.animation.json`.
 The suit animations must be named `<id>.animation.json` located in the `assets/<namespace>/animations/item/armor/miraculous/<id>.animation.json`.
+The supported suit animations are `move.fly`, `move.swim`, `move.run`, `move.walk`, and `misc.idle`.
 The kwami animations must be named `<id>.animation.json` located in the `assets/<namespace>/animations/entity/miraculous/<id>.animation.json`.
+The supported kwami animations are `misc.idle`, `move.fly`, `misc.eat`, `misc.hold`, and `misc.sit`.
