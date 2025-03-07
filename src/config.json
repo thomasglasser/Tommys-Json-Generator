@@ -758,16 +758,6 @@
       "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
     },
     {
-      "id": "mineraculous:lucky_charm_loot_table",
-      "url": "mineraculous/lucky-charm-loot-table",
-      "path": "mineraculous/lucky_charm_loot_table",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
-    },
-    {
       "id": "minejago:data_map_potion_fillables",
       "url": "minejago/data-map-potion-fillables",
       "path": "minejago/data_map_potion_fillables",

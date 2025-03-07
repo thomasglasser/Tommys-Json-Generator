@@ -10,8 +10,6 @@ use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::util::NumberProvider
 use ::java::data::tag::Tag
-use ::java::data::loot::LootPool
-use ::java::data::loot::LootFunction
 
 // Data Maps
 
@@ -323,12 +321,3 @@ dispatch minecraft:data_component[mineraculous:kamiko_data] to struct KamikoData
 dispatch minecraft:resource[mineraculous:tag/ability] to Tag<#[id="mineraculous:ability"] string>
 dispatch minecraft:resource[mineraculous:tag/miraculous] to Tag<#[id="mineraculous:miraculous"] string>
 dispatch minecraft:resource[mineraculous:tag/kamikotization] to Tag<#[id="mineraculous:kamikotization"] string>
-
-// Loot Tables
-
-dispatch minecraft:resource[mineraculous:lucky_charm_loot_table] to struct LuckyCharmLootTable {
-	type: "mineraculous:lucky_charm",
-	pools?: [LootPool],
-	functions?: [LootFunction],
-	random_sequence?: #[id(registry="random_sequence",definition=true)] string,
-}
