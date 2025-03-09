@@ -1,11 +1,11 @@
-use ::java::server::util::particle::Particle
-use ::java::server::util::block_state::BlockState
+use ::java::util::particle::Particle
+use ::java::util::block_state::BlockState
 use ::java::data::advancement::predicate::BlockPredicate
-use ::java::server::world::item::ItemStack
+use ::java::world::item::ItemStack
 use ::java::data::advancement::predicate::ItemPredicate
 use ::java::data::advancement::predicate::EntityPredicate
-use ::java::server::util::text::TextColor
-use ::java::server::world::item::SingleItem
+use ::java::util::text::TextColor
+use ::java::world::item::SingleItem
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::util::NumberProvider

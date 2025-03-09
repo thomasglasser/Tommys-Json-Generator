@@ -1,4 +1,4 @@
-use ::java::server::world::item::SingleItem
+use ::java::world::item::SingleItem
 use ::java::data::advancement::predicate::BlockPredicate
 use ::java::data::advancement::predicate::EntityPredicate
 use ::java::data::advancement::predicate::ItemPredicate
@@ -6,7 +6,7 @@ use ::java::data::advancement::predicate::LocationPredicate
 use ::java::data::util::MinMaxBounds
 use ::java::data::util::IntRange
 use ::java::server::util::text::Text
-use ::java::server::util::text::TextColor
+use ::java::util::text::TextColor
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::recipe::Ingredient

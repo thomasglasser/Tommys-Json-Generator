@@ -148,6 +148,53 @@ export async function fetchRegistries(versionId: VersionId) {
 		}
 		result.set('mineraculous:tag/miraculous', mineraculousMiraculousTagList)
 
+		// Mineraculous Expansion: Kamikotizations
+
+		// Registries
+		let mineraculousKamikotizationsRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/registries.json')
+		mineraculousKamikotizationsRegistries = await mineraculousKamikotizationsRegistries.json()
+		for (const key in mineraculousKamikotizationsRegistries) {
+			if (mineraculousKamikotizationsRegistries.hasOwnProperty(key)) {
+				// @ts-ignore
+				const entryIds: string[] = mineraculousKamikotizationsRegistries[key]
+				result.set(key, entryIds)
+			}
+		}
+
+		// Reloadable Registries
+		let mineraculousKamikotizationsLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/loot_tables.json')
+		mineraculousKamikotizationsLootTables = await mineraculousKamikotizationsLootTables.json()
+		for (const entryId in mineraculousKamikotizationsLootTables) {
+			// @ts-ignore
+			result.get('loot_table')?.push(mineraculousKamikotizationsLootTables[entryId])
+		}
+		let mineraculousKamikotizationsRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipes.json')
+		mineraculousKamikotizationsRecipes = await mineraculousKamikotizationsRecipes.json()
+		for (const entryId in mineraculousKamikotizationsRecipes) {
+			// @ts-ignore
+			result.get('recipe')?.push(mineraculousKamikotizationsRecipes[entryId])
+		}
+		let mineraculousKamikotizationsRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
+		mineraculousKamikotizationsRecipeAdvancements = await mineraculousKamikotizationsRecipeAdvancements.json()
+		for (const entryId in mineraculousKamikotizationsRecipeAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(mineraculousKamikotizationsRecipeAdvancements[entryId])
+		}
+		let mineraculousKamikotizationsAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/advancements.json')
+		mineraculousKamikotizationsAdvancements = await mineraculousKamikotizationsAdvancements.json()
+		for (const entryId in mineraculousKamikotizationsAdvancements) {
+			// @ts-ignore
+			result.get('advancement')?.push(mineraculousKamikotizationsAdvancements[entryId])
+		}
+
+		// Tags
+		let mineraculousKamikotizationsItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
+		mineraculousKamikotizationsItemTags = await mineraculousKamikotizationsItemTags.json()
+		for (const entryId in mineraculousKamikotizationsItemTags) {
+			// @ts-ignore
+			result.get('tag/item')?.push(mineraculousKamikotizationsItemTags[entryId])
+		}
+
 		// Minejago
 
 		// Registries
@@ -298,23 +345,39 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 	await validateCache(version)
 	try {
 		let url
-		if (id.startsWith('mineraculous:')) {
-			if (registry.includes('tag'))
-				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/tags/${core.ResourceLocation.shorten(registry).replace('tags/', '')}/${id.slice(13)}.json`
-			else if (registry.startsWith('mineraculous:'))
-				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/mineraculous/${registry.slice(13)}/${id.slice(13)}.json`
-			else
-				url = `https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/data/mineraculous/${core.ResourceLocation.shorten(registry)}/${id.slice(13)}.json`
-		} else if (id.startsWith('minejago:')) {
-			if (registry.includes('tag'))
-				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/tags/${core.ResourceLocation.shorten(registry).replace('tags/', '')}/${id.slice(9)}.json`
-			else if (registry.startsWith('minejago:'))
-				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/minejago/${registry.slice(9)}/${id.slice(9)}.json`
-			else
-				url = `https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/data/minejago/${core.ResourceLocation.shorten(registry)}/${id.slice(9)}.json`
+		let namespace
+		let path
+		if (registry.includes(':')) {
+			namespace = registry.substring(0, registry.indexOf(':'))
+			path = registry.substring(namespace.length + 1)
 		} else {
+			namespace = null
+			path = registry
+		}
+		let modId
+		let repo
+		if (id.startsWith('mineraculous:')) {
+			modId = 'mineraculous'
+			repo = 'Mineraculous'
+		} else if (id.startsWith('mineraculouskamikotizations:')) {
+			modId = 'mineraculouskamikotizations'
+			repo = 'Mineraculous-Expansion-Kamikotizations'
+		} else if (id.startsWith('minejago:')) {
+			modId = 'minejago'
+			repo = 'Minejago'
+		} else {
+			modId = null
+			repo = null
+		}
+		if (!modId) {
 			const type = ['atlases', 'blockstates', 'items', 'font', 'lang', 'models', 'equipment', 'post_effect'].includes(registry) ? 'assets' : 'data'
 			url = `${mcmeta(version, type)}/${type}/minecraft/${registry}/${id}.json`
+		} else {
+			if (registry.includes('tag')) {
+				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/tags/` + (namespace ? `${namespace}/` : '') + `${core.ResourceLocation.shorten(registry).split(':')?.pop().replace('tags/', '')}/${id.slice(modId.length + 1)}.json`
+			} else {
+				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/${namespace ? `${namespace}/` : ''}${core.ResourceLocation.shorten(registry).split(':')?.pop()}/${id.slice(modId.length + 1)}.json`
+			}
 		}
 		const res = await fetch(url)
 		return await res.text()

@@ -486,6 +486,66 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		},
 	})
 
+	// Mineraculous Expansion: Kamikotizations
+
+	// Registries
+	let mineraculousKamikotizationsRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/registries.json')
+	mineraculousKamikotizationsRegistries = await mineraculousKamikotizationsRegistries.json()
+
+	// Reloadable Registries
+	let mineraculousKamikotizationsLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/loot_tables.json')
+	mineraculousKamikotizationsLootTables = await mineraculousKamikotizationsLootTables.json()
+	let mineraculousKamikotizationsRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipes.json')
+	mineraculousKamikotizationsRecipes = await mineraculousKamikotizationsRecipes.json()
+	let mineraculousKamikotizationsRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
+	mineraculousKamikotizationsRecipeAdvancements = await mineraculousKamikotizationsRecipeAdvancements.json()
+	let mineraculousKamikotizationsAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/advancements.json')
+	mineraculousKamikotizationsAdvancements = await mineraculousKamikotizationsAdvancements.json()
+
+	// Tags
+	let mineraculousKamikotizationsItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
+	mineraculousKamikotizationsItemTags = await mineraculousKamikotizationsItemTags.json()
+
+	meta.registerSymbolRegistrar('mineraculouskamikotizations-summary', {
+		checksum: versionChecksum,
+		registrar: (symbols) => {
+			// Registries
+			for (const key in mineraculousKamikotizationsRegistries) {
+				if (mineraculousKamikotizationsRegistries.hasOwnProperty(key)) {
+					const entryIds: string[] = mineraculousKamikotizationsRegistries[key]
+					for (const entryId of entryIds) {
+						symbols.query('mineraculouskamikotizations://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
+							.enter({usage: {type: 'declaration'}})
+					}
+				}
+			}
+
+			// Reloadable Registries
+			for (const entryId in mineraculousKamikotizationsLootTables) {
+				symbols.query('mineraculouskamikotizations://summary/registries.json', 'loot_table', core.ResourceLocation.lengthen(mineraculousKamikotizationsLootTables[entryId]))
+					.enter({ usage: { type: 'declaration' } })
+			}
+			for (const entryId in mineraculousKamikotizationsRecipes) {
+				symbols.query('mineraculouskamikotizations://summary/registries.json', 'recipe', core.ResourceLocation.lengthen(mineraculousKamikotizationsRecipes[entryId]))
+					.enter({ usage: { type: 'declaration' } })
+			}
+			for (const entryId in mineraculousKamikotizationsRecipeAdvancements) {
+				symbols.query('mineraculouskamikotizations://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousKamikotizationsRecipeAdvancements[entryId]))
+					.enter({ usage: { type: 'declaration' } })
+			}
+			for (const entryId in mineraculousKamikotizationsAdvancements) {
+				symbols.query('mineraculouskamikotizations://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousKamikotizationsAdvancements[entryId]))
+					.enter({ usage: { type: 'declaration' } })
+			}
+
+			// Tags
+			for (const entryId in mineraculousKamikotizationsItemTags) {
+				symbols.query('mineraculouskamikotizations://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(mineraculousKamikotizationsItemTags[entryId]))
+					.enter({ usage: { type: 'declaration' } })
+			}
+		},
+	})
+
 	// Minejago
 
 	// Registries
