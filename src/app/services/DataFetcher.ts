@@ -3,7 +3,6 @@ import { Store } from '../Store.js'
 import { message } from '../Utils.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
-import * as core from '@spyglassmc/core'
 
 const CACHE_NAME = 'misode-v2'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
@@ -374,9 +373,9 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 			url = `${mcmeta(version, type)}/${type}/minecraft/${registry}/${id}.json`
 		} else {
 			if (registry.includes('tag')) {
-				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/tags/` + (namespace ? `${namespace}/` : '') + `${core.ResourceLocation.shorten(registry).split(':')?.pop().replace('tags/', '')}/${id.slice(modId.length + 1)}.json`
+				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/tags/` + (namespace ? `${namespace}/` : '') + `${path.replace('tags/', '')}/${id.slice(modId.length + 1)}.json`
 			} else {
-				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/${namespace ? `${namespace}/` : ''}${core.ResourceLocation.shorten(registry).split(':')?.pop()}/${id.slice(modId.length + 1)}.json`
+				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/${namespace ? `${namespace}/` : ''}${path}/${id.slice(modId.length + 1)}.json`
 			}
 		}
 		const res = await fetch(url)
