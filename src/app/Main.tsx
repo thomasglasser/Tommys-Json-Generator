@@ -6,6 +6,7 @@ import { App } from './App.js'
 import { LocaleProvider, ProjectProvider, StoreProvider, ThemeProvider, TitleProvider, VersionProvider } from './contexts/index.js'
 import { ModalProvider } from './contexts/Modal.jsx'
 import { SpyglassProvider } from './contexts/Spyglass.jsx'
+import { Analytics } from "@vercel/analytics/react"
 
 function Main() {
 	return (
@@ -18,6 +19,7 @@ function Main() {
 								<ProjectProvider>
 									<ModalProvider>
 										<App />
+										<Analytics />
 									</ModalProvider>
 								</ProjectProvider>
 							</SpyglassProvider>
