@@ -26,28 +26,28 @@ All files related to one miraculous must share the same ID.
 
 ## Creating the Abilities
 
-Abilities are the core feature of miraculous.
+Abilities are the core feature of miraculouses.
 They allow the miraculous holder to perform special actions.
-You can create abilities [here](https://snapshot-jsons.thomasglasser.dev/mineraculous/ability/).
+You can create abilities [here](https://beta-jsons.thomasglasser.dev/mineraculous/ability/).
 Select an ability type and fill out the fields.
-For more advanced creators, you can use a mod to add to the `mineraculous:ability_serializer` registry for more complex abilities.
 Once you have created the ability, save the file in the path `data/<namespace>/mineraculous/abilities/<id>.json`.
+For more advanced creators, you can use a mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
 
 ## Creating the Miraculous
 
-Miraculous are the main feature of the mod.
+Miraculouses are the main feature of the mod.
 They are items that can be worn and can be used to grant buffs and abilities.
-You can create miraculous [here](https://snapshot-jsons.thomasglasser.dev/mineraculous/miraculous/).
+You can create miraculouses [here](https://beta-jsons.thomasglasser.dev/mineraculous/miraculous/).
 Any abilities that you saved to the project will be able to be autofilled in the ability fields.
 Fill out the fields and save the file in the path `data/<namespace>/mineraculous/miraculous/<id>.json`.
 
 ### Tags
 
-Tags for kwami food and treats are automatically loaded from `data/mineraculous/tags/kwami_foods/<id>.json` and `data/mineraculous/tags/kwami_treats/<id>.json` respectively.
-You can create these tags [here](https://snapshot-jsons.thomasglasser.dev/tags/item/).
+Tags for kwami food and treats are automatically loaded from `data/<namespace>/tags/kwami_foods/<id>.json` and `data/<namespace>/tags/kwami_treats/<id>.json` respectively.
+You can create these tags [here](https://beta-jsons.thomasglasser.dev/tags/item/).
 
-Tags for miraculous and abilities are also supported.
-You can create these tags [here](https://snapshot-jsons.thomasglasser.dev/partners/).
+Tags for miraculouses and abilities are also supported.
+You can create these tags [here](https://beta-jsons.thomasglasser.dev/partners/).
 Mod tags, such as the `mineraculous:can_use_butterfly_cane` miraculous tag, can be added to in order to allow the miraculous holder to use the tool with your custom miraculous.
 
 ### Curios
@@ -60,8 +60,8 @@ One difference is that you must add `mineraculous:miraculous` to the item tag fo
 ### Adding a Lucky Charm Loot Table
 
 It's recommended, but not required, to add a lucky charm loot table to assist in defeating your miraculous should it fall into the wrong hands.
-You can create a loot table [here](https://snapshot-jsons.thomasglasser.dev/loot-table/).
-You should then add the loot table or a list of items to the miraculous lucky charms data map with [this generator](https://snapshot-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms).
+You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
+You should then add the loot table or a list of items to the miraculous lucky charms data map with [this generator](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms).
 This file should be placed in `data/<namespace>/data_maps/mineraculous/miraculous/lucky_charms.json`.
 
 ## Creating the Resource Pack
@@ -74,7 +74,7 @@ In a language file, you must add translations for miraculous, abilities, and rel
 
 Abilities pull from `ability.<namespace>.<id>`.
 Kwamis pull from `entity.mineraculous.kwami.<namespace>.<id>`.
-Miraculous pull from `miraculous.<namespace>.<id>`.
+Miraculouses pull from `miraculous.<namespace>.<id>`.
 Kwami Tags pull from `tag.item.<namespace>.kwami_foods.<id>` and `tag.item.<namespace>.kwami_treats.<id>`.
 Other Tags pull from `tag.<type>.<namespace>.<id>`.
 
@@ -92,7 +92,7 @@ The kwami model must be named `<id>.geo.json` and located in `assets/<namespace>
 You must add textures for the miraculous, suit, and kwami.
 
 The miraculous textures must be located in the `assets/<namespace>/textures/item/miraculous/<id>` subfolder.
-There are 7 textures for the miraculous:
+There are seven textures for the miraculous:
 - `hidden.png`, the default hidden texture
 - `powered.png`, the powered texture
 - `powered_0.png`, the powered texture with less than 1 minute left
@@ -102,7 +102,7 @@ There are 7 textures for the miraculous:
 - `powered_4.png`, the powered texture with less than 5 minutes left
 
 The suit textures must be located in the `assets/<namespace>/textures/item/armor/miraculous` subfolder.
-There are 4 texture variants for the suit:
+There are four texture variants for the suit:
 - `<id>.png`, the default texture
 - `<id>_glowmask.png`, the glowmask texture
 - `<id>_<frame>.png`, the transformation frame texture

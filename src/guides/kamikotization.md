@@ -25,24 +25,24 @@ All files related to one kamikotization must share the same ID.
 
 Abilities are the core feature of kamikotizations.
 They allow the kamikotization holder to perform special actions.
-You can create abilities [here](https://snapshot-jsons.thomasglasser.dev/mineraculous/ability/).
+You can create abilities [here](https://beta-jsons.thomasglasser.dev/mineraculous/ability/).
 Select an ability type and fill out the fields.
-For more advanced creators, you can use a mod to add to the `mineraculous:ability_serializer` registry for more complex abilities.
 Once you have created the ability, save the file in the path `data/<namespace>/mineraculous/abilities/<id>.json`.
+For more advanced creators, you can use a mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
 
 ## Creating the Kamikotization
 
 Kamikotizations are the main feature of the Butterfly Miraculous.
 They are transformations that can be used to power up an unpowered player.
-You can create kamikotizations [here](https://snapshot-jsons.thomasglasser.dev/mineraculous/kamikotization/).
+You can create kamikotizations [here](https://beta-jsons.thomasglasser.dev/mineraculous/kamikotization/).
 Any abilities that you saved to the project will be able to be autofilled in the ability fields.
 Fill out the fields and save the file in the path `data/<namespace>/mineraculous/kamikotization/<id>.json`.
 
 ### Adding a Lucky Charm Loot Table
 
 It's recommended, but not required, to add a lucky charm loot table to assist in defeating your kamikotization should it be given to the wrong player.
-You can create a loot table [here](https://snapshot-jsons.thomasglasser.dev/loot-table/).
-You should then add the loot table or a list of items to the kamikotization lucky charms data map with [this generator](https://snapshot-jsons.thomasglasser.dev/mineraculous/data-map-kamikotization-lucky-charms).
+You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
+You should then add the loot table or a list of items to the kamikotization lucky charms data map with [this generator](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-kamikotization-lucky-charms).
 This file should be placed in `data/<namespace>/data_maps/mineraculous/kamikotization/lucky_charms.json`.
 
 ## Creating the Resource Pack
@@ -59,7 +59,7 @@ Tags pull from `tag.<type>.<namespace>.<id>`.
 
 ### Models
 
-You must add models for the kamikotization suit.
+You must add a model for the kamikotization suit.
 
 The kamikotization model must be named `<id>.geo.json` and located in `assets/<namespace>/geo/item/armor/kamikotization/<id>.geo.json`.
 
@@ -68,7 +68,7 @@ The kamikotization model must be named `<id>.geo.json` and located in `assets/<n
 You must add textures for the kamikotization suit.
 
 The kamikotization textures must be located in the `assets/<namespace>/textures/item/armor/kamikotization` subfolder.
-There are 2 texture variants for the kamikotization suit:
+There are two texture variants for the kamikotization suit:
 - `<id>.png`, the default texture
 - `<id>_glowmask.png`, the glowmask texture
 
@@ -77,3 +77,4 @@ There are 2 texture variants for the kamikotization suit:
 You can add animations for the kamikotization suit.
 
 The kamikotization animations must be named `<id>.animation.json` located in the `assets/<namespace>/animations/item/armor/kamikotization/<id>.animation.json`.
+The supported suit animations are `move.fly`, `move.swim`, `move.run`, `move.walk`, and `misc.idle`.
