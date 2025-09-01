@@ -283,7 +283,7 @@ export async function fetchRegistries(versionId: VersionId) {
 			// @ts-ignore
 			minejagoElementTagList.push(minejagoElementTags[entryId])
 		}
-		result.set('minejago:tag/power', minejagoElementTagList)
+		result.set('minejago:tag/element', minejagoElementTagList)
 
 		return result
 	} catch (e) {
