@@ -1,14 +1,12 @@
-// @ts-nocheck
 import { useMemo } from 'preact/hooks'
-import contributors from '../../contributors.json'
-import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, GuideCard, ToolCard, ToolGroup } from '../components/index.js'
+import supporters from '../../supporters.json'
+import { Card, ChangelogEntry, Footer, GeneratorCard, Giscus, ToolCard, ToolGroup, GuideCard } from '../components/index.js'
 import { WhatsNewTime } from '../components/whatsnew/WhatsNewTime.jsx'
 import { useLocale, useTitle } from '../contexts/index.js'
 import { useAsync } from '../hooks/useAsync.js'
 import { useMediaQuery } from '../hooks/useMediaQuery.js'
 import { fetchChangelogs, fetchVersions, fetchWhatsNew } from '../services/DataFetcher.js'
 import { Store } from '../Store.js'
-import { shuffle } from '../Utils.js'
 
 const MIN_FAVORITES = 2
 const MAX_FAVORITES = 5
@@ -47,6 +45,8 @@ export function Home({}: Props) {
 					</div>}
 				</>}
 			</div>
+			<Contributors />
+			<Giscus />
 			<Footer />
 		</div>
 	</main>
@@ -97,23 +97,23 @@ function Tools() {
 
 	return <ToolGroup title={locale('tools')}>
 		<ToolCard title="Converter" icon="convert"
-				  link="/convert/"
-				  desc="Turn /give commands into loot tables" />
+			link="/convert/"
+			desc="Turn /give commands into loot tables" />
 		<ToolCard title="Customized Worlds" icon="customized"
-				  link="/customized/"
-				  desc="Create data packs to customize your world" />
+			link="/customized/"
+			desc="Create data packs to customize your world" />
 		<ToolCard title="Report Inspector" icon="report"
-				  link="https://misode.github.io/report/"
-				  desc="Analyse your performance reports" />
+			link="https://misode.github.io/report/"
+			desc="Analyse your performance reports" />
 		<ToolCard title="Minecraft Sounds" icon="sounds"
-				  link="/sounds/"
-				  desc="Browse through and mix all the vanilla sounds" />
+			link="/sounds/"
+			desc="Browse through and mix all the vanilla sounds" />
 		<ToolCard title="Transformation preview"
-				  link="/transformation/"
-				  desc="Visualize transformations for display entities" />
+			link="/transformation/"
+			desc="Visualize transformations for display entities" />
 		<ToolCard title="Template Placer"
-				  link="https://misode.github.io/template-placer/"
-				  desc="Automatically place all the structure pieces in your world" />
+			link="https://misode.github.io/template-placer/"
+			desc="Automatically place all the structure pieces in your world" />
 	</ToolGroup>
 }
 
@@ -162,32 +162,20 @@ function WhatsNew() {
 }
 
 function Contributors() {
-	const supporters = useMemo(() => {
-		return contributors.filter(c => c.types.includes('support') || c.types.includes('infrastructure'))
-	}, [])
-
-	const otherContributors = useMemo(() => {
-		return shuffle(contributors.filter(c => !supporters.includes(c)))
-	}, [])
-
 	return <div class="contributors">
 		<h3>Supporters</h3>
 		<ContributorsList list={supporters} large />
-		<h3>Contributors</h3>
-		<ContributorsList list={otherContributors} />
 	</div>
 }
 
 interface ContributorsListProps {
-	list: typeof contributors
+	list: typeof supporters
 	large?: boolean
 }
 function ContributorsList({ list, large }: ContributorsListProps) {
-	const { locale } = useLocale()
-
 	return <div class={`contributors-list ${large ? 'contributors-large' : ''}`}>
 		{list.map((c) =>
-			<a class="tooltipped tip-se" href={c.url} target="_blank" aria-label={`${c.name}\n${c.types.map(t => `• ${locale('contributor.' + t)}`).join('\n')}`}>
+			<a class="tooltipped tip-se" href={c.url} target="_blank" aria-label={c.name}>
 				<img width={large ? 48 : 32} height={large ? 48 : 32} src={c.avatar} alt={c.name} loading="lazy" />
 			</a>
 		)}

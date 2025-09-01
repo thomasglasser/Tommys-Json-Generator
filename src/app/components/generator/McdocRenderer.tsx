@@ -9,12 +9,13 @@ import { handleAttributes } from '@spyglassmc/mcdoc/lib/runtime/attribute/index.
 import type { SimplifiedEnum, SimplifiedMcdocType, SimplifiedMcdocTypeNoUnion, SimplifiedStructType, SimplifiedStructTypePairField } from '@spyglassmc/mcdoc/lib/runtime/checker/index.js'
 import { getValues } from '@spyglassmc/mcdoc/lib/runtime/completer/index.js'
 import { Identifier, ItemStack } from 'deepslate'
+import DOMPurify from 'dompurify'
 import { marked } from 'marked'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import config from '../../Config.js'
 import { useLocale } from '../../contexts/Locale.jsx'
 import { useFocus } from '../../hooks/useFocus.js'
-import { generateColor, hexId, randomInt, randomSeed } from '../../Utils.js'
+import { generateColor, hexId, intToHexRgb, randomInt, randomSeed } from '../../Utils.js'
 import { Btn } from '../Btn.jsx'
 import { ItemDisplay } from '../ItemDisplay.jsx'
 import { Octicon } from '../Octicon.jsx'
@@ -196,7 +197,7 @@ function StringHead({ type, optional, excludeStrings, node, ctx }: Props<StringT
 
 	const onRandomColor = useCallback(() => {
 		const color = generateColor()
-		onChangeValue('#' + (color.toString(16).padStart(6, '0') ?? '000000'))
+		onChangeValue(intToHexRgb(color))
 	}, [onChangeValue])
 
 	return <>
@@ -341,7 +342,7 @@ function NumericHead({ type, node, ctx }: Props<NumericType>) {
 	return <>
 		<input class="short-input" type="number" value={value} onInput={(e) => setValue((e.target as HTMLInputElement).value)} onBlur={onCommitValue} onSubmit={onCommitValue} onKeyDown={(e) => {if (e.key === 'Enter') onCommitValue()}} />
 		{colorKind && <>
-			<input class="short-input" type="color" value={'#' + (nodeValue?.toString(16).padStart(6, '0') ?? '000000')} onChange={(e) => onChangeColor((e.target as HTMLInputElement).value)} />
+			<input class="short-input" type="color" value={intToHexRgb(nodeValue)} onChange={(e) => onChangeColor((e.target as HTMLInputElement).value)} />
 			<button class="tooltipped tip-se" aria-label={locale('generate_new_color')} onClick={onRandomColor}>{Octicon.sync}</button>
 		</>}
 		{random && <>
@@ -1185,9 +1186,16 @@ interface KeyProps {
 function Key({ label, doc, raw }: KeyProps) {
 	const [shown, setShown] = useFocus()
 
+	const cleanDoc = useMemo(() => {
+		if (!doc) {
+			return doc
+		}
+		return DOMPurify.sanitize(marked(doc), { FORBID_ATTR: ['style'] })
+	}, [doc])
+
 	return <label onClick={() => setShown(true)}>
 		<span class={doc ? `underline ${shown ? '' : 'decoration-dotted hover:decoration-solid'}` : ''}>{raw ? label.toString() : formatIdentifier(label.toString())}</span>
-		{doc && <div class={`node-doc ${shown ? '' : 'hidden'}`} onClick={e => e.stopPropagation()} dangerouslySetInnerHTML={{ __html: marked(doc) }}></div>}
+		{cleanDoc && <div class={`node-doc ${shown ? '' : 'hidden'}`} onClick={e => e.stopPropagation()} dangerouslySetInnerHTML={{ __html: cleanDoc }}></div>}
 	</label>
 }
 
