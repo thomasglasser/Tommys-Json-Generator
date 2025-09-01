@@ -237,6 +237,7 @@ dispatch minecraft:trigger[mineraculous:transformed_miraculous] to Conditions<st
 enum(string) BuiltInAbilityContext {
 	Block = "block",
 	Entity = "entity",
+	LivingEntity = "living_entity",
 }
 
 type AbilityContext = (BuiltInAbilityContext | string)
