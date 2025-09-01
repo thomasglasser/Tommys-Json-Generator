@@ -14,7 +14,7 @@ export function getRootType(id: string): McdocType {
 		return { kind: 'reference', path: '::java::pack::Pack' }
 	}
 	if (id === 'text_component' ) {
-		return { kind: 'reference', path: '::java::server::util::text::Text' }
+		return { kind: 'reference', path: '::java::util::text::Text' }
 	}
 	if (id.startsWith('tag/')) {
 		const attribute: AttributeValue = {
@@ -326,6 +326,9 @@ const selectRegistries = new Set([
 	'creative_mode_tab',
 	'data_component_predicate_type',
 	'data_component_type',
+	'dialog_action_type',
+	'dialog_body_type',
+	'dialog_type',
 	'enchantment_effect_component_type',
 	'enchantment_entity_effect_type',
 	'enchantment_level_based_value_type',
@@ -336,6 +339,7 @@ const selectRegistries = new Set([
 	'float_provider_type',
 	'frog_variant',
 	'height_provider_type',
+	'input_control_type',
 	'int_provider_type',
 	'item_sub_predicate_type',
 	'loot_condition_type',

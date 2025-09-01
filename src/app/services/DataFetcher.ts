@@ -276,14 +276,14 @@ export async function fetchRegistries(versionId: VersionId) {
 			// @ts-ignore
 			result.get('tag/item')?.push(minejagoItemTags[entryId])
 		}
-		const minejagoPowerTagList = []
-		let minejagoPowerTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/power.json')
-		minejagoPowerTags = await minejagoPowerTags.json()
-		for (const entryId in minejagoPowerTags) {
+		const minejagoElementTagList = []
+		let minejagoElementTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/element.json')
+		minejagoElementTags = await minejagoElementTags.json()
+		for (const entryId in minejagoElementTags) {
 			// @ts-ignore
-			minejagoPowerTagList.push(minejagoPowerTags[entryId])
+			minejagoElementTagList.push(minejagoElementTags[entryId])
 		}
-		result.set('minejago:tag/power', minejagoPowerTagList)
+		result.set('minejago:tag/power', minejagoElementTagList)
 
 		return result
 	} catch (e) {
@@ -427,7 +427,9 @@ export type VersionMeta = {
 	data_version: number,
 	protocol_version: number,
 	data_pack_version: number,
+	data_pack_version_minor?: number,
 	resource_pack_version: number,
+	resource_pack_version_minor?: number,
 	build_time: string,
 	release_time: string,
 	sha1: string,

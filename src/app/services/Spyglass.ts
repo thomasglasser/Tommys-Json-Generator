@@ -28,7 +28,7 @@ export const DRAFTS_URI = `${ROOT_URI}drafts/`
 const INITIAL_DIRS = [CACHE_URI, ROOT_URI, DEPENDENCY_URI, UNSAVED_URI, PROJECTS_URI, DRAFTS_URI]
 
 const builtinMcdoc = `
-use ::java::server::util::text::Text
+use ::java::util::text::Text
 use ::java::data::worldgen::dimension::Dimension
 
 dispatch minecraft:resource[text_component] to Text
@@ -258,7 +258,7 @@ export class SpyglassService {
 			return `${UNSAVED_URI}pack.mcmeta`
 		}
 		const pack = gen.tags?.includes('assets') ? 'assets' : 'data'
-		return `${UNSAVED_URI}${pack}/draft/${genPath(gen, this.version)}/draft.json`
+		return `${UNSAVED_URI}${pack}/draft/${genPath(gen, this.version)}/draft${gen.ext ?? '.json'}`
 	}
 
 	public watchFile(uri: string, handler: (docAndNode: core.DocAndNode) => void) {
@@ -577,8 +577,8 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 	minejagoEntityTypeTags = await minejagoEntityTypeTags.json()
 	let minejagoItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
 	minejagoItemTags = await minejagoItemTags.json()
-	let minejagoPowerTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/power.json')
-	minejagoPowerTags = await minejagoPowerTags.json()
+	let minejagoElementTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/element.json')
+	minejagoElementTags = await minejagoElementTags.json()
 
 	meta.registerSymbolRegistrar('minejago-summary', {
 		checksum: versionChecksum,
@@ -641,8 +641,8 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 				symbols.query('minejago://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(minejagoItemTags[entryId]))
 					.enter({ usage: { type: 'declaration' } })
 			}
-			for (const entryId in minejagoPowerTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/minejago:power', core.ResourceLocation.lengthen(minejagoPowerTags[entryId]))
+			for (const entryId in minejagoElementTags) {
+				symbols.query('minejago://summary/registries.json', 'tag/minejago:element', core.ResourceLocation.lengthen(minejagoElementTags[entryId]))
 					.enter({ usage: { type: 'declaration' } })
 			}
 		},
@@ -660,7 +660,7 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 
 	registerAttributes(meta, release, versions)
 
-	json.initialize(ctx)
+	json.getInitializer()(ctx)
 	je.json.initialize(ctx)
 	je.mcf.initialize(ctx, summary.commands, release)
 	nbt.initialize(ctx)
