@@ -8,8 +8,12 @@ use ::java::util::text::TextColor
 use ::java::world::item::SingleItem
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::trigger::TriggerBase
+use ::java::data::advancement::trigger::CompositeEntity
 use ::java::data::util::NumberProvider
 use ::java::data::tag::Tag
+
+// ResourceKey: #[id="<registry>"] string
+// HolderSet: (#[id(registry="<registry>",tags="allowed")] string | [#[id="<registry>"] string])
 
 // Data Maps
 
@@ -36,7 +40,7 @@ type LuckyCharms = (
     } |
 )
 
-dispatch minecraft:resource[mineraculous:data_map_entity_lucky_charms] to DataMap<#[id(registry="entity_type",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization",tags="allowed")] string, (
 	#[id="loot_table"] string |
 	LuckyCharms
 )>
@@ -46,13 +50,37 @@ dispatch minecraft:resource[mineraculous:data_map_miraculous_lucky_charms] to Da
 	LuckyCharms
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_entity_lucky_charms] to DataMap<#[id(registry="entity_type",tags="allowed")] string, (
 	#[id="loot_table"] string |
 	LuckyCharms
 )>
 
+type EffectAmplifier = (
+	struct {
+		amplifier: int @ 0..255,
+	}
+)
+
 dispatch minecraft:resource[mineraculous:data_map_miraculous_effects] to DataMap<#[id(registry="mob_effect",tags="allowed")] string, (
-    int @ 0..
+    int @ 0..255 |
+	EffectAmplifier
+)>
+
+enum(string) AttributeModifierOperation {
+	AddValue = "add_value",
+	AddMultipliedBase = "add_multiplied_base",
+	AddMultipliedTotal = "add_multiplied_total",
+}
+
+type ModifierSettings = (
+	struct {
+		amount: double,  
+		operation: AttributeModifierOperation,
+	}
+)
+
+dispatch minecraft:resource[mineraculous:data_map_miraculous_attribute_modifiers] to DataMap<#[id(registry="attribute",tags="allowed")] string, (
+    ModifierSettings
 )>
 
 // Abilities
@@ -63,109 +91,121 @@ dispatch minecraft:resource[mineraculous:ability] to struct Ability {
 }
 
 enum(string) AbilityType {
-    Empty = "mineraculous:empty",
-    ApplyEffectsWhileTransformed = "mineraculous:apply_effects_while_transformed",
-	ApplyInfiniteEffectsOrDestroy = "mineraculous:apply_infinite_effects_or_destroy",
-	ContextAware = "mineraculous:context_aware",
-	Drag = "mineraculous:drag",
-	LuckyCharmWorldRecovery = "mineraculous:lucky_charm_world_recovery",
-	NightVision = "mineraculous:night_vision",
-	RandomSpread = "mineraculous:random_spread",
-	ReplaceItemsInHand = "mineraculous:replace_items_in_hand",
+    ApplyEffectsOrDestroy = "mineraculous:apply_effects_or_destroy",
+	AutomaticNightVision = "mineraculous:automatic_night_vision",
+	ContextDependent = "mineraculous:context_dependent",
+	Continuous = "mineraculous:continuous",
+	ConvertAndTame = "mineraculous:convert_and_tame",
+	PassiveEffects = "mineraculous:passive_effects",
+	ReplaceAdjacentBlocks = "mineraculous:replace_adjacent_blocks",
+	ReplaceItemInMainHand = "mineraculous:replace_item_in_main_hand",
+	RevertLuckyCharmTargetsAbilityEffects = "mineraculous:revert_lucky_charm_targets_ability_effects",
 	RightHandParticles = "mineraculous:right_hand_particles",
-	SetCameraEntity = "mineraculous:set_camera_entity",
-	SetOwner = "mineraculous:set_owner",
-	SummonLuckyCharm = "mineraculous:summon_lucky_charm",
+	SpectateEntity = "mineraculous:spectate_entity",
+	SummonTargetDependentLuckyCharm = "mineraculous:summon_target_dependent_lucky_charm",
 }
 
-struct AbilityBase {
-	start_sound?: #[id="sound_event"] string,
-	override_active?: boolean,
-}
+type EffectSettings = (
+	struct {
+		duration?: int @ -1..,
+		ambient?: boolean,
+		show_particles?: boolean,
+		show_icon?: boolean,
+	}
+)
 
-dispatch mineraculous:ability[mineraculous:empty] to struct {
-	...AbilityBase,
-}
-
-dispatch mineraculous:ability[mineraculous:apply_effects_while_transformed] to struct {
+dispatch mineraculous:ability[mineraculous:apply_effects_or_destroy] to struct {
 	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	start_level?: int @ 0..,
-    start_sound?: #[id="sound_event"] string,
-}
-
-dispatch mineraculous:ability[mineraculous:apply_infinite_effects_or_destroy] to struct {
-	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	drop_item?: #[id="item"] string,
+	effect_settings?: EffectSettings,
 	damage_type?: #[id="damage_type"] string,
-	blame_tag?: string,
-	...AbilityBase,
+	override_kill_credit?: boolean,
+	allow_blocking?: boolean,
+	drop_item?: #[id="item"] string,
+	apply_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:context_aware] to struct {
-	block?: Ability,
-	entity?: Ability,
-	item?: Ability,
-	air?: Ability,
-	passive?: [Ability],
-	...AbilityBase,
-}
-
-dispatch mineraculous:ability[mineraculous:drag] to struct {
-	ability: Ability,
-	drag_ticks?: int @ 1..,
-	...AbilityBase,
-}
-
-dispatch mineraculous:ability[mineraculous:lucky_charm_world_recovery] to struct {
-	require_in_hand?: boolean,
-	spread_particle?: Particle,
-	...AbilityBase,
-}
-
-dispatch mineraculous:ability[mineraculous:night_vision] to struct {
+dispatch mineraculous:ability[mineraculous:automatic_night_vision] to struct {
+	light_level?: int @ 0..,
 	shader?: string,
-	start_sound?: #[id="sound_event"] string,
+	apply_sound?: #[id="sound_event"] string,
+	remove_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:random_spread] to struct {
-	state: BlockState,
+dispatch mineraculous:ability[mineraculous:context_dependent] to struct {
+	block?: (Ability | #[id="mineraculous:ability"] string),
+	entity?: (Ability | #[id="mineraculous:ability"] string),
+	passive?: ([Ability] | #[id(registry="mineraculous:ability",tags="allowed")] string | [#[id="mineraculous:ability"] string]),
+}
+
+dispatch mineraculous:ability[mineraculous:continuous] to struct {
+	ability: (Ability | #[id="mineraculous:ability"] string),
+	ticks?: int @ 1..,
+	passive_start_sound?: #[id="sound_event"] string,
+	active_start_sound?: #[id="sound_event"] string,
+	finish_sound?: #[id="sound_event"] string,
+}
+
+dispatch mineraculous:ability[mineraculous:convert_and_tame] to struct {
+	new_type: #[id(registry="entity_type",tags="allowed")] string,
+	valid_entities?: EntityPredicate,
+	invalid_entities?: EntityPredicate,
+	convert_sound?: #[id="sound_event"] string,
+}
+
+dispatch mineraculous:ability[mineraculous:passive_effects] to struct {
+	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
+	start_amplifier?: int @ 0..,
+}
+
+dispatch mineraculous:ability[mineraculous:replace_adjacent_blocks] to struct {
+	replacement?: BlockState,
+	prefer_same?: boolean,
 	valid_blocks?: BlockPredicate,
 	invalid_blocks?: BlockPredicate,
-	...AbilityBase,
+	replace_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:replace_items_in_hand] to struct {
-	replacement?: ItemStack,
-	hurt_and_break?: boolean,
+dispatch mineraculous:ability[mineraculous:replace_item_in_main_hand] to struct {
+	replacement?: SingleItem,
+	break_original?: boolean,
 	valid_items?: ItemPredicate,
 	invalid_items?: ItemPredicate,
-	...AbilityBase,
+	replace_sound?: #[id="sound_event"] string,
+}
+
+dispatch mineraculous:ability[mineraculous:revert_lucky_charm_targets_ability_effects] to struct {
+	revert_sound?: #[id="sound_event"] string,
 }
 
 dispatch mineraculous:ability[mineraculous:right_hand_particles] to struct {
 	particle: Particle,
-	...AbilityBase,
 }
 
-dispatch mineraculous:ability[mineraculous:set_camera_entity] to struct {
-	entity: EntityPredicate,
-	shader?: string,
-	toggle_tag?: string,
-	must_be_tamed?: boolean,
-	override_owner?: boolean,
-	...AbilityBase,
-}
-
-dispatch mineraculous:ability[mineraculous:set_owner] to struct {
-	max_of_types?: int @ 1..,
+dispatch mineraculous:ability[mineraculous:spectate_entity] to struct {
 	valid_entities?: EntityPredicate,
 	invalid_entities?: EntityPredicate,
-	...AbilityBase,
+	private_chat?: boolean,
+	allow_remote_damage?: boolean,
+	allow_kamikotization_revocation?: boolean,
+	override_owner?: boolean,
+	shader?: string,
+	face_mask_texture?: string,
+	start_sound?: #[id="sound_event"] string,
+	stop_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:summon_lucky_charm] to struct {
-	require_tool?: boolean,
-	...AbilityBase,
+dispatch mineraculous:ability[mineraculous:summon_target_dependent_lucky_charm] to struct {
+	require_active_tool_in_hand?: boolean,
+	summon_sound?: #[id="sound_event"] string,
+}
+
+// Kamikotization
+
+dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotization {
+	default_name: string,
+	item_predicate?: ItemPredicate,
+	power_source: (ItemStack | Ability | #[id="mineraculous:ability"] string),
+	passive_abilities?: (#[id(registry="mineraculous:ability",tags="allowed")] string | [#[id="mineraculous:ability"] string]),
 }
 
 // Miraculous
@@ -176,67 +216,60 @@ dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 		#[color="named"] TextColor |
 	),
 	acceptable_slot: string,
-	transformation_frames?: int @ 0..,
+	transformation_frames?: int @ 1..,
 	tool?: SingleItem,
 	tool_slot?: string,
-	active_ability?: #[id="mineraculous:ability"] string,
-	passive_abilities?: [#[id="mineraculous:ability"] string],
+	active_ability: (Ability | #[id="mineraculous:ability"] string),
+	passive_abilities?: ([Ability] | [#[id="mineraculous:ability"] string]),
 	transform_sound?: #[id="sound_event"] string,
 	detransform_sound?: #[id="sound_event"] string,
 	timer_beep_sound?: #[id="sound_event"] string,
 	timer_end_sound?: #[id="sound_event"] string,
 }
 
-// Kamikotization
-
-dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotization {
-	default_name: string,
-	item_predicate?: ItemPredicate,
-	power_source: (ItemStack | #[id="mineraculous:ability"] string),
-	passive_abilities?: [#[id="mineraculous:ability"] string],
-}
-
 // Advancement Triggers
 
 dispatch minecraft:trigger[mineraculous:transformed_miraculous] to Conditions<struct TransformedMiraculous {
 	...TriggerBase,
-	type: #[id="mineraculous:miraculous"] string,
+	miraculous?: #[id="mineraculous:miraculous"] string,
 }>
 
-enum(string) UsedPowerContext {
-	Empty = "empty",
+enum(string) BuiltInAbilityContext {
 	Block = "block",
 	Entity = "entity",
-	LivingEntity = "living_entity",
-	Item = "item",
 }
 
-dispatch minecraft:trigger[mineraculous:used_miraculous_power] to Conditions<struct UsedMiraculousPower {
+type AbilityContext = (BuiltInAbilityContext | string)
+
+dispatch minecraft:trigger[mineraculous:performed_miraculous_active_ability] to Conditions<struct PerformedMiraculousActiveAbility {
 	...TriggerBase,
-	type: #[id="mineraculous:miraculous"] string,
-	contexts?: [UsedPowerContext],
+	miraculous?: #[id="mineraculous:miraculous"] string,
+	contexts?: [AbilityContext],
 }>
 
-dispatch minecraft:trigger[mineraculous:kamikotized_player] to Conditions<struct KamikotizedPlayer {
+dispatch minecraft:trigger[mineraculous:kamikotized_entity] to Conditions<struct KamikotizedEntity {
 	...TriggerBase,
-	type?: #[id="mineraculous:kamikotization"] string,
+	target?: CompositeEntity,
+	kamikotization?: #[id="mineraculous:kamikotization"] string,
+	self?: boolean,
+}>
+
+dispatch minecraft:trigger[mineraculous:released_purified_entities] to Conditions<struct ReleasedPurifiedEntities {
+	...TriggerBase,
+	released?: [CompositeEntity],
+	count?: int @ 1..,
 }>
 
 dispatch minecraft:trigger[mineraculous:transformed_kamikotization] to Conditions<struct TransformedKamikotization {
 	...TriggerBase,
-	type?: #[id="mineraculous:kamikotization"] string,
+	kamikotization?: #[id="mineraculous:kamikotization"] string,
 	self?: boolean,
 }>
 
-dispatch minecraft:trigger[mineraculous:used_kamikotization_power] to Conditions<struct UsedKamikotizationPower {
+dispatch minecraft:trigger[mineraculous:performed_kamikotization_active_ability] to Conditions<struct PerformedKamikotizationActiveAbility {
 	...TriggerBase,
-	type: #[id="mineraculous:kamikotization"] string,
-	contexts?: [UsedPowerContext],
-}>
-
-dispatch minecraft:trigger[mineraculous:released_purified_kamiko] to Conditions<struct ReleasedPurifiedKamiko {
-	...TriggerBase,
-	count?: int @ 1..,
+	kamikotization?: #[id="mineraculous:kamikotization"] string,
+	contexts?: [AbilityContext],
 }>
 
 // Advancement Predicates
@@ -248,72 +281,104 @@ dispatch minecraft:entity_sub_predicate[mineraculous:kamikotization] to struct K
 // Loot Conditions
 
 dispatch minecraft:loot_condition[mineraculous:has_item] to struct HasItem {
-	predicate?: ItemPredicate,
+	predicate: ItemPredicate,
+	invert?: boolean,
 }
 
 // Number Providers
 
-dispatch minecraft:number_provider[mineraculous:power_level_multiplier] to struct PowerLevelMultiplier {
+dispatch minecraft:number_provider[mineraculous:power_level_multiplier_generator] to struct PowerLevelMultiplierGenerator {
 	base: NumberProvider,
 }
 
 // Data Components
 
-dispatch minecraft:data_component[mineraculous:powered] to struct {}
+type Unit = (struct {})
 
-dispatch minecraft:data_component[mineraculous:kwami_data] to struct KwamiData {
-	uuid: int[] @ 4,
-	charged: boolean,
-}
+type UUID = (int[] @ 4)
 
-dispatch minecraft:data_component[mineraculous:tool_id] to int @ 0..
+dispatch minecraft:data_component[mineraculous:active] to boolean
 
-dispatch minecraft:data_component[mineraculous:hide_enchantments] to struct {}
+type ActiveSettings = (
+	struct {
+		controller?: string,
+		on_anim?: string,
+		off_anim?: string,
+		on_sound?: #[id="sound_event"] string,
+		off_sound?: #[id="sound_event"] string,
+	}
+)
 
-dispatch minecraft:data_component[mineraculous:miraculous] to #[id="mineraculous:miraculous"] string
+dispatch minecraft:data_component[mineraculous:active_settings] to ActiveSettings
 
-dispatch minecraft:data_component[mineraculous:kamikotization] to #[id="mineraculous:kamikotization"] string
+dispatch minecraft:data_component[mineraculous:blocking] to Unit
 
-dispatch minecraft:data_component[mineraculous:lucky_charm] to struct LuckyCharm {
-	target?: int[] @ 4,
-	id: int @ 0..,
-}
+dispatch minecraft:data_component[mineraculous:hide_enchantments] to Unit
 
-dispatch minecraft:data_component[mineraculous:recoverable_item_id] to int[] @ 4
+dispatch minecraft:data_component[mineraculous:carrier] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:owner] to UUID
+
+dispatch minecraft:data_component[mineraculous:powered] to Unit
+
+dispatch minecraft:data_component[mineraculous:charged] to boolean
+
+dispatch minecraft:data_component[mineraculous:kwami_id] to UUID
 
 dispatch minecraft:data_component[mineraculous:transformation_frames] to int @ 0..
 
-dispatch minecraft:data_component[mineraculous:detransformed_frames] to int @ 0..
+dispatch minecraft:data_component[mineraculous:detransformation_frames] to int @ 0..
 
 dispatch minecraft:data_component[mineraculous:remaining_ticks] to int @ 0..
-
-dispatch minecraft:data_component[mineraculous:active] to struct {}
 
 dispatch minecraft:data_component[mineraculous:ladybug_yoyo_ability] to enum(string) {
 	Block = "block",
 	Lasso = "lasso",
+	Phone = "phone",
 	Purify = "purify",
-	Travel = "travel",
+	Spyglass = "spyglass",
+	Travel = "travel"
 }
 
 dispatch minecraft:data_component[mineraculous:cat_staff_ability] to enum(string) {
 	Block = "block",
 	Perch = "perch",
+	Phone = "phone",
+	Spyglass = "spyglass",
 	Throw = "throw",
-	Travel = "travel",
+	Travel = "travel"
 }
 
 dispatch minecraft:data_component[mineraculous:butterfly_cane_ability] to enum(string) {
 	Blade = "blade",
 	Block = "block",
 	KamikoStore = "kamiko_store",
-	Throw = "throw",
+	Phone = "phone",
+	Spyglass = "spyglass",
+	Throw = "throw"
 }
 
+dispatch minecraft:data_component[mineraculous:lucky_charm] to struct LuckyCharm {
+	target?: UUID,
+	owner: UUID,
+	id: int @ 0..,
+}
+
+dispatch minecraft:data_component[mineraculous:revertible_item_id] to UUID
+
+dispatch minecraft:data_component[mineraculous:miraculous] to #[id="mineraculous:miraculous"] string
+
+dispatch minecraft:data_component[mineraculous:miraculous_id] to UUID
+
+dispatch minecraft:data_component[mineraculous:tool_id] to int @ 0..
+
+dispatch minecraft:data_component[mineraculous:kamikotization] to #[id="mineraculous:kamikotization"] string
+
 dispatch minecraft:data_component[mineraculous:kamiko_data] to struct KamikoData {
-	uuid: int[] @ 4,
-	owner: int[] @ 4,
-	name_color: int,
+	uuid: UUID,
+	owner: UUID,
+	name_color: int @ 0..,
+	face_mask_texture?: string,
 }
 
 // Tags
