@@ -28,7 +28,7 @@ export const DRAFTS_URI = `${ROOT_URI}drafts/`
 const INITIAL_DIRS = [CACHE_URI, ROOT_URI, DEPENDENCY_URI, UNSAVED_URI, PROJECTS_URI, DRAFTS_URI]
 
 const builtinMcdoc = `
-use ::java::server::util::text::Text
+use ::java::util::text::Text
 use ::java::data::worldgen::dimension::Dimension
 
 dispatch minecraft:resource[text_component] to Text
@@ -258,7 +258,7 @@ export class SpyglassService {
 			return `${UNSAVED_URI}pack.mcmeta`
 		}
 		const pack = gen.tags?.includes('assets') ? 'assets' : 'data'
-		return `${UNSAVED_URI}${pack}/draft/${genPath(gen, this.version)}/draft.json`
+		return `${UNSAVED_URI}${pack}/draft/${genPath(gen, this.version)}/draft${gen.ext ?? '.json'}`
 	}
 
 	public watchFile(uri: string, handler: (docAndNode: core.DocAndNode) => void) {
@@ -410,7 +410,7 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 
 	registerAttributes(meta, release, versions)
 
-	json.initialize(ctx)
+	json.getInitializer()(ctx)
 	je.json.initialize(ctx)
 	je.mcf.initialize(ctx, summary.commands, release)
 	nbt.initialize(ctx)

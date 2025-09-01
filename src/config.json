@@ -1,6 +1,16 @@
 {
   "languages": [
     {
+      "code": "ar",
+      "name": "العربية",
+      "mc": "ar_sa"
+    },
+    {
+      "code": "cz",
+      "name": "Čeština",
+      "mc": "cs_cz"
+    },
+    {
       "code": "de",
       "name": "Deutsch",
       "mc": "de_de"
@@ -59,6 +69,11 @@
       "code": "tr",
       "name": "Türkçe",
       "mc": "tr_tr"
+    },
+    {
+      "code": "vi",
+      "name": "Tiếng Việt",
+      "mc": "vi_vn"
     },
     {
       "code": "zh-cn",
@@ -139,15 +154,13 @@
       "id": "1.20.3",
       "ref": "1.20.4",
       "name": "1.20.3 — 1.20.4",
-      "pack_format": 26,
-      "show": true
+      "pack_format": 26
     },
     {
       "id": "1.20.5",
       "ref": "1.20.6",
       "name": "1.20.5 — 1.20.6",
-      "pack_format": 41,
-      "show": true
+      "pack_format": 41
     },
     {
       "id": "1.21",
@@ -160,8 +173,7 @@
       "id": "1.21.2",
       "ref": "1.21.3",
       "name": "1.21.2 — 1.21.3",
-      "pack_format": 57,
-      "show": true
+      "pack_format": 57
     },
     {
       "id": "1.21.4",
@@ -172,9 +184,23 @@
     },
     {
       "id": "1.21.5",
-      "dynamic": true,
+      "ref": "1.21.5",
       "name": "1.21.5",
-      "pack_format": 62,
+      "pack_format": 71,
+      "show": true
+    },
+    {
+      "id": "1.21.6",
+      "ref": "1.21.7",
+      "name": "1.21.6 — 1.21.8",
+      "pack_format": 81,
+      "show": true
+    },
+    {
+      "id": "1.21.9",
+      "dynamic": true,
+      "name": "1.21.9",
+      "pack_format": 83,
       "show": true
     }
   ],
@@ -230,12 +256,19 @@
     {
       "id": "banner_pattern",
       "url": "banner-pattern",
-      "minVersion": "1.20.5"
+      "minVersion": "1.20.5",
+      "wiki": "https://minecraft.wiki/w/Banner/Patterns#JSON_Format"
     },
     {
       "id": "wolf_variant",
       "url": "wolf-variant",
-      "minVersion": "1.20.5"
+      "minVersion": "1.20.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Wolf"
+    },
+    {
+      "id": "wolf_sound_variant",
+      "url": "wolf-sound-variant",
+      "minVersion": "1.21.5"
     },
     {
       "id": "enchantment",
@@ -264,32 +297,50 @@
     {
       "id": "instrument",
       "url": "instrument",
-      "minVersion": "1.21.2"
+      "minVersion": "1.21.2",
+      "wiki": "https://minecraft.wiki/w/Instrument_definition"
     },
     {
       "id": "trial_spawner",
       "url": "trial-spawner",
-      "minVersion": "1.21.2"
+      "minVersion": "1.21.2",
+      "wiki": "https://minecraft.wiki/w/Trial_spawner_configuration"
     },
     {
       "id": "pig_variant",
       "url": "pig-variant",
-      "minVersion": "1.21.5"
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Pig"
     },
     {
       "id": "cat_variant",
       "url": "cat-variant",
-      "minVersion": "1.21.5"
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Cat"
     },
     {
       "id": "frog_variant",
       "url": "frog-variant",
-      "minVersion": "1.21.5"
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Frog"
+    },
+    {
+      "id": "chicken_variant",
+      "url": "chicken-variant",
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Chicken"
     },
     {
       "id": "cow_variant",
       "url": "cow-variant",
-      "minVersion": "1.21.5"
+      "minVersion": "1.21.5",
+      "wiki": "https://minecraft.wiki/w/Mob_variant_definitions#Cow"
+    },
+    {
+      "id": "dialog",
+      "url": "dialog",
+      "minVersion": "1.21.6",
+      "wiki": "https://minecraft.wiki/w/Dialog"
     },
     {
       "id": "test_instance",
@@ -488,6 +539,14 @@
       "wiki": "https://minecraft.wiki/w/Tag#Java_Edition"
     },
     {
+      "id": "tag/dialog",
+      "url": "tags/dialog",
+      "tags": ["tags"],
+      "path": "tags/dialog",
+      "minVersion": "1.21.6",
+      "wiki": "https://minecraft.wiki/w/Tag#Java_Edition"
+    },
+    {
       "id": "tag/worldgen/biome",
       "url": "tags/biome",
       "tags": ["tags", "worldgen"],
@@ -599,6 +658,14 @@
       "wiki": "https://minecraft.wiki/w/Model#Item_models"
     },
     {
+      "id": "texture_meta",
+      "url": "assets/texture-meta",
+      "path": "textures",
+      "ext": ".png.mcmeta",
+      "tags": ["assets"],
+      "wiki": "https://minecraft.wiki/w/Resource_pack#Texture_animation"
+    },
+    {
       "id": "equipment",
       "url": "assets/equipment",
       "path": "equipment",
@@ -636,6 +703,30 @@
       "tags": ["assets"],
       "minVersion": "1.21.2",
       "wiki": "https://minecraft.wiki/w/Shader#Post-processing_effects"
+    },
+    {
+      "id": "fabric:fabric_mod_json",
+      "url": "fabric/fabric-mod-json",
+      "noPath": true,
+      "tags": ["partners"],
+      "dependency": "fabric",
+      "wiki": "https://wiki.fabricmc.net/documentation:fabric_mod_json"
+    },
+    {
+      "id": "fabric:dependency_overrides",
+      "url": "fabric/dependency-overrides",
+      "noPath": true,
+      "tags": ["partners"],
+      "dependency": "fabric",
+      "wiki": "https://wiki.fabricmc.net/tutorial:dependency_overrides"
+    },
+    {
+      "id": "immersive_weathering:block_growth",
+      "url": "immersive-weathering/block-growth",
+      "path": "block_growths",
+      "tags": ["partners"],
+      "dependency": "immersive_weathering",
+      "minVersion": "1.18.2"
     },
     {
       "id": "neoforge:biome_modifier",
@@ -726,6 +817,212 @@
       "dependency": "neoforge",
       "minVersion": "1.20.2",
       "wiki": "https://github.com/neoforged/NeoForge/blob/1.21.x/src/main/java/net/neoforged/neoforge/common/world/StructureModifiers.java"
+    },
+    {
+      "id": "ohthetreesyoullgrow:configured_feature",
+      "url": "ohthetreesyoullgrow/feature",
+      "path": "ohthetreesyoullgrow/configured_feature",
+      "tags": ["partners"],
+      "dependency": "ohthetreesyoullgrow",
+      "minVersion": "1.20",
+      "wiki": "https://github.com/CorgiTaco/Oh-The-Trees-Youll-Grow/wiki/Generating-Your-Tree-With-Data-Packs!"
+    },
+    {
+      "id": "sky_aesthetics:sky",
+      "url": "sky-aesthetics/sky",
+      "path": "sky_aesthetics",
+      "tags": ["partners", "assets"],
+      "dependency": "sky_aesthetics",
+      "minVersion": "1.21.1",
+      "wiki": "https://github.com/TathanDev/SkyAesthetics/wiki/Custom-Sky"
+    },
+    {
+      "id": "create:recipes",
+      "url": "create/recipes",
+      "path": "create",
+      "tags": ["partners"],
+      "dependency": "create"
+    },
+    {
+      "id": "thermoo:environment_provider",
+      "url": "thermoo/environment_provider",
+      "path": "thermoo/environment_provider",
+      "tags": ["partners"],
+      "dependency": "thermoo",
+      "wiki": "https://thermoo.thedeathlycow.com/datapacks/environment_provider_definition/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "thermoo:environment",
+      "url": "thermoo/environment",
+      "path": "thermoo/environment",
+      "tags": ["partners"],
+      "dependency": "thermoo",
+      "wiki": "https://thermoo.thedeathlycow.com/datapacks/environment_definition/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "thermoo:temperature_effect",
+      "url": "thermoo/temperature_effect",
+      "path": "thermoo/temperature_effect",
+      "tags": ["partners"],
+      "dependency": "thermoo",
+      "wiki": "https://thermoo.thedeathlycow.com/datapacks/temperature_effect_definition/",
+      "minVersion": "1.20.1"
+    },
+    {
+      "id": "thermoo:predicate",
+      "url": "thermoo/predicate",
+      "path": "thermoo/predicate",
+      "tags": ["partners"],
+      "dependency": "thermoo",
+      "wiki": "https://thermoo.thedeathlycow.com/datapacks/loot_condition/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:raid_ally_set",
+      "url": "pixelmon/raid/ally",
+      "path": "pixelmon/raid/ally",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:raid_spawn_set",
+      "url": "pixelmon/raid/spawn",
+      "path": "pixelmon/raid/spawn",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:growth",
+      "url": "pixelmon/growth",
+      "path": "pixelmon/growth",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:type",
+      "url": "pixelmon/battle/type",
+      "path": "pixelmon/battle/type",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:spawn_replacement",
+      "url": "pixelmon/spawn_replacement",
+      "path": "pixelmon/spawn_replacement",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:interaction_event",
+      "url": "pixelmon/interaction_event",
+      "path": "pixelmon/interaction_event",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:research",
+      "url": "pixelmon/research/research",
+      "path": "pixelmon/research/research",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:research_trigger",
+      "url": "pixelmon/research/trigger",
+      "path": "pixelmon/research/trigger",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:npc_preset",
+      "url": "pixelmon/npc/preset",
+      "path": "pixelmon/npc/preset",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:pokedex_trigger",
+      "url": "pixelmon/pokemon/pokedex/trigger",
+      "path": "pixelmon/pokemon/pokedex/trigger",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:pokedex_region",
+      "url": "pixelmon/pokemon/pokedex/region",
+      "path": "pixelmon/pokemon/pokedex/region",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    },
+    {
+      "id": "pixelmon:pokedex",
+      "url": "pixelmon/pokemon/pokedex/pokedex",
+      "path": "pixelmon/pokemon/pokedex/pokedex",
+      "tags": ["partners"],
+      "dependency": "pixelmon",
+      "wiki": "https://pixelmonmod.com/wiki/",
+      "minVersion": "1.21.1"
+    }
+  ],
+  "legacyGuides": [
+    {
+      "id": "adding-custom-structures",
+      "title": "Adding custom structures",
+      "link": "Tutorials/Custom_structures"
+    },
+    {
+      "id": "custom-armor-trims",
+      "title": "Trim patterns and materials",
+      "link": "Tutorials/Adding_custom_trims"
+    },
+    {
+      "id": "density-functions",
+      "title": "Density function types and their configuration",
+      "link": "Density_function"
+    },
+    {
+      "id": "feature-order-cycle",
+      "title": "How to fix feature order cycles",
+      "link": "Custom_biome"
+    },
+    {
+      "id": "heightmap-types",
+      "title": "The different heightmap types explained",
+      "link": "Heightmap"
+    },
+    {
+      "id": "noise-router",
+      "title": "How terrain is generated using the noise router",
+      "link": "Noise_router#Final_density"
+    },
+    {
+      "id": "placed-features",
+      "title": "Placed features and their configuration",
+      "link": "Placed_feature"
     }
   ]
 }
