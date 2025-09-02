@@ -83,6 +83,17 @@ dispatch minecraft:resource[mineraculous:data_map_miraculous_attribute_modifiers
     ModifierSettings
 )>
 
+type Ageable = (
+	struct {
+		next: #[id="block"] string,
+	}
+)
+
+dispatch minecraft:resource[mineraculous:data_map_ageables] to DataMap<#[id(registry="block",tags="allowed")] string, (
+	#[id="block"] string |
+	Ageable
+)>
+
 // Abilities
 
 dispatch minecraft:resource[mineraculous:ability] to struct Ability {

@@ -182,6 +182,7 @@
   "generator.mineraculous:data_map_entity_lucky_charms": "Entity Lucky Charms Data Map",
   "generator.mineraculous:data_map_miraculous_effects": "Miraculous Effects Data Map",
   "generator.mineraculous:data_map_miraculous_attribute_modifiers": "Miraculous Attribute Modifiers Data Map",
+  "generator.mineraculous:data_map_ageables": "Ageables Data Map",
   "generator.mineraculous:ability": "Ability",
   "generator.mineraculous:miraculous": "Miraculous",
   "generator.mineraculous:kamikotization": "Kamikotization",
