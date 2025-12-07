@@ -2,7 +2,18 @@
 <html lang="en">
 <head>
 	<script>
-		function gtag() {}
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-S982VZS08T', {
+			send_page_view: false,
+			theme: localStorage.getItem('theme') || 'default',
+			version: localStorage.getItem('schema_version') || '1.21.9',
+			locale: localStorage.getItem('language') || 'en',
+			prefers_color_scheme: matchMedia('(prefers-color-scheme: light)').matches ? 'light' : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'none',
+			tree_view_mode: localStorage.getItem('misode_tree_view_mode') || 'default',
+			colormap: localStorage.getItem('misode_colormap') || 'default',
+		});
 	</script>
 	<script>
 		(() => {
