@@ -132,6 +132,12 @@ export async function fetchRegistries(versionId: VersionId) {
 			// @ts-ignore
 			result.get('tag/damage_type')?.push(mineraculousDamageTypeTags[entryId])
 		}
+        let mineraculousEntityTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/entity_type.json')
+        mineraculousEntityTypeTags = await mineraculousEntityTypeTags.json()
+        for (const entryId in mineraculousEntityTypeTags) {
+            // @ts-ignore
+            result.get('tag/entity_type')?.push(mineraculousEntityTypeTags[entryId])
+        }
 		let mineraculousItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
 		mineraculousItemTags = await mineraculousItemTags.json()
 		for (const entryId in mineraculousItemTags) {

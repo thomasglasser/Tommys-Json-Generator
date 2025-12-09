@@ -1070,7 +1070,7 @@ dispatch pixelmon:interaction_condition_type[pixelmon:item_has_tag] to struct {
 	tag: string
 }
 
-type InteractionCondition (
+type InteractionCondition = (
 	[DataProvider] |
 	struct {
 		type: #[id] InteractionConditionType,
@@ -1084,12 +1084,12 @@ struct ResearchTier {
 	accent_color?: Color
 }
 
-type OptionalListRenderableSprite (
+type OptionalListRenderableSprite = (
 	RenderableSprite |
 	[RenderableSprite]
 )
 
-type RenderableSprite (
+type RenderableSprite = (
 	ResourceWithFallback |
 	struct {
 		resource: ResourceWithFallback,
@@ -1099,7 +1099,7 @@ type RenderableSprite (
 	}
 )
 
-type DescribableResource (
+type DescribableResource = (
 	RenderableSprite |
 	struct {
 		resource: OptionalListRenderableSprite,
@@ -1309,12 +1309,6 @@ enum(string) PokedexRegistrationStatus {
     UNKNOWN = "UNKNOWN",
     SEEN = "SEEN",
     CAUGHT = "CAUGHT",
-}
-
-enum(string) Gender {
-	MALE = "MALE",
-	FEMALE = "FEMALE",
-	NONE = "NONE",
 }
 
 dispatch minecraft:resource[pixelmon:pokedex_trigger] to struct PokedexTrigger {

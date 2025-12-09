@@ -13,7 +13,7 @@ See the [Minecraft Wiki](https://minecraft.fandom.com/wiki/Kamikotization) for i
 
 First, you must create a GeckoLib armor model for the kamikotization.
 A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
-You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous/tree/models).
+You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/tree/models).
 
 The kamikotization can have a glowmask.
 
@@ -28,7 +28,7 @@ They allow the kamikotization holder to perform special actions.
 You can create abilities [here](https://beta-jsons.thomasglasser.dev/mineraculous/ability/).
 Select an ability type and fill out the fields.
 Once you have created the ability, save the file in the path `data/<namespace>/mineraculous/abilities/<id>.json`.
-For more advanced creators, you can use a mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
+For more advanced addons, you can use a Java mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
 
 ## Creating the Kamikotization
 
@@ -40,8 +40,11 @@ Fill out the fields and save the file in the path `data/<namespace>/mineraculous
 
 ### Adding a Lucky Charm Loot Table
 
-It's recommended, but not required, to add a lucky charm loot table to assist in defeating your kamikotization should it be given to the wrong player.
+It's recommended, but not required, to add a lucky charm loot table to assist in defeating your kamikotization should it be bestowed upon the wrong hands.
 You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
+*Note: At this time, to generate a lucky charm loot table,
+you must use a preset to set the "type" field to "mineraculous:lucky_charm".
+Searching the presets for "lucky_charm" will yield valid results.*
 You should then add the loot table or a list of items to the kamikotization lucky charms data map with [this generator](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-kamikotization-lucky-charms).
 This file should be placed in `data/<namespace>/data_maps/mineraculous/kamikotization/lucky_charms.json`.
 
@@ -51,7 +54,7 @@ Once you have created the assets, you must create a resource pack to display the
 
 ### Names
 
-In a language file, you must add translations for kamikotization, abilities, and related fields.
+In a language file, you must add translations for the kamikotization, abilities, and related fields.
 
 Abilities pull from `ability.<namespace>.<id>`.
 Kamikotizations pull from `kamikotization.<namespace>.<id>`.

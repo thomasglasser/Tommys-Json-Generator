@@ -429,6 +429,8 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 	mineraculousBlockTags = await mineraculousBlockTags.json()
 	let mineraculousDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
 	mineraculousDamageTypeTags = await mineraculousDamageTypeTags.json()
+	let mineraculousEntityTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/entity_type.json')
+    mineraculousEntityTypeTags = await mineraculousEntityTypeTags.json()
 	let mineraculousItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
 	mineraculousItemTags = await mineraculousItemTags.json()
 	let mineraculousMiraculousTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/mineraculous/miraculous.json')
@@ -475,6 +477,10 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 				symbols.query('mineraculous://summary/registries.json', 'tag/damage_type', core.ResourceLocation.lengthen(mineraculousDamageTypeTags[entryId]))
 					.enter({ usage: { type: 'declaration' } })
 			}
+            for (const entryId in mineraculousEntityTypeTags) {
+                symbols.query('mineraculous://summary/registries.json', 'tag/entity_type', core.ResourceLocation.lengthen(mineraculousEntityTypeTags[entryId]))
+                    .enter({ usage: { type: 'declaration' } })
+            }
 			for (const entryId in mineraculousItemTags) {
 				symbols.query('mineraculous://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(mineraculousItemTags[entryId]))
 					.enter({ usage: { type: 'declaration' } })
