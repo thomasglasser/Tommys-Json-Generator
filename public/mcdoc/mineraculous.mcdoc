@@ -119,8 +119,8 @@ dispatch minecraft:data_component[mineraculous:texture_state] to enum(string) Te
 }
 
 dispatch minecraft:data_component[mineraculous:kwami_foods] to struct KwamiFoods {
-	preferred_foods: #[id(registry="block",tags="required")] string,
-	treats: #[id(registry="block",tags="required")] string,
+	preferred_foods: #[id(registry="item",tags="required")] string,
+	treats: #[id(registry="item",tags="required")] string,
 	default_eat_ticks?: int @ 1..,
 	is_left_handed?: boolean,
 }
