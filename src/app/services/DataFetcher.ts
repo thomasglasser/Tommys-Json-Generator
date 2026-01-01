@@ -153,6 +153,16 @@ export async function fetchRegistries(versionId: VersionId) {
 		}
 		result.set('mineraculous:tag/miraculous', mineraculousMiraculousTagList)
 
+		// Looks
+		const mineraculousLookList = []
+		let mineraculousLooks = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/looks.json')
+		mineraculousLooks = await mineraculousLooks.json()
+		for (const entryId in mineraculousLooks) {
+			// @ts-ignore
+			mineraculousLookList.push("mineraculous:" + mineraculousLooks[entryId])
+		}
+		result.set('mineraculous:look', mineraculousLookList)
+
 		// Mineraculous Expansion: Kamikotizations
 
 		// Registries
@@ -378,8 +388,10 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 			const type = ['atlases', 'blockstates', 'items', 'font', 'lang', 'models', 'equipment', 'post_effect'].includes(registry) ? 'assets' : 'data'
 			url = `${mcmeta(version, type)}/${type}/minecraft/${registry}/${id}.json`
 		} else {
-			if (registry.includes('tag')) {
+			if (path.includes('tag')) {
 				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/tags/` + (namespace ? `${namespace}/` : '') + `${path.replace('tags/', '')}/${id.slice(modId.length + 1)}.json`
+			} else if (registry.includes('mineraculous/look')) {
+				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/assets/${modId}/mineraculous/looks/${id.slice(modId.length + 1)}.json`
 			} else {
 				url = `https://raw.githubusercontent.com/thomasglasser/${repo}/refs/heads/main/src/generated/resources/data/${modId}/${namespace ? `${namespace}/` : ''}${path}/${id.slice(modId.length + 1)}.json`
 			}

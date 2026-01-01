@@ -676,7 +676,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/tags/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
     },
     {
       "id": "mineraculous:tag/miraculous_ladybug_target_type",
@@ -686,7 +686,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/tags/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
     },
     {
       "id": "mineraculous:tag/ability",
@@ -696,7 +696,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/tags/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
     },
     {
       "id": "mineraculous:tag/miraculous",
@@ -706,7 +706,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/tags/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
     },
     {
       "id": "mineraculous:tag/kamikotization",
@@ -716,7 +716,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/tags/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
     },
     {
       "id": "minejago:tag/focus_modifier",
@@ -809,6 +809,16 @@
       "wiki": "https://minecraft.wiki/w/Shader#Post-processing_effects"
     },
     {
+      "id": "mineraculous:look",
+      "url": "mineraculous/look",
+      "path": "mineraculous/look",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/looks/"
+    },
+    {
       "id": "mineraculous:data_map_kamikotization_lucky_charms",
       "url": "mineraculous/data-map-kamikotization-lucky-charms",
       "path": "mineraculous/data_map_kamikotization_lucky_charms",
@@ -816,7 +826,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_miraculous_lucky_charms",
@@ -826,7 +836,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_entity_lucky_charms",
@@ -836,7 +846,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_miraculous_effects",
@@ -846,7 +856,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_miraculous_attribute_modifiers",
@@ -856,7 +866,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:data_map_ageables",
@@ -866,7 +876,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
       "id": "mineraculous:ability",
@@ -876,7 +886,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/abilities/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/abilities/"
     },
     {
       "id": "mineraculous:kamikotization",
@@ -886,7 +896,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
     },
     {
       "id": "mineraculous:miraculous",
@@ -896,7 +906,7 @@
       "dependency": "mineraculous",
       "minVersion": "1.21",
       "maxVersion": "1.21",
-      "wiki": "https://mineraculous-snapshot.wiki.thomasglasser.dev/category/apis/entry/miraculous/"
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/miraculous/"
     },
     {
       "id": "minejago:data_map_potion_fillables",
