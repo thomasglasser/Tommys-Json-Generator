@@ -143,6 +143,8 @@
   "generator.tag/zombie_nautilus_variant": "Zombie Nautilus Variant Tag",
   "generator.mineraculous:tag/ability_serializer": "Ability Serializer Tag",
   "generator.mineraculous:tag/miraculous_ladybug_target_type": "Miraculous Ladybug Target Type Tag",
+  "generator.mineraculous:tag/look_context": "Look Context Tag",
+  "generator.mineraculous:tag/look_metadata_type": "Look Metadata Type Tag",
   "generator.mineraculous:tag/ability": "Ability Tag",
   "generator.mineraculous:tag/miraculous": "Miraculous Tag",
   "generator.mineraculous:tag/kamikotization": "Kamikotization Tag",

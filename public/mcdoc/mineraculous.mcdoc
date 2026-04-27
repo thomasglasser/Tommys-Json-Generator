@@ -6,7 +6,7 @@ use ::java::data::advancement::predicate::ItemPredicate
 use ::java::data::advancement::predicate::EntityPredicate
 use ::java::util::text::TextColor
 use ::java::world::item::SingleItem
-use ::java::data::advancement::trigger::Conditions
+use ::java::data::advancement::trigger::Conditions as TriggerConditions
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::advancement::trigger::CompositeEntity
 use ::java::data::util::NumberProvider
@@ -14,6 +14,7 @@ use ::java::data::tag::Tag
 use ::java::data::recipe::Smelting
 use ::java::data::recipe::CookingBookCategory
 use ::java::data::recipe::Ingredient
+use ::java::data::loot::function::Conditions as LootConditions
 
 // ResourceKey: #[id="<registry>"] string
 // HolderSet: (#[id(registry="<registry>",tags="allowed")] string | [#[id="<registry>"] string])
@@ -35,7 +36,7 @@ dispatch minecraft:data_component_predicate[mineraculous:lucky_charm] to struct 
 
 // Advancement Triggers
 
-dispatch minecraft:trigger[mineraculous:transformed_miraculous] to Conditions<struct TransformedMiraculous {
+dispatch minecraft:trigger[mineraculous:transformed_miraculous] to TriggerConditions<struct TransformedMiraculous {
 	...TriggerBase,
 	miraculous?: #[id="mineraculous:miraculous"] string,
 }>
@@ -46,32 +47,32 @@ type AbilityContext = (enum(string) BuiltInAbilityContext {
 	LivingEntity = "living_entity",
 } | string)
 
-dispatch minecraft:trigger[mineraculous:performed_miraculous_active_ability] to Conditions<struct PerformedMiraculousActiveAbility {
+dispatch minecraft:trigger[mineraculous:performed_miraculous_active_ability] to TriggerConditions<struct PerformedMiraculousActiveAbility {
 	...TriggerBase,
 	miraculous?: #[id="mineraculous:miraculous"] string,
 	contexts?: [AbilityContext],
 }>
 
-dispatch minecraft:trigger[mineraculous:kamikotized_entity] to Conditions<struct KamikotizedEntity {
+dispatch minecraft:trigger[mineraculous:kamikotized_entity] to TriggerConditions<struct KamikotizedEntity {
 	...TriggerBase,
 	target?: CompositeEntity,
 	kamikotization?: #[id="mineraculous:kamikotization"] string,
 	self?: boolean,
 }>
 
-dispatch minecraft:trigger[mineraculous:released_purified_entities] to Conditions<struct ReleasedPurifiedEntities {
+dispatch minecraft:trigger[mineraculous:released_purified_entities] to TriggerConditions<struct ReleasedPurifiedEntities {
 	...TriggerBase,
 	released?: [CompositeEntity],
 	count?: int @ 1..,
 }>
 
-dispatch minecraft:trigger[mineraculous:transformed_kamikotization] to Conditions<struct TransformedKamikotization {
+dispatch minecraft:trigger[mineraculous:transformed_kamikotization] to TriggerConditions<struct TransformedKamikotization {
 	...TriggerBase,
 	kamikotization?: #[id="mineraculous:kamikotization"] string,
 	self?: boolean,
 }>
 
-dispatch minecraft:trigger[mineraculous:performed_kamikotization_active_ability] to Conditions<struct PerformedKamikotizationActiveAbility {
+dispatch minecraft:trigger[mineraculous:performed_kamikotization_active_ability] to TriggerConditions<struct PerformedKamikotizationActiveAbility {
 	...TriggerBase,
 	kamikotization?: #[id="mineraculous:kamikotization"] string,
 	contexts?: [AbilityContext],
@@ -104,7 +105,8 @@ dispatch minecraft:data_component[mineraculous:kwami_id] to UUID
 
 dispatch minecraft:data_component[mineraculous:transformation_state] to struct TransformationState {
 	transforming: boolean,
-	remaining_frames: int,
+	remaining_frames?: int,
+	animate_suit: boolean,
 }
 
 dispatch minecraft:data_component[mineraculous:remaining_ticks] to int @ 0..
@@ -217,6 +219,7 @@ enum(string) BuiltInLookAssetType {
 	TransformationTextures = "mineraculous:transformation_textures",
 	CountdownTextures = "mineraculous:countdown_textures",
 	ScopeTexture = "mineraculous:scope_texture",
+	CatStaffTextureLayout = "mineraculous:cat_staff_texture_layout"
 }
 
 dispatch mineraculous:look_asset[mineraculous:texture] to string
@@ -232,10 +235,31 @@ dispatch mineraculous:look_asset[mineraculous:countdown_textures] to struct Coun
 }
 dispatch mineraculous:look_asset[mineraculous:scope_texture] to string
 
+type UVRect = struct {
+	u1: int @ 0..,
+	v1: int @ 0..,
+	u2: int @ 0..,
+	v2: int @ 0..,	
+}
+
+dispatch mineraculous:look_asset[mineraculous:cat_staff_texture_layout] to struct CatStaffTextureLayout {
+	texture_width?: int @ 1..,
+	texture_height?: int @ 1..,
+	staff_width_pixels?: int @ 1..,
+	segment_height_pixels?: int @ 1..,
+	glowing_line_height_pixels?: int @ 1..,
+	segment_uv?: UVRect,
+	paw_uv?: UVRect,
+	line_uv?: UVRect,
+	cap_uv?: UVRect,	
+}
+
 // Registry Tags
 
 dispatch minecraft:resource[mineraculous:tag/ability_serializer] to Tag<#[id="mineraculous:ability_serializer"] string>
 dispatch minecraft:resource[mineraculous:tag/miraculous_ladybug_target_type] to Tag<#[id="mineraculous:miraculous_ladybug_target_type"] string>
+dispatch minecraft:resource[mineraculous:tag/look_context] to Tag<#[id="mineraculous:look_context"] string>
+dispatch minecraft:resource[mineraculous:tag/look_metadata_type] to Tag<#[id="mineraculous:look_metadata_type"] string>
 dispatch minecraft:resource[mineraculous:tag/ability] to Tag<#[id="mineraculous:ability"] string>
 dispatch minecraft:resource[mineraculous:tag/miraculous] to Tag<#[id="mineraculous:miraculous"] string>
 dispatch minecraft:resource[mineraculous:tag/kamikotization] to Tag<#[id="mineraculous:kamikotization"] string>
@@ -313,14 +337,16 @@ dispatch minecraft:resource[mineraculous:ability] to struct Ability {
 	...mineraculous:ability[[type]],
 }
 
+type EffectSettings = struct {
+	duration?: int @ -1..,
+	ambient?: boolean,
+	show_particles?: boolean,
+	show_icon?: boolean,
+}
+
 dispatch mineraculous:ability[mineraculous:apply_effects_or_destroy] to struct ApplyEffectsOrDestroy {
 	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	effect_settings?: struct EffectSettings {
-		duration?: int @ -1..,
-		ambient?: boolean,
-		show_particles?: boolean,
-		show_icon?: boolean,
-	},
+	effect_settings?: EffectSettings,
 	additive?: boolean,
 	valid_entities?: EntityPredicate,
 	invalid_entities?: EntityPredicate,
@@ -353,9 +379,9 @@ dispatch mineraculous:ability[mineraculous:convert_and_tame] to struct ConvertAn
 	convert_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:passive_effects] to struct PassiveEffects {
+dispatch mineraculous:ability[mineraculous:passive_infinite_effects] to struct PassiveInfiniteEffects {
 	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	start_amplifier?: int @ 0..,
+	effect_settings?: EffectSettings,
 }
 
 dispatch mineraculous:ability[mineraculous:replace_adjacent_blocks] to struct ReplaceAdjacentBlocks {
@@ -398,10 +424,13 @@ dispatch mineraculous:ability[mineraculous:spectate_entity] to struct SpectateEn
 
 dispatch mineraculous:ability[mineraculous:summon_target_dependent_lucky_charm] to struct SummonTargetDependentLuckyCharm {
 	require_active_tool_in_hand?: boolean,
+	disappear_on_detransformation?: boolean,
 	summon_sound?: #[id="sound_event"] string,
 }
 
-dispatch mineraculous:ability[mineraculous:toggleable_night_vision] to struct ToggleableNightVision {
+dispatch mineraculous:ability[mineraculous:toggleable_special_effects] to struct ToggleableSpecialEffects {
+	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
+	effect_settings?: EffectSettings,
 	shader?: string,
 	apply_sound?: #[id="sound_event"] string,
 	remove_sound?: #[id="sound_event"] string,
@@ -434,6 +463,11 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 dispatch minecraft:loot_function[mineraculous:dye_randomly] to struct DyeRandomly {
 	color_count?: NumberProvider,
 	only_dyeable?: boolean,
+	...LootConditions,
+}
+
+dispatch minecraft:loot_function[mineraculous:set_miraculous_randomly] to struct SetMiraculousRandomly {
+	...LootConditions,
 }
 
 // Loot Conditions
