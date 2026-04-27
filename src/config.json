@@ -711,6 +711,22 @@
       "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
     },
     {
+      "id": "tag/villager_trade",
+      "url": "tags/villager-trade",
+      "tags": ["tags"],
+      "path": "tags/villager_trade",
+      "minVersion": "26.1",
+      "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
+    },
+    {
+      "id": "tag/trade_set",
+      "url": "tags/trade-set",
+      "tags": ["tags"],
+      "path": "tags/trade_set",
+      "minVersion": "26.1",
+      "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
+    },
+    {
       "id": "mineraculous:tag/ability_serializer",
       "url": "mineraculous/tags/ability_serializer",
       "path": "mineraculous/tags/ability_serializer",
