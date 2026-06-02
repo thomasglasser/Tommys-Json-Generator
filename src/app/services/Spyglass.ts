@@ -14,7 +14,7 @@ import type { ConfigGenerator } from '../Config.js'
 import siteConfig from '../Config.js'
 import { computeIfAbsent, genPath } from '../Utils.js'
 import type { VanillaMcdocSymbols, VersionMeta } from './DataFetcher.js'
-import { fetchBlockStates, fetchRegistries, fetchVanillaMcdoc, fetchVersions, getVersionChecksum } from './DataFetcher.js'
+import { fetchBlockStates, fetchRegistries, fetchVanillaMcdoc, fetchVersions, getVersionChecksum, MODS } from './DataFetcher.js'
 import { IndexedDbFileSystem } from './FileSystem.js'
 import type { VersionId } from './Versions.js'
 
@@ -408,261 +408,76 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		registrar: je.dependency.symbolRegistrar(summary, release),
 	})
 
-	// Mineraculous
+	// Mods
+	const customModSymbols: { uri: string, category: string, id: string }[] = []
 
-	// Registries
-	let mineraculousRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/registries.json')
-	mineraculousRegistries = await mineraculousRegistries.json()
+	for (const [modId, resourcePath] of Object.entries(MODS)) {
+		const resourcesUrl = `https://raw.githubusercontent.com/${resourcePath}`
+		const baseUri = `${modId}://summary/registries.json`
 
-	// Reloadable Registries
-	let mineraculousLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/loot_tables.json')
-	mineraculousLootTables = await mineraculousLootTables.json()
-	let mineraculousRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipes.json')
-	mineraculousRecipes = await mineraculousRecipes.json()
-	let mineraculousRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
-	mineraculousRecipeAdvancements = await mineraculousRecipeAdvancements.json()
-	let mineraculousAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/advancements.json')
-	mineraculousAdvancements = await mineraculousAdvancements.json()
-
-	// Tags
-	let mineraculousBlockTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/block.json')
-	mineraculousBlockTags = await mineraculousBlockTags.json()
-	let mineraculousDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
-	mineraculousDamageTypeTags = await mineraculousDamageTypeTags.json()
-	let mineraculousEntityTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/entity_type.json')
-    mineraculousEntityTypeTags = await mineraculousEntityTypeTags.json()
-	let mineraculousItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
-	mineraculousItemTags = await mineraculousItemTags.json()
-	let mineraculousMiraculousTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous/refs/heads/main/src/generated/resources/reports/tags/mineraculous/miraculous.json')
-	mineraculousMiraculousTags = await mineraculousMiraculousTags.json()
-
-	meta.registerSymbolRegistrar('mineraculous-summary', {
-		checksum: versionChecksum,
-		registrar: (symbols) => {
-			// Registries
-			for (const key in mineraculousRegistries) {
-				if (mineraculousRegistries.hasOwnProperty(key)) {
-					const entryIds: string[] = mineraculousRegistries[key]
-					for (const entryId of entryIds) {
-						symbols.query('mineraculous://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
-							.enter({usage: {type: 'declaration'}})
-					}
+		// Registries
+		try {
+			const registries = await (await fetch(`${resourcesUrl}/reports/registries.json`)).json()
+			for (const [key, entryIds] of Object.entries(registries)) {
+				const category = core.ResourceLocation.shorten(key)
+				for (const entryId of (entryIds as string[])) {
+					customModSymbols.push({ uri: baseUri, category, id: entryId })
 				}
 			}
+		} catch (e) {}
 
-			// Reloadable Registries
-			for (const entryId in mineraculousLootTables) {
-				symbols.query('mineraculous://summary/registries.json', 'loot_table', core.ResourceLocation.lengthen(mineraculousLootTables[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousRecipes) {
-				symbols.query('mineraculous://summary/registries.json', 'recipe', core.ResourceLocation.lengthen(mineraculousRecipes[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousRecipeAdvancements) {
-				symbols.query('mineraculous://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousRecipeAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousAdvancements) {
-				symbols.query('mineraculous://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
+		// Reloadables
+		const reloadables = [
+			{ file: 'loot_tables.json', target: 'loot_table' },
+			{ file: 'recipes.json', target: 'recipe' },
+			{ file: 'recipe_advancements.json', target: 'advancement' },
+			{ file: 'advancements.json', target: 'advancement' },
+			{ file: 'looks.json', target: `mineraculous:look` }
+		]
+		for (const { file, target } of reloadables) {
+			try {
+				const data = await (await fetch(`${resourcesUrl}/reports/${file}`)).json()
+				for (const entryId of Object.values(data as Record<string, string>)) {
+					customModSymbols.push({ uri: baseUri, category: target, id: entryId })
+				}
+			} catch (e) {}
+		}
 
-			// Tags
-			for (const entryId in mineraculousBlockTags) {
-				symbols.query('mineraculous://summary/registries.json', 'tag/block', core.ResourceLocation.lengthen(mineraculousBlockTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousDamageTypeTags) {
-				symbols.query('mineraculous://summary/registries.json', 'tag/damage_type', core.ResourceLocation.lengthen(mineraculousDamageTypeTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-            for (const entryId in mineraculousEntityTypeTags) {
-                symbols.query('mineraculous://summary/registries.json', 'tag/entity_type', core.ResourceLocation.lengthen(mineraculousEntityTypeTags[entryId]))
-                    .enter({ usage: { type: 'declaration' } })
-            }
-			for (const entryId in mineraculousItemTags) {
-				symbols.query('mineraculous://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(mineraculousItemTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousMiraculousTags) {
-				symbols.query('mineraculous://summary/registries.json', 'tag/mineraculous:miraculous', core.ResourceLocation.lengthen(mineraculousMiraculousTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-		},
-	})
+		// Tags
+		try {
+			const tagsIndexRes = await fetch(`${resourcesUrl}/reports/tags.json`)
+			if (tagsIndexRes.ok) {
+				const tagsList: string[] = await tagsIndexRes.json()
+				for (const tagId of tagsList) {
+					const [namespace, registry] = tagId.split(':')
+					const tagUrl = `${resourcesUrl}/reports/tags/${namespace}/${registry}.json`
 
-	// Mineraculous Expansion: Kamikotizations
+					try {
+						const tagData = await (await fetch(tagUrl)).json()
+						const cleanRegistry = registry.replace('worldgen/', '')
+						const category = namespace === 'minecraft'
+							? `tag/${cleanRegistry}`
+							: `tag/${namespace}:${cleanRegistry}`
 
-	// Registries
-	let mineraculousKamikotizationsRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/registries.json')
-	mineraculousKamikotizationsRegistries = await mineraculousKamikotizationsRegistries.json()
-
-	// Reloadable Registries
-	let mineraculousKamikotizationsLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/loot_tables.json')
-	mineraculousKamikotizationsLootTables = await mineraculousKamikotizationsLootTables.json()
-	let mineraculousKamikotizationsRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipes.json')
-	mineraculousKamikotizationsRecipes = await mineraculousKamikotizationsRecipes.json()
-	let mineraculousKamikotizationsRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
-	mineraculousKamikotizationsRecipeAdvancements = await mineraculousKamikotizationsRecipeAdvancements.json()
-	let mineraculousKamikotizationsAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/advancements.json')
-	mineraculousKamikotizationsAdvancements = await mineraculousKamikotizationsAdvancements.json()
-
-	// Tags
-	let mineraculousKamikotizationsItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
-	mineraculousKamikotizationsItemTags = await mineraculousKamikotizationsItemTags.json()
-
-	meta.registerSymbolRegistrar('mineraculouskamikotizations-summary', {
-		checksum: versionChecksum,
-		registrar: (symbols) => {
-			// Registries
-			for (const key in mineraculousKamikotizationsRegistries) {
-				if (mineraculousKamikotizationsRegistries.hasOwnProperty(key)) {
-					const entryIds: string[] = mineraculousKamikotizationsRegistries[key]
-					for (const entryId of entryIds) {
-						symbols.query('mineraculouskamikotizations://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
-							.enter({usage: {type: 'declaration'}})
-					}
+						for (const entryId of Object.values(tagData as Record<string, string>)) {
+							customModSymbols.push({ uri: baseUri, category, id: entryId })
+						}
+					} catch (e) {}
 				}
 			}
+		} catch (e) {}
+	}
 
-			// Reloadable Registries
-			for (const entryId in mineraculousKamikotizationsLootTables) {
-				symbols.query('mineraculouskamikotizations://summary/registries.json', 'loot_table', core.ResourceLocation.lengthen(mineraculousKamikotizationsLootTables[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousKamikotizationsRecipes) {
-				symbols.query('mineraculouskamikotizations://summary/registries.json', 'recipe', core.ResourceLocation.lengthen(mineraculousKamikotizationsRecipes[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousKamikotizationsRecipeAdvancements) {
-				symbols.query('mineraculouskamikotizations://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousKamikotizationsRecipeAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in mineraculousKamikotizationsAdvancements) {
-				symbols.query('mineraculouskamikotizations://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(mineraculousKamikotizationsAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-
-			// Tags
-			for (const entryId in mineraculousKamikotizationsItemTags) {
-				symbols.query('mineraculouskamikotizations://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(mineraculousKamikotizationsItemTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-		},
-	})
-
-	// Minejago
-
-	// Registries
-	let minejagoRegistries = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/registries.json')
-	minejagoRegistries = await minejagoRegistries.json()
-
-	// Reloadable Registries
-	let minejagoLootTables = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/loot_tables.json')
-	minejagoLootTables = await minejagoLootTables.json()
-	let minejagoRecipes = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/recipes.json')
-	minejagoRecipes = await minejagoRecipes.json()
-	let minejagoRecipeAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/recipe_advancements.json')
-	minejagoRecipeAdvancements = await minejagoRecipeAdvancements.json()
-	let minejagoAdvancements = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/advancements.json')
-	minejagoAdvancements = await minejagoAdvancements.json()
-
-	// Tags
-	let minejagoBiomeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/worldgen/biome.json')
-	minejagoBiomeTags = await minejagoBiomeTags.json()
-	let minejagoStructureTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/worldgen/structure.json')
-	minejagoStructureTags = await minejagoStructureTags.json()
-	let minejagoBannerPatternTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/banner_pattern.json')
-	minejagoBannerPatternTags = await minejagoBannerPatternTags.json()
-	let minejagoBlockTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/block.json')
-	minejagoBlockTags = await minejagoBlockTags.json()
-	let minejagoDamageTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/damage_type.json')
-	minejagoDamageTypeTags = await minejagoDamageTypeTags.json()
-	let minejagoEntityTypeTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/entity_type.json')
-	minejagoEntityTypeTags = await minejagoEntityTypeTags.json()
-	let minejagoItemTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minecraft/item.json')
-	minejagoItemTags = await minejagoItemTags.json()
-	let minejagoElementTags = await fetch('https://raw.githubusercontent.com/thomasglasser/Minejago/refs/heads/main/src/generated/resources/reports/tags/minejago/element.json')
-	minejagoElementTags = await minejagoElementTags.json()
-
-	meta.registerSymbolRegistrar('minejago-summary', {
+	// Register all fetched symbols synchronously
+	meta.registerSymbolRegistrar('custom-mods-summary', {
 		checksum: versionChecksum,
 		registrar: (symbols) => {
-			// Registries
-			for (const key in minejagoRegistries) {
-				if (minejagoRegistries.hasOwnProperty(key)) {
-					const entryIds: string[] = minejagoRegistries[key]
-					for (const entryId of entryIds) {
-						symbols.query('minejago://summary/registries.json', core.ResourceLocation.shorten(key), core.ResourceLocation.lengthen(entryId))
-							.enter({usage: {type: 'declaration'}})
-					}
-				}
-			}
-
-			// Reloadable Registries
-			for (const entryId in minejagoLootTables) {
-				symbols.query('minejago://summary/registries.json', 'loot_table', core.ResourceLocation.lengthen(minejagoLootTables[entryId]))
+			for (const { uri, category, id } of customModSymbols) {
+				symbols.query(uri, category, core.ResourceLocation.lengthen(id))
 					.enter({ usage: { type: 'declaration' } })
 			}
-			for (const entryId in minejagoRecipes) {
-				symbols.query('minejago://summary/registries.json', 'recipe', core.ResourceLocation.lengthen(minejagoRecipes[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoRecipeAdvancements) {
-				symbols.query('minejago://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(minejagoRecipeAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoAdvancements) {
-				symbols.query('minejago://summary/registries.json', 'advancement', core.ResourceLocation.lengthen(minejagoAdvancements[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-
-			// Tags
-			for (const entryId in minejagoBiomeTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/worldgen/biome', core.ResourceLocation.lengthen(minejagoBiomeTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoStructureTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/worldgen/structure', core.ResourceLocation.lengthen(minejagoStructureTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoBannerPatternTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/banner_pattern', core.ResourceLocation.lengthen(minejagoBannerPatternTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoBlockTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/block', core.ResourceLocation.lengthen(minejagoBlockTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoDamageTypeTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/damage_type', core.ResourceLocation.lengthen(minejagoDamageTypeTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoEntityTypeTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/entity_type', core.ResourceLocation.lengthen(minejagoEntityTypeTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoItemTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/item', core.ResourceLocation.lengthen(minejagoItemTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-			for (const entryId in minejagoElementTags) {
-				symbols.query('minejago://summary/registries.json', 'tag/minejago:element', core.ResourceLocation.lengthen(minejagoElementTags[entryId]))
-					.enter({ usage: { type: 'declaration' } })
-			}
-		},
+		}
 	})
-
-	// meta.registerSymbolRegistrar('modid-summary', {
-	// 	checksum: versionChecksum,
-	// 	registrar: (symbols) => {
-	// 		for (const entryId of ['modid:foo', 'modid:bar']) {
-	// 			symbols.query('modid://summary/registries.json', 'item', core.ResourceLocation.lengthen(entryId))
-	// 				.enter({ usage: { type: 'declaration' } })
-	// 		}
-	// 	}
-	// })
 
 	registerAttributes(meta, release, versions)
 
