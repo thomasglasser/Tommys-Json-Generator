@@ -432,7 +432,7 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 			{ file: 'recipes.json', target: 'recipe' },
 			{ file: 'recipe_advancements.json', target: 'advancement' },
 			{ file: 'advancements.json', target: 'advancement' },
-			{ file: 'looks.json', target: `mineraculous:look` }
+			{ file: 'looks.json', target: 'mineraculous:look' }
 		]
 		for (const { file, target } of reloadables) {
 			try {

@@ -106,6 +106,9 @@ export async function fetchRegistries(versionId: VersionId) {
 			for (const { file, target } of reloadables) {
 				try {
 					const data = await (await fetch(`${resourcesUrl}/reports/${file}`)).json()
+					if (!result.has(target)) {
+						result.set(target, [])
+					}
 					result.get(target)?.push(...Object.values(data as Record<string, string>))
 				} catch (e) {}
 			}

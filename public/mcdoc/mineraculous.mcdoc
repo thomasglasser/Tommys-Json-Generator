@@ -2,6 +2,7 @@ use ::java::util::particle::Particle
 use ::java::util::block_state::BlockState
 use ::java::data::advancement::predicate::BlockPredicate
 use ::java::world::item::ItemStack
+use ::java::assets::model::Predicates
 use ::java::data::advancement::predicate::ItemPredicate
 use ::java::data::advancement::predicate::EntityPredicate
 use ::java::util::text::TextColor
@@ -96,6 +97,13 @@ dispatch minecraft:data_component[mineraculous:hide_enchantments] to Unit
 dispatch minecraft:data_component[mineraculous:carrier] to int @ 0..
 
 dispatch minecraft:data_component[mineraculous:owner] to UUID
+
+dispatch minecraft:data_component[mineraculous:look_data] to struct LookData {
+	name?: string,
+	looks: struct {
+		[#[id="mineraculous:look_context"] string]: string
+	}
+}
 
 dispatch minecraft:data_component[mineraculous:powered] to Unit
 
@@ -194,17 +202,43 @@ dispatch minecraft:data_component[mineraculous:kamikotizing] to struct SlotInfo 
 	)
 }
 
-// Looks
-dispatch minecraft:resource[mineraculous:look] to struct Look {
-	metadata?: struct LookMetadata {
-		[#[id="mineraculous:look_metadata_type"] string]: mineraculous:look_metadata[[%key]]
-	},
-	assets: struct LookAssets {
-		[#[id="mineraculous:look_context"] string]: struct ContextAssets {
-			[#[id] (BuiltInLookAssetType | string)]: mineraculous:look_asset[[%key]]
-		},
-	},
+struct LookAssets {
+    [#[id="mineraculous:look_asset_type"] string]: mineraculous:look_asset[[%key]]
 }
+
+enum(string) ModPredicates {
+	Active = "mineraculous:active",
+	MissingPieces = "mineraculous:missing_pieces",
+	Mode = "mode",
+	Thrown = "thrown",
+	Storing = "storing",
+}
+
+type ContextAssets = struct {
+    [#[id="mineraculous:look_context"] string]: (
+        struct ItemLookAssets {
+            assets: LookAssets,
+            overrides?: [struct LookOverride {
+                predicate: struct LookOverridePredicates {
+                    [(Predicates | ModPredicates | string)]: float, 
+                },
+                assets: LookAssets,
+            }],
+        } | 
+        LookAssets
+    )
+}
+
+dispatch minecraft:resource[mineraculous:look] to (
+    struct Look {
+        parent?: #[id="mineraculous:look"] string,
+        metadata?: struct LookMetadata {
+            [#[id="mineraculous:look_metadata_type"] string]: mineraculous:look_metadata[[%key]],
+        },
+        contexts: ContextAssets,
+    } |
+    ContextAssets
+)
 
 // Look Metadata
 dispatch mineraculous:look_metadata[mineraculous:valid_miraculouses] to ([#[id="mineraculous:miraculous"] string])
@@ -216,6 +250,7 @@ enum(string) BuiltInLookAssetType {
 	GeckolibModel = "mineraculous:geckolib_model",
 	GeckolibAnimations = "mineraculous:geckolib_animations",
 	ItemTransforms = "mineraculous:item_transforms",
+	FlatTexture = "mineraculous:flat_texture",
 	TransformationTextures = "mineraculous:transformation_textures",
 	CountdownTextures = "mineraculous:countdown_textures",
 	ScopeTexture = "mineraculous:scope_texture",
@@ -226,6 +261,7 @@ dispatch mineraculous:look_asset[mineraculous:texture] to string
 dispatch mineraculous:look_asset[mineraculous:geckolib_model] to string
 dispatch mineraculous:look_asset[mineraculous:geckolib_animations] to string
 dispatch mineraculous:look_asset[mineraculous:item_transforms] to string
+dispatch mineraculous:look_asset[mineraculous:flat_texture] to string
 dispatch mineraculous:look_asset[mineraculous:transformation_textures] to struct TransformationTextures {
 	base: string,
 	texture_count: int @ 1..,
@@ -235,7 +271,7 @@ dispatch mineraculous:look_asset[mineraculous:countdown_textures] to struct Coun
 }
 dispatch mineraculous:look_asset[mineraculous:scope_texture] to string
 
-type UVRect = struct {
+struct UVRect {
 	u1: int @ 0..,
 	v1: int @ 0..,
 	u2: int @ 0..,
@@ -462,7 +498,6 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 
 dispatch minecraft:loot_function[mineraculous:dye_randomly] to struct DyeRandomly {
 	color_count?: NumberProvider,
-	only_dyeable?: boolean,
 	...LootConditions,
 }
 
@@ -482,6 +517,13 @@ dispatch minecraft:loot_condition[mineraculous:has_item] to struct HasItem {
 dispatch minecraft:number_provider[mineraculous:power_level_multiplier] to struct PowerLevelMultiplier {
 	base: NumberProvider,
 	divisor?: int,
+}
+
+// Structure Processor Types
+dispatch minecraft:template_processor[mineraculous:framed_item_dye] to struct FramedItemDye {
+	valid_items?: ItemPredicate,
+	invalid_items?: ItemPredicate,
+	color_count?: NumberProvider,
 }
 
 // Miraculous
