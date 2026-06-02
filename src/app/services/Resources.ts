@@ -5,7 +5,7 @@ import type { BlockDefinitionProvider, BlockFlagsProvider, BlockModelProvider, B
 import { BlockDefinition, BlockModel, Identifier, ItemRenderer, TextureAtlas, upperPowerOfTwo } from 'deepslate/render'
 import config from '../Config.js'
 import { jsonToNbt, message } from '../Utils.js'
-import { fetchLanguage, fetchResources } from './DataFetcher.js'
+import {fetchLanguage, fetchResources, MODS} from './DataFetcher.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
 
@@ -38,21 +38,54 @@ export async function renderItem(version: VersionId, item: ItemStack, baseCompon
 		return cached
 	}
 
-	const promise = (async () => {
-		const canvas = document.createElement('canvas')
-		canvas.width = RENDER_SIZE
-		canvas.height = RENDER_SIZE
-		const resources = await getResources(version, baseComponents)
-		const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true })
-		if (!gl) {
-			throw new Error('Cannot get WebGL2 context')
-		}
-		const renderer = new ItemRenderer(gl, item, resources, { display_context: 'gui' })
-		renderer.drawItem()
-		return canvas.toDataURL()
-	})()
+	// Mods
+	const namespace = item.id.namespace
+	if (MODS[namespace]) {
+		const promise = (async () => {
+			const resourcePath = MODS[namespace]
+			const resourcesUrl = `https://raw.githubusercontent.com/${resourcePath}`
+			const id = item.id.path
+
+			// The order of operations for finding a visual representation of the block/item
+			const texturePaths = [
+				`${resourcesUrl}/assets/${namespace}/textures/item/${id}.png`,
+				`${resourcesUrl}/assets/${namespace}/textures/block/${id}.png`,
+				`${resourcesUrl}/assets/${namespace}/textures/block/${id}_front.png`, // Directional blocks (ovens, machines)
+				`${resourcesUrl}/assets/${namespace}/textures/block/${id}_side.png`,  // Pillars, logs
+				`${resourcesUrl}/assets/${namespace}/textures/block/${id}_top.png`    // Ultimate fallback (grass, tables)
+			]
+
+			for (const url of texturePaths) {
+				try {
+					const res = await fetch(url, { method: 'HEAD' })
+					if (res.ok) return url
+				} catch (e) {}
+			}
+
+			// If absolutely nothing is found, fallback to the base item URL to fail gracefully
+			return renderGlItem(version, item, baseComponents)
+		})()
+		ItemRenderCache.set(cache_key, promise)
+		return promise
+	}
+
+	const promise = (async () => renderGlItem(version, item, baseComponents))()
 	ItemRenderCache.set(cache_key, promise)
 	return promise
+}
+
+async function renderGlItem(version: VersionId, item: ItemStack, baseComponents: Map<string, Map<string, unknown>>) {
+	const canvas = document.createElement('canvas')
+	canvas.width = RENDER_SIZE
+	canvas.height = RENDER_SIZE
+	const resources = await getResources(version, baseComponents)
+	const gl = canvas.getContext('webgl2', { preserveDrawingBuffer: true })
+	if (!gl) {
+		throw new Error('Cannot get WebGL2 context')
+	}
+	const renderer = new ItemRenderer(gl, item, resources, { display_context: 'gui' })
+	renderer.drawItem()
+	return canvas.toDataURL()
 }
 
 interface Resources extends BlockDefinitionProvider, BlockModelProvider, TextureAtlasProvider, BlockFlagsProvider, BlockPropertiesProvider, ItemModelProvider, ItemComponentsProvider {}
