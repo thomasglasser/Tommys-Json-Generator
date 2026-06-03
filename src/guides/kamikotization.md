@@ -1,5 +1,5 @@
 ---
-title: Creating a Custom Kamikotization
+title: Creating a Kamikotization
 versions:
     - 1.21
 tags:
@@ -7,15 +7,15 @@ tags:
 ---
 
 This guide will walk you through the process of creating a custom kamikotization.
-See the [Minecraft Wiki](https://minecraft.fandom.com/wiki/Kamikotization) for information on loading [data](https://minecraft.fandom.com/wiki/Tutorial:Installing_a_data_pack) and [resource](https://minecraft.fandom.com/wiki/Tutorial:Loading_a_resource_pack) packs.
+See the [Minecraft Wiki](https://minecraft.wiki) for information on loading [data](https://minecraft.wiki/w/Tutorial:Installing_a_data_pack) and [resource](https://minecraft.wiki/w/Tutorial:Loading_a_resource_pack) packs.
 
 ## Creating the Models
 
-First, you must create a GeckoLib armor model for the kamikotization.
+First, you must create a GeckoLib armor model for the suit.
 A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
-You can also find the mod's default models [here](https://github.com/thomasglasser/Mineraculous-Expansion-Kamikotizations/tree/models).
+You can also find the mod's templates [here](https://github.com/Mineraculous/Templates).
 
-The kamikotization can have a glowmask.
+The suit must have a model and texture and can have a glowmask and animations.
 
 You must then choose a namespace for your addon and an ID for your kamikotization.
 This ID must be unique and can only contain lowercase letters, numbers, and underscores.
@@ -40,7 +40,7 @@ Fill out the fields and save the file in the path `data/<namespace>/mineraculous
 
 ### Adding a Lucky Charm Loot Table
 
-It's recommended, but not required, to add a lucky charm loot table to assist in defeating your kamikotization should it be bestowed upon the wrong hands.
+It's recommended (but not required) to add a lucky charm loot table to assist in defeating a wielder of your kamikotization should it be bestowed upon the wrong hands.
 You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
 *Note: At this time, to generate a lucky charm loot table,
 you must use a preset to set the "type" field to "mineraculous:lucky_charm".
@@ -60,24 +60,24 @@ Abilities pull from `ability.<namespace>.<id>`.
 Kamikotizations pull from `kamikotization.<namespace>.<id>`.
 Tags pull from `tag.<type>.<namespace>.<id>`.
 
-### Models
+### Default Look
 
-You must add a model for the kamikotization suit.
+You must add a default look for the kamikotization.
+It must be named `<id>.json` and located in `assets/<namespace>/mineraculous/looks/mineraculous/kamikotization/<id>.json`.
+The guide for looks can be found [here](https://beta-jsons.thomasglasser.dev/guides/looks/).
 
-The kamikotization model must be named `<id>.geo.json` and located in `assets/<namespace>/geo/item/armor/kamikotization/<id>.geo.json`.
+The default kamikotization look requires the following contexts to have *at least* a GeckoLib model and texture:
+- Kamikotization Suit
+- Kamikotization Tool (if look-based)
 
-### Textures
+Refer to the existing kamikotization looks for reference on what else you can provide.
 
-You must add textures for the kamikotization suit.
+You should also specify your kamikotization in the `mineraculous:allowed_kamikotizations` metadata to ensure it can't be equipped for other kamikotizations.
 
-The kamikotization textures must be located in the `assets/<namespace>/textures/item/armor/kamikotization` subfolder.
-There are two texture variants for the kamikotization suit:
-- `<id>.png`, the default texture
-- `<id>_glowmask.png`, the glowmask texture
+> **Warning**
+> If your tool is a custom look-based item, it **must** implement `KamikotizationBackedItem` and provide your miraculous key for the default look, otherwise it will crash.
 
-### Animations
+### Other Looks
 
-You can add animations for the kamikotization suit.
-
-The kamikotization animations must be named `<id>.animation.json` located in the `assets/<namespace>/animations/item/armor/kamikotization/<id>.animation.json`.
-The supported suit animations are `move.fly`, `move.swim`, `move.run`, `move.walk`, and `misc.idle`.
+If you want to offer alternative visuals, you can add other looks with the generator.
+Make sure you add the `mineraculous:allowed_kamikotizations` metadata to limit the look to your kamikotization.
