@@ -75,7 +75,7 @@ Refer to the existing kamikotization looks for reference on what else you can pr
 You should also specify your kamikotization in the `mineraculous:allowed_kamikotizations` metadata to ensure it can't be equipped for other kamikotizations.
 
 > **Warning**
-> If your tool is a custom look-based item, it **must** implement `KamikotizationBackedItem` and provide your miraculous key for the default look, otherwise it will crash.
+> If your tool is a custom look-based item, it **must** implement `KamikotizationBackedItem` and provide your kamikotization key for the default look, otherwise it will crash.
 
 ### Other Looks
 
