@@ -727,56 +727,6 @@
       "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
     },
     {
-      "id": "mineraculous:tag/ability_serializer",
-      "url": "mineraculous/tags/ability_serializer",
-      "path": "mineraculous/tags/ability_serializer",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
-    },
-    {
-      "id": "mineraculous:tag/miraculous_ladybug_target_type",
-      "url": "mineraculous/tags/miraculous_ladybug_target_type",
-      "path": "mineraculous/tags/miraculous_ladybug_target_type",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
-    },
-    {
-      "id": "mineraculous:tag/look_context",
-      "url": "mineraculous/tags/look_context",
-      "path": "mineraculous/tags/look_context",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
-    },
-    {
-      "id": "mineraculous:tag/look_metadata_type",
-      "url": "mineraculous/tags/look_metadata_type",
-      "path": "mineraculous/tags/look_metadata_type",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
-    },
-    {
-      "id": "mineraculous:tag/ability",
-      "url": "mineraculous/tags/ability",
-      "path": "mineraculous/tags/ability",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
-    },
-    {
       "id": "mineraculous:tag/miraculous",
       "url": "mineraculous/tags/miraculous",
       "path": "mineraculous/tags/miraculous",
@@ -935,16 +885,6 @@
       "minVersion": "1.21",
       "maxVersion": "1.21",
       "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
-    },
-    {
-      "id": "mineraculous:ability",
-      "url": "mineraculous/ability",
-      "path": "mineraculous/ability",
-      "tags": ["partners"],
-      "dependency": "mineraculous",
-      "minVersion": "1.21",
-      "maxVersion": "1.21",
-      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/abilities/"
     },
     {
       "id": "mineraculous:kamikotization",

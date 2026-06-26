@@ -19,11 +19,12 @@ use ::java::data::loot::function::Conditions as LootConditions
 
 // ResourceKey: #[id="<registry>"] string
 // HolderSet: (#[id(registry="<registry>",tags="allowed")] string | [#[id="<registry>"] string])
-
 // Advancement Predicates
-
 dispatch minecraft:entity_sub_predicate[mineraculous:kamikotization] to struct KamikotizationPredicate {
-	kamikotizations?: (#[id(registry="mineraculous:kamikotization",tags="allowed")] string | [#[id="mineraculous:kamikotization"] string])
+	kamikotizations?: (
+		#[id(registry="mineraculous:kamikotization", tags="allowed")] string |
+		[#[id="mineraculous:kamikotization"] string] |
+	),
 }
 
 dispatch minecraft:entity_sub_predicate[mineraculous:cat_staff] to struct CatStaffPredicate {
@@ -35,23 +36,58 @@ dispatch minecraft:data_component_predicate[mineraculous:lucky_charm] to struct 
 	self?: boolean,
 }
 
+// Ability Sources
+enum(string) AbilitySourceKeyRegistry {
+	Miraculous = "mineraculous:miraculous",
+	Kamikotization = "mineraculous:kamikotization",
+}
+
+dispatch mineraculous:ability_source_key[mineraculous:miraculous] to struct {
+	element: #[id="mineraculous:miraculous"] string,
+}
+
+dispatch mineraculous:ability_source_key[mineraculous:kamikotization] to struct {
+	element: #[id="mineraculous:kamikotization"] string,
+}
+
+struct AbilitySourcePredicate {
+	key?: struct {
+		registry: AbilitySourceKeyRegistry,
+		...mineraculous:ability_source_key[[registry]],
+	},
+	minimum_power_level?: int,
+	power_active?: boolean,
+	has_stored_entities?: boolean,
+	tool?: ItemPredicate,
+}
+
+// Ability Targets
+struct AbilityTargetPredicate {
+	type: #[id="mineraculous:ability_target_predicate"] string,
+	...mineraculous:ability_target_predicate[[type]],
+}
+
+dispatch mineraculous:ability_target_predicate[mineraculous:block] to struct BlockAbilityTargetPredicate {
+	block?: BlockPredicate,
+}
+
+dispatch mineraculous:ability_target_predicate[mineraculous:entity] to struct EntityAbilityTargetPredicate {
+	entity?: EntityPredicate,
+}
+
+dispatch mineraculous:ability_target_predicate[mineraculous:passive] to struct PassiveAbilityTargetPredicate {}
+
 // Advancement Triggers
+dispatch minecraft:trigger[mineraculous:performed_ability] to TriggerConditions<struct PerformedAbility {
+	...TriggerBase,
+	id?: string,
+	source?: AbilitySourcePredicate,
+	target?: AbilityTargetPredicate,
+}>
 
 dispatch minecraft:trigger[mineraculous:transformed_miraculous] to TriggerConditions<struct TransformedMiraculous {
 	...TriggerBase,
 	miraculous?: #[id="mineraculous:miraculous"] string,
-}>
-
-type AbilityContext = (enum(string) BuiltInAbilityContext {
-	Block = "block",
-	Entity = "entity",
-	LivingEntity = "living_entity",
-} | string)
-
-dispatch minecraft:trigger[mineraculous:performed_miraculous_active_ability] to TriggerConditions<struct PerformedMiraculousActiveAbility {
-	...TriggerBase,
-	miraculous?: #[id="mineraculous:miraculous"] string,
-	contexts?: [AbilityContext],
 }>
 
 dispatch minecraft:trigger[mineraculous:kamikotized_entity] to TriggerConditions<struct KamikotizedEntity {
@@ -73,15 +109,8 @@ dispatch minecraft:trigger[mineraculous:transformed_kamikotization] to TriggerCo
 	self?: boolean,
 }>
 
-dispatch minecraft:trigger[mineraculous:performed_kamikotization_active_ability] to TriggerConditions<struct PerformedKamikotizationActiveAbility {
-	...TriggerBase,
-	kamikotization?: #[id="mineraculous:kamikotization"] string,
-	contexts?: [AbilityContext],
-}>
-
 // Data Components
-
-type Unit = (struct {})
+struct Unit {}
 
 type UUID = (int[] @ 4)
 
@@ -98,11 +127,52 @@ dispatch minecraft:data_component[mineraculous:carrier] to int @ 0..
 
 dispatch minecraft:data_component[mineraculous:owner] to UUID
 
+// Look Property Types
+type ParticleLookPropertyType = Particle
+
+type PositiveNumberLookPropertyType = int @ 1..
+
+type ResourceLocationLookPropertyType = #[id] string
+
+type SoundLookPropertyType = #[id="sound_event"] string
+
+type StringLookPropertyType = string
+
+dispatch mineraculous:look_property_type[mineraculous:particle] to struct ParticleLookProperty {
+	default_value?: ParticleLookPropertyType,
+}
+
+dispatch mineraculous:look_property_type[mineraculous:positive_number] to struct PositiveNumberLookProperty {
+	default_value?: PositiveNumberLookPropertyType,
+}
+
+dispatch mineraculous:look_property_type[mineraculous:resource_location] to struct ResourceLocationLookProperty {
+	default_value?: ResourceLocationLookPropertyType,
+}
+
+dispatch mineraculous:look_property_type[mineraculous:sound] to struct SoundLookProperty {
+	default_value?: SoundLookPropertyType,
+}
+
+dispatch mineraculous:look_property_type[mineraculous:string] to struct StringLookProperty {
+	default_value?: StringLookPropertyType,
+}
+
+struct UnbakedLookProperty {
+	type: #[id="mineraculous:look_property_type"] string,
+	...mineraculous:look_property_type[[type]],
+	optional?: boolean,
+}
+
+struct UnbakedLookProperties {
+	[string]: UnbakedLookProperty,
+}
+
 dispatch minecraft:data_component[mineraculous:look_data] to struct LookData {
-	name?: string,
+	look_properties: UnbakedLookProperties,
 	looks: struct {
-		[#[id="mineraculous:look_context"] string]: string
-	}
+		[#[id="mineraculous:look_context"] string]: string,
+	},
 }
 
 dispatch minecraft:data_component[mineraculous:powered] to Unit
@@ -130,8 +200,8 @@ dispatch minecraft:data_component[mineraculous:power_state] to enum(string) Powe
 }
 
 dispatch minecraft:data_component[mineraculous:kwami_foods] to struct KwamiFoods {
-	preferred_foods: #[id(registry="item",tags="required")] string,
-	treats: #[id(registry="item",tags="required")] string,
+	preferred_foods: #[id(registry="item", tags="required")] string,
+	treats: #[id(registry="item", tags="required")] string,
 	default_eat_ticks?: int @ 1..,
 	is_left_handed?: boolean,
 }
@@ -147,7 +217,7 @@ dispatch minecraft:data_component[mineraculous:ladybug_yoyo_mode] to enum(string
 	Phone = "phone",
 	Purify = "purify",
 	Spyglass = "spyglass",
-	Travel = "travel"
+	Travel = "travel",
 }
 
 dispatch minecraft:data_component[mineraculous:cat_staff_mode] to enum(string) CatStaffMode {
@@ -156,7 +226,7 @@ dispatch minecraft:data_component[mineraculous:cat_staff_mode] to enum(string) C
 	Phone = "phone",
 	Spyglass = "spyglass",
 	Throw = "throw",
-	Travel = "travel"
+	Travel = "travel",
 }
 
 dispatch minecraft:data_component[mineraculous:butterfly_cane_mode] to enum(string) ButterflyCaneMode {
@@ -165,7 +235,7 @@ dispatch minecraft:data_component[mineraculous:butterfly_cane_mode] to enum(stri
 	KamikoStore = "kamiko_store",
 	Phone = "phone",
 	Spyglass = "spyglass",
-	Throw = "throw"
+	Throw = "throw",
 }
 
 dispatch minecraft:data_component[mineraculous:revertible_item_id] to UUID
@@ -194,16 +264,16 @@ dispatch minecraft:data_component[mineraculous:kamiko_data] to struct KamikoData
 
 dispatch minecraft:data_component[mineraculous:kamikotizing] to struct SlotInfo {
 	slot: (
-		int | 
+		int |
 		struct CuriosData {
 			identifier: string,
 			index: int,
-		}
-	)
+		} |
+	),
 }
 
 struct LookAssets {
-    [#[id="mineraculous:look_asset_type"] string]: mineraculous:look_asset[[%key]]
+	[#[id="mineraculous:look_asset_type"] string]: mineraculous:look_asset[[%key]],
 }
 
 enum(string) ModPredicates {
@@ -215,34 +285,39 @@ enum(string) ModPredicates {
 }
 
 type ContextAssets = struct {
-    [#[id="mineraculous:look_context"] string]: (
-        struct ItemLookAssets {
-            assets: LookAssets,
-            overrides?: [struct LookOverride {
-                predicate: struct LookOverridePredicates {
-                    [(Predicates | ModPredicates | string)]: float, 
-                },
-                assets: LookAssets,
-            }],
-        } | 
-        LookAssets
-    )
+	[#[id="mineraculous:look_context"] string]: (
+		struct ItemLookAssets {
+			assets: LookAssets,
+			overrides?: [struct LookOverride {
+				predicate: struct LookOverridePredicates {
+					[(Predicates | ModPredicates | string)]: float,
+				},
+				assets: LookAssets,
+			}],
+		} |
+		LookAssets |
+	),
 }
 
 dispatch minecraft:resource[mineraculous:look] to (
-    struct Look {
-        parent?: #[id="mineraculous:look"] string,
-        metadata?: struct LookMetadata {
-            [#[id="mineraculous:look_metadata_type"] string]: mineraculous:look_metadata[[%key]],
-        },
-        contexts: ContextAssets,
-    } |
-    ContextAssets
+	struct Look {
+		parent?: #[id="mineraculous:look"] string,
+		metadata?: struct LookMetadata {
+			[#[id="mineraculous:look_metadata_type"] string]: mineraculous:look_metadata[[%key]],
+		},
+		contexts: ContextAssets,
+	} |
+	ContextAssets |
 )
 
 // Look Metadata
-dispatch mineraculous:look_metadata[mineraculous:valid_miraculouses] to ([#[id="mineraculous:miraculous"] string])
-dispatch mineraculous:look_metadata[mineraculous:valid_kamikotizations] to ([#[id="mineraculous:kamikotization"] string])
+dispatch mineraculous:look_metadata[mineraculous:valid_miraculouses] to (
+	[#[id="mineraculous:miraculous"] string] |
+)
+
+dispatch mineraculous:look_metadata[mineraculous:valid_kamikotizations] to (
+	[#[id="mineraculous:kamikotization"] string] |
+)
 
 // Look Assets
 enum(string) BuiltInLookAssetType {
@@ -254,28 +329,35 @@ enum(string) BuiltInLookAssetType {
 	TransformationTextures = "mineraculous:transformation_textures",
 	CountdownTextures = "mineraculous:countdown_textures",
 	ScopeTexture = "mineraculous:scope_texture",
-	CatStaffTextureLayout = "mineraculous:cat_staff_texture_layout"
+	CatStaffTextureLayout = "mineraculous:cat_staff_texture_layout",
 }
 
 dispatch mineraculous:look_asset[mineraculous:texture] to string
+
 dispatch mineraculous:look_asset[mineraculous:geckolib_model] to string
+
 dispatch mineraculous:look_asset[mineraculous:geckolib_animations] to string
+
 dispatch mineraculous:look_asset[mineraculous:item_transforms] to string
+
 dispatch mineraculous:look_asset[mineraculous:flat_texture] to string
+
 dispatch mineraculous:look_asset[mineraculous:transformation_textures] to struct TransformationTextures {
 	base: string,
 	texture_count: int @ 1..,
 }
+
 dispatch mineraculous:look_asset[mineraculous:countdown_textures] to struct CountdownTextures {
 	base: string,
 }
+
 dispatch mineraculous:look_asset[mineraculous:scope_texture] to string
 
 struct UVRect {
 	u1: int @ 0..,
 	v1: int @ 0..,
 	u2: int @ 0..,
-	v2: int @ 0..,	
+	v2: int @ 0..,
 }
 
 dispatch mineraculous:look_asset[mineraculous:cat_staff_texture_layout] to struct CatStaffTextureLayout {
@@ -287,21 +369,15 @@ dispatch mineraculous:look_asset[mineraculous:cat_staff_texture_layout] to struc
 	segment_uv?: UVRect,
 	paw_uv?: UVRect,
 	line_uv?: UVRect,
-	cap_uv?: UVRect,	
+	cap_uv?: UVRect,
 }
 
 // Registry Tags
-
-dispatch minecraft:resource[mineraculous:tag/ability_serializer] to Tag<#[id="mineraculous:ability_serializer"] string>
-dispatch minecraft:resource[mineraculous:tag/miraculous_ladybug_target_type] to Tag<#[id="mineraculous:miraculous_ladybug_target_type"] string>
-dispatch minecraft:resource[mineraculous:tag/look_context] to Tag<#[id="mineraculous:look_context"] string>
-dispatch minecraft:resource[mineraculous:tag/look_metadata_type] to Tag<#[id="mineraculous:look_metadata_type"] string>
-dispatch minecraft:resource[mineraculous:tag/ability] to Tag<#[id="mineraculous:ability"] string>
-dispatch minecraft:resource[mineraculous:tag/miraculous] to Tag<#[id="mineraculous:miraculous"] string>
 dispatch minecraft:resource[mineraculous:tag/kamikotization] to Tag<#[id="mineraculous:kamikotization"] string>
 
-// Data Maps
+dispatch minecraft:resource[mineraculous:tag/miraculous] to Tag<#[id="mineraculous:miraculous"] string>
 
+// Data Maps
 type DataMap<K, V> = struct {
 	replace?: boolean,
 	values: struct DataMapValues {
@@ -311,172 +387,201 @@ type DataMap<K, V> = struct {
 				replace?: boolean,
 				value: V,
 			} |
-		)
+		),
 	},
 	remove?: [K],
 }
 
 type LuckyCharms = (
-    struct {
-            loot_table: #[id="loot_table"] string,
-    } |
-    struct {
-            items: (#[id(registry="item",tags="allowed")] string | [#[id="item"] string]),
-    } |
+	struct {
+		loot_table: #[id="loot_table"] string,
+	} |
+	struct {
+		items: (
+			#[id(registry="item", tags="allowed")] string |
+			[#[id="item"] string] |
+		),
+	} |
 )
 
-dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization", tags="allowed")] string, (
 	#[id="loot_table"] string |
-	LuckyCharms
+	LuckyCharms |
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_miraculous_lucky_charms] to DataMap<#[id(registry="mineraculous:miraculous",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_miraculous_lucky_charms] to DataMap<#[id(registry="mineraculous:miraculous", tags="allowed")] string, (
 	#[id="loot_table"] string |
-	LuckyCharms
+	LuckyCharms |
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_entity_lucky_charms] to DataMap<#[id(registry="entity_type",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_entity_lucky_charms] to DataMap<#[id(registry="entity_type", tags="allowed")] string, (
 	#[id="loot_table"] string |
-	LuckyCharms
+	LuckyCharms |
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_miraculous_effects] to DataMap<#[id(registry="mob_effect",tags="allowed")] string, (
-    int @ 0..255 |
+dispatch minecraft:resource[mineraculous:data_map_miraculous_effects] to DataMap<#[id(registry="mob_effect", tags="allowed")] string, (
+	int @ 0..255 |
 	struct MiraculousEffect {
 		amplifier: int @ 0..255,
 		toggleable?: boolean,
-	}
+	} |
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_miraculous_attribute_modifiers] to DataMap<#[id(registry="attribute",tags="allowed")] string, (
-    struct ModifierSettings {
-		amount: double,  
+dispatch minecraft:resource[mineraculous:data_map_miraculous_attribute_modifiers] to DataMap<#[id(registry="attribute", tags="allowed")] string, (
+	struct ModifierSettings {
+		amount: double,
 		operation: enum(string) Operation {
 			AddValue = "add_value",
 			AddMultipliedBase = "add_multiplied_base",
 			AddMultipliedTotal = "add_multiplied_total",
 		},
-	}
+	} |
 )>
 
-dispatch minecraft:resource[mineraculous:data_map_ageables] to DataMap<#[id(registry="block",tags="allowed")] string, (
+dispatch minecraft:resource[mineraculous:data_map_ageables] to DataMap<#[id(registry="block", tags="allowed")] string, (
 	#[id="block"] string |
 	struct Ageable {
 		next: #[id="block"] string,
-	}
+	} |
 )>
 
 // Abilities
-
-dispatch minecraft:resource[mineraculous:ability] to struct Ability {
-	type: #[id="mineraculous:ability_serializer"] string,
-	...mineraculous:ability[[type]],
+struct AbilityConditionInstance {
+	type: #[id="mineraculous:ability_condition"] string,
+	...mineraculous:ability_condition[[type]],
 }
 
+struct AbilityInstance {
+	id: string,
+	ability: struct Ability {
+		conditions?: [AbilityConditionInstance],
+		branches: [struct AbilityBranch {
+			conditions?: [AbilityConditionInstance],
+			actions: [struct AbilityActionInstance {
+				type: #[id="mineraculous:ability_action"] string,
+				...mineraculous:ability_action[[type]],
+			}],
+		}],
+		look_properties?: UnbakedLookProperties,
+	},
+	continuous_ticks?: int,
+	start_sound?: string,
+	stop_sound?: string,
+}
+
+// Ability Actions
 type EffectSettings = struct {
-	duration?: int @ -1..,
-	ambient?: boolean,
-	show_particles?: boolean,
-	show_icon?: boolean,
+	effect_duration?: int @ -1..,
+	is_effect_ambient?: boolean,
+	show_effect_particles?: boolean,
+	show_effect_icon?: boolean,
 }
 
-dispatch mineraculous:ability[mineraculous:apply_effects_or_destroy] to struct ApplyEffectsOrDestroy {
-	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	effect_settings?: EffectSettings,
+dispatch mineraculous:ability_action[mineraculous:apply_effects_or_destroy] to struct ApplyEffectsOrDestroy {
+	effects: (
+		#[id(registry="mob_effect", tags="allowed")] string |
+		[#[id="mob_effect"] string] |
+	),
+	...EffectSettings,
 	additive?: boolean,
-	valid_entities?: EntityPredicate,
-	invalid_entities?: EntityPredicate,
-	damage_type?: #[id="damage_type"] string,
 	override_kill_credit?: boolean,
 	allow_blocking?: boolean,
-	drop_item?: #[id="item"] string,
-	apply_sound?: #[id="sound_event"] string,
+	drop_item?: SingleItem,
+	apply_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:context_dependent] to struct ContextDependent {
-	block?: (Ability | #[id="mineraculous:ability"] string),
-	entity?: (Ability | #[id="mineraculous:ability"] string),
-	passive?: ([Ability] | #[id(registry="mineraculous:ability",tags="allowed")] string | [#[id="mineraculous:ability"] string]),
+dispatch mineraculous:ability_action[mineraculous:convert_and_tame] to struct ConvertAndTame {
+	conversion: #[id="entity_type"] string,
+	apply_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:continuous] to struct Continuous {
-	ability: (Ability | #[id="mineraculous:ability"] string),
-	ticks?: int @ 1..,
-	passive_start_sound?: #[id="sound_event"] string,
-	active_start_sound?: #[id="sound_event"] string,
-	finish_sound?: #[id="sound_event"] string,
+dispatch mineraculous:ability_action[mineraculous:passive_infinite_effects] to struct PassiveInfiniteEffects {
+	effects: (
+		#[id(registry="mob_effect", tags="allowed")] string |
+		[#[id="mob_effect"] string] |
+	),
+	...EffectSettings,
 }
 
-dispatch mineraculous:ability[mineraculous:convert_and_tame] to struct ConvertAndTame {
-	new_type: #[id(registry="entity_type",tags="allowed")] string,
-	require_none_stored?: boolean,
-	valid_entities?: EntityPredicate,
-	invalid_entities?: EntityPredicate,
-	convert_sound?: #[id="sound_event"] string,
-}
-
-dispatch mineraculous:ability[mineraculous:passive_infinite_effects] to struct PassiveInfiniteEffects {
-	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	effect_settings?: EffectSettings,
-}
-
-dispatch mineraculous:ability[mineraculous:replace_adjacent_blocks] to struct ReplaceAdjacentBlocks {
-	replacement?: BlockState,
+dispatch mineraculous:ability_action[mineraculous:replace_adjacent_blocks] to struct ReplaceAdjacentBlocks {
+	replacement_block?: BlockState,
 	instant?: boolean,
 	prefer_same?: boolean,
 	valid_blocks?: BlockPredicate,
 	invalid_blocks?: BlockPredicate,
-	replace_sound?: #[id="sound_event"] string,
+	apply_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:replace_item_in_main_hand] to struct ReplaceItemInMainHand {
-	replacement?: SingleItem,
+dispatch mineraculous:ability_action[mineraculous:replace_item_in_main_hand] to struct ReplaceItemInMainHand {
+	replacement_item?: SingleItem,
 	break_original?: boolean,
-	valid_items?: ItemPredicate,
-	invalid_items?: ItemPredicate,
-	replace_sound?: #[id="sound_event"] string,
+	apply_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:revert_lucky_charm_targets_ability_effects] to struct RevertLuckyCharmTargetsAbilityEffects {
-	revert_sound?: #[id="sound_event"] string,
+dispatch mineraculous:ability_action[mineraculous:revert_lucky_charm_targets_ability_effects] to struct RevertLuckyCharmTargetsAbilityEffects {
+	revert_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:right_hand_particles] to struct RightHandParticles {
-	particle: Particle,
+dispatch mineraculous:ability_action[mineraculous:right_hand_particles] to struct RightHandParticles {
+	particle: string,
 }
 
-dispatch mineraculous:ability[mineraculous:spectate_entity] to struct SpectateEntity {
+dispatch mineraculous:ability_action[mineraculous:spectate_entity] to struct SpectateEntity {
 	valid_entities?: EntityPredicate,
 	invalid_entities?: EntityPredicate,
-	private_chat?: boolean,
-	allow_remote_damage?: boolean,
-	allow_kamikotization_revocation?: boolean,
+	can_private_chat?: boolean,
+	can_hurt?: boolean,
+	can_depower?: boolean,
 	override_owner?: boolean,
 	shader?: string,
 	face_mask_texture?: string,
-	start_sound?: #[id="sound_event"] string,
-	stop_sound?: #[id="sound_event"] string,
+	start_sound?: string,
+	stop_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:summon_target_dependent_lucky_charm] to struct SummonTargetDependentLuckyCharm {
-	require_active_tool_in_hand?: boolean,
+dispatch mineraculous:ability_action[mineraculous:summon_target_dependent_lucky_charm] to struct SummonTargetDependentLuckyCharm {
 	disappear_on_detransformation?: boolean,
-	summon_sound?: #[id="sound_event"] string,
+	start_sound?: string,
 }
 
-dispatch mineraculous:ability[mineraculous:toggleable_special_effects] to struct ToggleableSpecialEffects {
-	effects: (#[id(registry="mob_effect",tags="allowed")] string | [#[id="mob_effect"] string]),
-	effect_settings?: EffectSettings,
+dispatch mineraculous:ability_action[mineraculous:toggleable_special_effects] to struct ToggleableSpecialEffects {
+	effects: (
+		#[id(registry="mob_effect", tags="allowed")] string |
+		[#[id="mob_effect"] string] |
+	),
+	...EffectSettings,
 	shader?: string,
-	apply_sound?: #[id="sound_event"] string,
-	remove_sound?: #[id="sound_event"] string,
+	apply_sound?: string,
+	remove_sound?: string,
+}
+
+// Ability Conditions
+struct EntityCondition {
+	valid_entities?: EntityPredicate,
+	invalid_entities?: EntityPredicate,
+}
+
+dispatch mineraculous:ability_condition[mineraculous:performer] to EntityCondition
+
+dispatch mineraculous:ability_condition[mineraculous:source] to struct SourceCondition {
+	valid_ability_sources?: AbilitySourcePredicate,
+	invalid_ability_sources?: AbilitySourcePredicate,
+}
+
+dispatch mineraculous:ability_condition[mineraculous:target] to struct TargetCondition {
+	valid_ability_targets?: AbilityTargetPredicate,
+	invalid_ability_targets?: AbilityTargetPredicate,
 }
 
 // Recipe Serializers
-
 dispatch minecraft:recipe_serializer[mineraculous:oven_cooking] to Smelting
 
-dispatch minecraft:recipe_serializer[mineraculous:smelting_transmute,mineraculous:smoking_transmute,mineraculous:campfire_cooking_transmute,mineraculous:oven_cooking_transmute] to struct TransmuteSmelting {
+dispatch minecraft:recipe_serializer[
+	mineraculous:smelting_transmute,
+	mineraculous:smoking_transmute,
+	mineraculous:campfire_cooking_transmute,
+	mineraculous:oven_cooking_transmute,
+] to struct TransmuteSmelting {
 	group?: string,
 	category?: CookingBookCategory,
 	ingredient: Ingredient,
@@ -485,35 +590,23 @@ dispatch minecraft:recipe_serializer[mineraculous:smelting_transmute,mineraculou
 	cookingtime?: int,
 }
 
-// Kamikotization
-
-dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotization {
-	default_name: string,
-	item_predicate?: ItemPredicate,
-	power_source: (ItemStack | Ability | #[id="mineraculous:ability"] string),
-	passive_abilities?: (#[id(registry="mineraculous:ability",tags="allowed")] string | [#[id="mineraculous:ability"] string]),
-}
-
 // Loot Functions
-
-dispatch minecraft:loot_function[mineraculous:dye_randomly] to struct DyeRandomly {
+dispatch minecraft:loot_function[mineraculous:dye_randomly] <F, C>to struct DyeRandomly {
 	color_count?: NumberProvider,
-	...LootConditions,
+	...LootConditions<C>,
 }
 
-dispatch minecraft:loot_function[mineraculous:set_miraculous_randomly] to struct SetMiraculousRandomly {
-	...LootConditions,
+dispatch minecraft:loot_function[mineraculous:set_miraculous_randomly] <F, C>to struct SetMiraculousRandomly {
+	...LootConditions<C>,
 }
 
 // Loot Conditions
-
 dispatch minecraft:loot_condition[mineraculous:has_item] to struct HasItem {
 	predicate: ItemPredicate,
 	invert?: boolean,
 }
 
 // Number Providers
-
 dispatch minecraft:number_provider[mineraculous:power_level_multiplier] to struct PowerLevelMultiplier {
 	base: NumberProvider,
 	divisor?: int,
@@ -526,21 +619,61 @@ dispatch minecraft:template_processor[mineraculous:framed_item_dye] to struct Fr
 	color_count?: NumberProvider,
 }
 
-// Miraculous
+// Built-In Look Property Keys
+struct NameLookProperty {
+	"mineraculous:name"?: StringLookPropertyType,
+}
 
+struct TransformationFramesLookProperty {
+	"mineraculous:transformation_frames"?: PositiveNumberLookPropertyType,
+}
+
+struct TransformSoundLookProperty {
+	"mineraculous:transform_sound"?: SoundLookPropertyType,
+}
+
+struct DetransformSoundLookProperty {
+	"mineraculous:detransform_sound"?: SoundLookPropertyType,
+}
+
+struct TimerWarningSoundLookProperty {
+	"mineraculous:timer_warning_sound"?: SoundLookPropertyType,
+}
+
+struct TimerEndSoundLookProperty {
+	"mineraculous:timer_end_sound"?: SoundLookPropertyType,
+}
+
+// Kamikotization
+dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotization {
+	default_name: string,
+	item_predicate?: ItemPredicate,
+	look_properties?: struct KamikotizationLookProperties {
+		...NameLookProperty,
+		[#[id] string]: any,
+	},
+	power_source: (ItemStack | AbilityInstance),
+	passive_abilities?: [AbilityInstance],
+}
+
+// Miraculous
 dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 	color: (
 		#[color="hex_rgb"] string |
 		#[color="named"] TextColor |
 	),
 	acceptable_slot: string,
-	transformation_frames?: int @ 1..,
-	tool?: SingleItem,
+	tool: SingleItem,
 	tool_slot?: string,
-	active_ability: (Ability | #[id="mineraculous:ability"] string),
-	passive_abilities?: ([Ability] | [#[id="mineraculous:ability"] string]),
-	transform_sound?: #[id="sound_event"] string,
-	detransform_sound?: #[id="sound_event"] string,
-	timer_warning_sound?: #[id="sound_event"] string,
-	timer_end_sound?: #[id="sound_event"] string,
+	look_properties?: struct MiraculousLookProperties {
+		...NameLookProperty,
+		...TransformationFramesLookProperty,
+		...TransformSoundLookProperty,
+		...DetransformSoundLookProperty,
+		...TimerWarningSoundLookProperty,
+		...TimerEndSoundLookProperty,
+		[#[id] string]: any,
+	},
+	active_ability: AbilityInstance,
+	passive_abilities?: [AbilityInstance],
 }
