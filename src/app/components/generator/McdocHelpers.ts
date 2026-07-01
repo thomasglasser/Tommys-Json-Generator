@@ -176,6 +176,12 @@ export function getDefault(type: SimplifiedMcdocType, range: core.Range, ctx: co
 }
 
 export function getChange(type: SimplifiedMcdocTypeNoUnion, oldType: SimplifiedMcdocTypeNoUnion, oldNode: JsonNode, ctx: core.CheckerContext): JsonNode {
+	if ((type as any).kind === 'union') {
+		return getChange((type as any).members[0], oldType, oldNode, ctx)
+	}
+	if ((oldType as any).kind === 'union') {
+		return getChange(type, (oldType as any).members[0], oldNode, ctx)
+	}
 	const node = getDefault(type, oldNode.range, ctx)
 	if (JsonArrayNode.is(node) && isListOrArray(type)) {
 		// From X to [X]
@@ -256,6 +262,48 @@ export function getChange(type: SimplifiedMcdocTypeNoUnion, oldType: SimplifiedM
 				}
 			}
 		}
+	}
+	if (JsonObjectNode.is(node) && type.kind === 'struct' && oldType.kind === 'struct') {
+		const getLiteralKey = (k: any): string | undefined => {
+			if (typeof k === 'string') return k
+			if (k?.kind === 'literal' && k?.value?.value !== undefined) return k.value.value.toString()
+			return undefined
+		}
+		const newLiteralKeys = new Set(type.fields.map(f => getLiteralKey(f.key)).filter((k): k is string => k !== undefined))
+		const oldLiteralKeys = new Set(oldType.fields.map(f => getLiteralKey(f.key)).filter((k): k is string => k !== undefined))
+		for (let i = node.children.length - 1; i >= 0; i--) {
+			const key = node.children[i].key?.value
+			if (key && oldLiteralKeys.has(key) && !newLiteralKeys.has(key)) {
+				node.children.splice(i, 1)
+			}
+		}
+		for (const field of type.fields) {
+			if (field.kind === 'pair' && !field.optional) {
+				const keyStr = getLiteralKey(field.key)
+				if (keyStr !== undefined && !node.children.some(pair => pair.key?.value === keyStr)) {
+					const keyNode: JsonStringNode = {
+						type: 'json:string',
+						range: node.range,
+						options: JsonStringOptions,
+						value: keyStr,
+						valueMap: [{ inner: core.Range.create(0), outer: core.Range.create(node.range.start) }],
+					}
+					const valueNode = getDefault(simplifyType(field.type, ctx), node.range, ctx)
+					const pair: JsonPairNode = {
+						type: 'pair',
+						range: node.range,
+						key: keyNode,
+						value: valueNode,
+						children: [keyNode, valueNode],
+					}
+					keyNode.parent = pair
+					valueNode.parent = pair
+					node.children.push(pair)
+					pair.parent = node
+				}
+			}
+		}
+		return node
 	}
 	return node
 }
@@ -483,10 +531,21 @@ export function quickEqualTypes(a: SimplifiedMcdocTypeNoUnion, b: SimplifiedMcdo
 		return a.value.kind === b.value.kind && a.value.value === b.value.value
 	}
 	if (a.kind === 'struct' && b.kind === 'struct') {
-		// Compare the first key of both structs
-		const keyA = a.fields[0]?.key
-		const keyB = b.fields[0]?.key
-		return (!keyA && !keyB) || (keyA && keyB && quickEqualTypes(keyA, keyB))
+		if (a.fields.length !== b.fields.length) {
+			return false
+		}
+		for (let i = 0; i < a.fields.length; i++) {
+			const keyA = a.fields[i]?.key
+			const keyB = b.fields[i]?.key
+			if (!keyA && !keyB) continue
+			if (!keyA || !keyB || !quickEqualTypes(keyA, keyB)) {
+				return false
+			}
+		}
+		return true
+	}
+	if (a.kind === 'enum' && b.kind === 'enum') {
+		return a.values.length === b.values.length && a.values.every((val, i) => val.value === b.values[i]?.value)
 	}
 	// Types are of the same kind	
 	return true
