@@ -6,78 +6,66 @@ tags:
     - mineraculous
 ---
 
-This guide will walk you through the process of creating a custom kamikotization.
-See the [Minecraft Wiki](https://minecraft.wiki) for information on loading [data](https://minecraft.wiki/w/Tutorial:Installing_a_data_pack) and [resource](https://minecraft.wiki/w/Tutorial:Loading_a_resource_pack) packs.
+This guide will walk you through creating a custom **Kamikotization** in **Mineraculous**. Kamikotizations are powerful, specialized transformations created by the Butterfly Miraculous to empower players.
 
-## Creating the Models
+You can create and configure your Kamikotization using the [Kamikotization Generator](https://beta-jsons.thomasglasser.dev/mineraculous/kamikotization/).
 
-First, you must create a GeckoLib armor model for the suit.
-A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
-You can also find the mod's templates [here](https://github.com/Mineraculous/Templates).
+---
 
-The suit must have a model and texture and can have a glowmask and animations.
+## Creating the Kamikotization File
 
-You must then choose a namespace for your addon and an ID for your kamikotization.
-This ID must be unique and can only contain lowercase letters, numbers, and underscores.
-All files related to one kamikotization must share the same ID.
+When creating a kamikotization file in the generator, you will configure its triggering conditions, power source, inline abilities, and customization settings.
 
-## Creating the Abilities
+### Power Source (Items vs. Abilities)
+Every kamikotization requires a `power_source` that fuels or triggers the transformation. You can choose between two power source types:
+- **Item**: An item (such as a specific token, weapon, or charged object) that grants the transformation abilities.
+- **Ability**: An ability that grants the transformation abilities.
 
-Abilities are the core feature of kamikotizations.
-They allow the kamikotization holder to perform special actions.
-You can create abilities [here](https://beta-jsons.thomasglasser.dev/mineraculous/ability/).
-Select an ability type and fill out the fields.
-Once you have created the ability, save the file in the path `data/<namespace>/mineraculous/abilities/<id>.json`.
-For more advanced addons, you can use a Java mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
+### Abilities
+- **Passive Abilities**: Add a list of passive abilities (`passive_abilities`) that remain active while the target is transformed. Each ability includes a unique `id`, trigger `conditions`, branching logic (`branches`), executed `actions` (such as status effects or stat boosts), and audio settings.
 
-## Creating the Kamikotization
+### Conditions & Customization Settings
+- **Conditions**: Optional rules (`conditions`) that must be met for a target to be kamikotized (e.g., item checks or health thresholds).
+- **Customization Settings**: Define defaults such as the display name (`mineraculous:name`) or custom data values.
 
-Kamikotizations are the main feature of the Butterfly Miraculous.
-They are transformations that can be used to power up an unpowered player.
-You can create kamikotizations [here](https://beta-jsons.thomasglasser.dev/mineraculous/kamikotization/).
-Any abilities that you saved to the project will be able to be autofilled in the ability fields.
-Fill out the fields and save the file in the path `data/<namespace>/mineraculous/kamikotization/<id>.json`.
+Once configured, save your file to your data pack at:
+`data/<namespace>/mineraculous/kamikotization/<id>.json`
 
-### Adding a Lucky Charm Loot Table
+---
 
-It's recommended (but not required) to add a lucky charm loot table to assist in defeating a wielder of your kamikotization should it be bestowed upon the wrong hands.
-You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
-*Note: At this time, to generate a lucky charm loot table,
-you must use a preset to set the "type" field to "mineraculous:lucky_charm".
-Searching the presets for "lucky_charm" will yield valid results.*
-You should then add the loot table or a list of items to the kamikotization lucky charms data map with [this generator](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-kamikotization-lucky-charms).
-This file should be placed in `data/<namespace>/data_maps/mineraculous/kamikotization/lucky_charms.json`.
+## Enhancing with Data Maps
 
-## Creating the Resource Pack
+### Lucky Charms Data Map
+To assist players in defeating an opponent who has been bestowed your kamikotization, you should configure Lucky Charm drops using **Data Maps**.
+- Generator: [Kamikotization Lucky Charms Data Map](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-kamikotization-lucky-charms/)
+- **Items vs. Loot Table**: You can map your kamikotization directly to a **List of Items** or tags (no separate loot table file required!) or point to a full Minecraft **Loot Table**.
+- File Path: `data/<namespace>/data_maps/mineraculous/kamikotization/lucky_charms.json`
 
-Once you have created the assets, you must create a resource pack to display them.
+---
 
-### Names
+## Visuals & Resource Pack Setup
 
-In a language file, you must add translations for the kamikotization, abilities, and related fields.
+To display your kamikotization suit and tool in-game, you must create a Resource Pack containing your GeckoLib armor/tool models, textures, translations, and a **Default Look**.
 
-Abilities pull from `ability.<namespace>.<id>`.
-Kamikotizations pull from `kamikotization.<namespace>.<id>`.
-Tags pull from `tag.<type>.<namespace>.<id>`.
+### 3D Models
+Create GeckoLib armor models for the suit and items using [Blockbench](https://www.blockbench.net/) and the [Mineraculous Templates](https://github.com/Mineraculous/Templates). Your suit requires a `.geo.json` model and texture, and can optionally feature emissive glowmasks and custom animations.
 
-### Default Look
+### Translations
+In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translations for:
+- Kamikotization Name: `kamikotization.<namespace>.<id>`
+- Ability Names: `ability.<namespace>.<kamikotization_id>.<ability_id>`
+- Tags: `tag.<type>.<namespace>.<id>`
+- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<kamikotization_id>.<ability_id>.<setting_id>`
 
-You must add a default look for the kamikotization.
-It must be named `<id>.json` and located in `assets/<namespace>/mineraculous/looks/mineraculous/kamikotization/<id>.json`.
-The guide for looks can be found [here](https://beta-jsons.thomasglasser.dev/guides/looks/).
+### Setting Up the Default Look
+Every kamikotization must have a **Default Look** JSON file that links your suit models and textures to the transformation.
+- File Path: `assets/<namespace>/mineraculous/looks/mineraculous/kamikotization/<id>.json`
+- Use the [Look Generator](https://beta-jsons.thomasglasser.dev/mineraculous/look/) and configure at least the following required contexts with GeckoLib models and textures:
+  1. `mineraculous:kamikotization_suit` (the suit armor)
+  2. `mineraculous:kamikotization_tool` (if your tool is look-based)
 
-The default kamikotization look requires the following contexts to have *at least* a GeckoLib model and texture:
-- Kamikotization Suit
-- Kamikotization Tool (if look-based)
+> [IMPORTANT]
+> In your Default Look (and any alternative looks you create), include a metadata block with **`mineraculous:valid_kamikotizations`** containing your kamikotization. This ensures your custom suit aesthetics cannot be equipped onto other transformations!
 
-Refer to the existing kamikotization looks for reference on what else you can provide.
-
-You should also specify your kamikotization in the `mineraculous:allowed_kamikotizations` metadata to ensure it can't be equipped for other kamikotizations.
-
-> **Warning**
-> If your tool is a custom look-based item, it **must** implement `KamikotizationBackedItem` and provide your kamikotization key for the default look, otherwise it will crash.
-
-### Other Looks
-
-If you want to offer alternative visuals, you can add other looks with the generator.
-Make sure you add the `mineraculous:allowed_kamikotizations` metadata to limit the look to your kamikotization.
+> [WARNING]
+> If your tool is a custom look-based item, your Java class **must** implement `KamikotizationBackedItem` and provide your kamikotization key for the default look, otherwise the game will crash when rendering it.

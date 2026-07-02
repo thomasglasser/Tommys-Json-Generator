@@ -6,118 +6,93 @@ tags:
     - mineraculous
 ---
 
-This guide will walk you through the process of creating a custom miraculous.
-See the [Minecraft Wiki](https://minecraft.wiki) for information on loading [data](https://minecraft.wiki/w/Tutorial:Installing_a_data_pack) and [resource](https://minecraft.wiki/w/Tutorial:Loading_a_resource_pack) packs.
+This guide walks you through creating a complete custom Miraculous in **Mineraculous**, from configuring abilities and customization settings to setting up 3D models, kwamis, and data maps.
 
-## Creating the Models
+You can create and configure your Miraculous using the [Miraculous Generator](https://beta-jsons.thomasglasser.dev/mineraculous/miraculous/).
 
-First, you must create a GeckoLib armor model for the suit,
-a GeckoLib item model for the miraculous,
-and a GeckoLib entity model for the kwami.
-A tutorial on how to make GeckoLib models can be found [here](https://github.com/bernie-g/geckolib/wiki/Making-Your-Models-(Blockbench)).
-You can also find the mod's templates [here](https://github.com/Mineraculous/Templates).
+---
 
-The suit must have a model and texture and can have a glowmask, transformation frames, and animations.
-The miraculous must have a model, texture, and countdown textures, and can have a glowmask and item transforms.
-The kwami must have a model, texture, and hungry texture, and can have animations.
+## Creating the Miraculous File
 
-You must then choose a namespace for your addon and an ID for your miraculous.
-This ID must be unique and can only contain lowercase letters, numbers, and underscores.
-All files related to one miraculous must share the same ID.
+Miraculouses are core items that players wear to transform, gain buffs, and activate special powers. When creating a miraculous in the generator, you will configure several key systems:
 
-## Creating the Abilities
+### Core Properties & Tool
+- **Color**: Set your miraculous's theme color using either an RGB hex code or a built-in text color.
+- **Acceptable Slot**: The Curios slot ID where the miraculous can be equipped (e.g., `necklace`, `ring`, `bracelet`).
+- **Tool**: Configure the weapon or tool granted upon transforming (e.g., cane, yo-yo, staff). You can specify a single item and an optional tool slot.
 
-Abilities are the core feature of miraculouses.
-They allow the miraculous holder to perform special actions.
-You can create abilities [here](https://beta-jsons.thomasglasser.dev/mineraculous/ability/).
-Select an ability type and fill out the fields.
-Once you have created the ability, save the file in the path `data/<namespace>/mineraculous/abilities/<id>.json`.
-For more advanced addons, you can use a Java mod to add to the `mineraculous:ability_serializer` registry for more complex abilities and use [Data Generation](https://docs.neoforged.net/docs/resources/#data-generation) to create the JSON files.
+### Inline Abilities
+- **Active Ability**: Configure the primary activated power (`active_ability`). Each ability instance includes a unique `id`, trigger `conditions`, branching logic (`branches`), executed `actions` (like status effects, damage, or teleportation), and sound/timer settings.
+- **Passive Abilities**: Optionally add a list of passive ability instances (`passive_abilities`) that run continuously while transformed.
 
-## Creating the Miraculous
+### Customization Settings
+The `customization_settings` block allows you to define default parameters and sounds for your miraculous:
+- **Name**: Default display name (`mineraculous:name`).
+- **Transformation Frames**: Duration of animation frames (`mineraculous:transformation_frames`).
+- **Audio**: Custom sound events for transforming (`mineraculous:transform_sound`), detransforming (`mineraculous:detransform_sound`), timer warnings (`mineraculous:timer_warning_sound`), and timer expiration (`mineraculous:timer_end_sound`).
 
-Miraculouses are the main feature of the mod.
-They are items that can be worn and can be used to grant buffs and abilities.
-You can create miraculouses [here](https://beta-jsons.thomasglasser.dev/mineraculous/miraculous/).
-Any abilities that you saved to the project will be able to be autofilled in the ability fields.
-Fill out the fields and save the file in the path `data/<namespace>/mineraculous/miraculous/<id>.json`.
+Once completed, save your file to your data pack at:
+`data/<namespace>/mineraculous/miraculous/<id>.json`
 
-### Tags
+---
 
-Tags for kwami preferred foods and treats are automatically loaded from `data/<namespace>/tags/kwami_preferred_foods/<id>.json` and `data/<namespace>/tags/kwami_treats/<id>.json` respectively.
-You can create these tags [here](https://beta-jsons.thomasglasser.dev/tags/item/).
+## Enhancing with Data Maps
 
-Tags for miraculouses and abilities are also supported.
-You can create these tags [here](https://beta-jsons.thomasglasser.dev/partners/).
-Mod tags, such as the `mineraculous:can_use_butterfly_cane` miraculous tag, can be added to so the miraculous holder can use the tool with your custom miraculous.
+Mineraculous uses **Data Maps** to link extra gameplay mechanics to your miraculous without cluttering the main definition file. You can generate these using the **Data Maps** generators on the site.
 
-### Curios
+### Lucky Charms Data Map
+To assist players in defeating an opponent using your miraculous, you should configure Lucky Charm drops using **Data Maps**.
+- Generator: [Miraculous Lucky Charms Data Map](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms/)
+- **Items vs. Loot Table**: You can map your miraculous directly to a **List of Items** (no need to make a separate loot table file!) or point to a full Minecraft **Loot Table**.
+- File Path: `data/<namespace>/data_maps/mineraculous/miraculous/lucky_charms.json`
 
-If you're adding a miraculous and/or tool to a Curios slot that's not already used by the mod,
-you'll need to register it if it exists or create it if it doesn't.
-See the [Curios Wiki](https://docs.illusivesoulworks.com/category/slots) for information on how to do this.
-One difference is that you must add `mineraculous:miraculous` and `mineraculous:fake_miraculous` to the item tag for the slot.
+### Effects & Attribute Modifiers Data Maps
+- **Miraculous Effects**: Map status effects (like Speed or Strength) to your miraculous with custom amplifiers and toggleable rules using the [Miraculous Effects Data Map](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-effects/) (`data/<namespace>/data_maps/mineraculous/miraculous/effects.json`).
+- **Attribute Modifiers**: Map attribute bonuses (like armor or attack damage) using the [Miraculous Attribute Modifiers Data Map](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-attribute-modifiers/) (`data/<namespace>/data_maps/mineraculous/miraculous/attribute_modifiers.json`).
 
-### Adding a Lucky Charm Loot Table
+---
 
-It's recommended (but not required) to add a lucky charm loot table to assist in defeating a holder of your miraculous should it fall into the wrong hands.
-You can create a loot table [here](https://beta-jsons.thomasglasser.dev/loot-table/).
-You should then add the loot table or a list of items to the miraculous lucky charms data map with [this generator](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms).
-*Note: At this time, to generate a lucky charm loot table,
-you must use a preset to set the "type" field to "mineraculous:lucky_charm".
-Searching the presets for "lucky_charm" will yield valid results.*
-This file should be placed in `data/<namespace>/data_maps/mineraculous/miraculous/lucky_charms.json`.
+## Tags & Curios Integration
 
-## Creating the Resource Pack
+### Kwami Dietary Tags
+Kwamis require food to recharge their energy. You define their diets using item tags:
+- **Preferred Foods**: `data/<namespace>/tags/item/kwami_preferred_foods/<id>.json`
+- **Treats**: `data/<namespace>/tags/item/kwami_treats/<id>.json`
 
-Once you have created the assets, you must create a resource pack to display them.
+### Mod & Curios Tags
+- If your miraculous grants a weapon that requires custom permissions, add your miraculous or item to the appropriate mod tags (e.g., `mineraculous:can_use_butterfly_cane`).
+- If you are adding your miraculous to a custom Curios slot, ensure the slot tag includes `mineraculous:miraculous` and `mineraculous:fake_miraculous`. Refer to the [Curios Wiki](https://docs.illusivesoulworks.com/category/slots) for slot registration details.
 
-### Names
+---
 
-In a language file, you must add translations for miraculous, abilities, and related fields.
+## Visuals & Resource Pack Setup
 
-Abilities pull from `ability.<namespace>.<id>`.
-Kwamis pull from `entity.mineraculous.kwami.<namespace>.<id>`.
-Miraculouses pull from `miraculous.<namespace>.<id>`.
-Kwami Tags pull from `tag.item.<namespace>.kwami_preferred_foods.<id>` and `tag.item.<namespace>.kwami_treats.<id>`.
-Other Tags pull from `tag.<type>.<namespace>.<id>`.
+To make your miraculous look amazing in-game, you must create a Resource Pack containing its 3D models, textures, translations, and **Default Look**.
 
-### Default Look
+### Translations
+In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translations for:
+- Miraculous Name: `miraculous.<namespace>.<id>`
+- Ability Names: `ability.<namespace>.<miraculous_id>.<ability_id>`
+- Dietary Tags: `tag.item.<namespace>.kwami_preferred_foods.<id>` and `tag.item.<namespace>.kwami_treats.<id>`
+- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<miraculous_id>.<ability_id>.<setting_id>`
 
-You must add a default look for the miraculous.
-It must be named `<id>.json` and located in `assets/<namespace>/mineraculous/looks/mineraculous/miraculous/<id>.json`.
-The guide for looks can be found [here](https://beta-jsons.thomasglasser.dev/guides/looks/).
+### 3D Models & Kwami Assets
+Create GeckoLib models using [Blockbench](https://www.blockbench.net/) and the [Mineraculous Templates](https://github.com/Mineraculous/Templates).
+- **Kwami Model**: `assets/<namespace>/geo/entity/miraculous/<id>.geo.json`
+- **Kwami Textures**: Normal texture at `assets/<namespace>/textures/entity/miraculous/<id>.png` and hungry texture at `assets/<namespace>/textures/entity/miraculous/<id>_hungry.png`.
+- **Kwami Animations**: Optional animation file at `assets/<namespace>/animations/entity/miraculous/<id>.animation.json` (supports `misc.idle`, `move.fly`, `misc.eat`, `misc.hold`, `misc.sit`, and `misc.sit_eat`).
 
-The default miraculous look requires the following contexts to have *at least* a GeckoLib model and texture:
-- Hidden Miraculous
-- Powered Miraculous
-- Miraculous Suit
-- Miraculous Tool (if look-based)
+### Setting Up the Default Look
+Every miraculous requires a **Default Look** JSON file to link your suit and item textures/models to the item.
+- File Path: `assets/<namespace>/mineraculous/looks/mineraculous/miraculous/<id>.json`
+- Use the [Look Generator](https://beta-jsons.thomasglasser.dev/mineraculous/look/) and configure at least the following required contexts with GeckoLib models and textures:
+  1. `mineraculous:hidden_miraculous` (when worn normally)
+  2. `mineraculous:powered_miraculous` (when charged/active)
+  3. `mineraculous:miraculous_suit` (the transformed armor)
+  4. `mineraculous:miraculous_tool` (if your tool is look-based)
 
-Refer to the existing miraculous looks for reference on what else you can provide.
+> [IMPORTANT]
+> In your Default Look (and any alternative custom looks), add a metadata block with **`mineraculous:valid_miraculouses`** containing your miraculous. This prevents other miraculouses from accidentally using your visuals!
 
-You should also specify your miraculous in the `mineraculous:allowed_miraculouses` metadata to ensure it can't be equipped for other miraculouses.
-
-> **Warning**
-> If your tool is a custom look-based item, it **must** implement `MiraculousBackedItem` and provide your miraculous key for the default look, otherwise it will crash.
-
-### Other Looks
-
-If you want to offer alternative visuals, you can add other looks with the generator.
-Make sure you add the `mineraculous:allowed_miraculouses` metadata to limit the look to your miraculous.
-
-### Models
-
-You must add a model for the kwami, named `<id>.geo.json` and located in `assets/<namespace>/geo/entity/miraculous/<id>.geo.json`.
-
-### Textures
-
-You must add 2 textures for the kwami.
-The normal kwami texture must be named `<id>.png` and located in `assets/<namespace>/textures/entity/miraculous/<id>.png`.
-The hungry kwami texture must be named `<id>_hungry.png` and located in `assets/<namespace>/textures/entity/miraculous/<id>_hungry.png`.
-
-### Animations
-
-You can add animations for the kwami, named `<id>.animation.json` located in the `assets/<namespace>/animations/entity/miraculous/<id>.animation.json`.
-The supported kwami animations are `misc.idle`, `move.fly`, `misc.eat`, `misc.hold`, `misc.sit`, and `misc.sit_eat`.
-If not provided, kwamis will use the default animations.
+> [WARNING]
+> If your tool is a custom look-based item, your Java class **must** implement `MiraculousBackedItem` and provide your miraculous key for the default look, otherwise the game will crash when rendering it.
