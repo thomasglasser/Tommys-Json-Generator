@@ -21,9 +21,11 @@ Miraculouses are core items that players wear to transform, gain buffs, and acti
 - **Acceptable Slot**: The Curios slot ID where the miraculous can be equipped (e.g., `necklace`, `ring`, `bracelet`).
 - **Tool**: Configure the weapon or tool granted upon transforming (e.g., cane, yo-yo, staff). You can specify a single item and an optional tool slot.
 
-### Inline Abilities
-- **Active Ability**: Configure the primary activated power (`active_ability`). Each ability instance includes a unique `id`, trigger `conditions`, branching logic (`branches`), executed `actions` (like status effects, damage, or teleportation), and sound/timer settings.
+### Abilities
+- **Active Ability**: Configure the primary activated power (`active_ability`). You define this by supplying an **Ability Instance**, which points to a data-driven Ability and configures its properties and custom settings to fit this miraculous.
 - **Passive Abilities**: Optionally add a list of passive ability instances (`passive_abilities`) that run continuously while transformed.
+
+For a complete breakdown of how to create the Abilities referenced by these instances, check out the [Creating an Ability](/guides/ability) guide!
 
 ### Customization Settings
 The `customization_settings` block allows you to define default parameters and sounds for your miraculous:

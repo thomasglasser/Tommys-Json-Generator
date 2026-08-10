@@ -22,7 +22,9 @@ Every kamikotization requires a `power_source` that fuels or triggers the transf
 - **Ability**: An ability that grants the transformation abilities.
 
 ### Abilities
-- **Passive Abilities**: Add a list of passive abilities (`passive_abilities`) that remain active while the target is transformed. Each ability includes a unique `id`, trigger `conditions`, branching logic (`branches`), executed `actions` (such as status effects or stat boosts), and audio settings.
+- **Passive Abilities**: Add a list of passive ability instances (`passive_abilities`) that remain active while the target is transformed. Each instance points to a data-driven Ability and configures its properties and custom settings to fit this kamikotization.
+
+For a complete breakdown of how to create the Abilities referenced by these instances, check out the [Creating an Ability](/guides/ability) guide!
 
 ### Conditions & Customization Settings
 - **Conditions**: Optional rules (`conditions`) that must be met for a target to be kamikotized (e.g., item checks or health thresholds).
