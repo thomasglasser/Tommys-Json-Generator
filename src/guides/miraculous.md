@@ -45,7 +45,7 @@ Mineraculous uses **Data Maps** to link extra gameplay mechanics to your miracul
 ### Lucky Charms Data Map
 To assist players in defeating an opponent using your miraculous, you should configure Lucky Charm drops using **Data Maps**.
 - Generator: [Miraculous Lucky Charms Data Map](https://beta-jsons.thomasglasser.dev/mineraculous/data-map-miraculous-lucky-charms/)
-- **Items vs. Loot Table**: You can map your miraculous directly to a **List of Items** (no need to make a separate loot table file!) or point to a full Minecraft **Loot Table**.
+- **Loot Table**: You must provide a **Loot Table** for the lucky charm drops! You can pass the loot table ID inline as a shorthand string or provide an object with `loot_table`.
 - File Path: `data/<namespace>/data_maps/mineraculous/miraculous/lucky_charms.json`
 
 ### Effects & Attribute Modifiers Data Maps

@@ -19,8 +19,7 @@ When creating an ability file in the generator, you will configure its global co
 ### Customization Settings
 Abilities use `customization_settings` as a schema to define customizable parameters like sounds, durations, or visual colors. 
 - You define the `type` (e.g., Sound Event, String, Integer) and an optional `default_value`.
-- When an ability is used by a Miraculous via an **Ability Instance**, the instance provides properties that map to these settings. 
-- If an instance provides an `extra_customization_setting`, it can override these defaults!
+- When an ability is used by a Miraculous via an **Ability Instance**, the instance can provide its own `customization_settings` block to override these defaults!
 
 ### Conditions
 You can specify a list of global `conditions` that must pass for the ability to run at all. Conditions also contain properties that map to the customization settings.
@@ -40,12 +39,12 @@ Once configured, save your file to your data pack at:
 
 Once your `Ability` is created, it must be assigned to a Miraculous or Kamikotization using an **Ability Instance**.
 
-An Ability Instance links to your ability's `id` and allows you to fill in the blank `properties` exposed by the ability (like mapping a `START_SOUND` property to a specific sound event setting).
+An Ability Instance links to your ability and allows you to override default settings (like supplying a specific sound event for the start sound).
 
 ### Either Codec Formatting
 Ability Instances are designed to be concise:
-- **String Format**: If your instance uses all the default settings of the ability and has no extra overrides, you can just supply the ability's ID as a string! (e.g., `"mineraculous:venom"`)
-- **Object Format**: If you need to map properties or supply `extra_customization_settings`, provide it as an object with `ability`, `properties`, and `extra_customization_settings`.
+- **String Format**: If your instance uses all the default settings of the ability and has no overrides, you can just supply the ability's ID as a string! (e.g., `"mineraculous:venom"`)
+- **Object Format**: If you need to supply `customization_settings`, `continuous_ticks`, or sound overrides, provide it as an object with `ability` and `customization_settings`.
 
 ## Translations
 In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translations for:

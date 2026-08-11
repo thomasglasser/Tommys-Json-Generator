@@ -401,17 +401,9 @@ type DataMap<K, V> = struct {
 	remove?: [K],
 }
 
-type LuckyCharms = (
-	struct {
-		#[misode_member_name="Full Loot Table"] loot_table: #[id="loot_table"] string,
-	} |
-	struct {
-		#[misode_member_name="Items"] items: (
-			#[misode_member_name="Item or Tag"] #[id(registry="item", tags="allowed")] string |
-			#[misode_member_name="Item List"] [#[id="item"] string] |
-		),
-	} |
-)
+type LuckyCharms = struct {
+	#[misode_member_name="Full Loot Table"] loot_table: #[id="loot_table"] string,
+}
 
 dispatch minecraft:resource[mineraculous:data_map_kamikotization_lucky_charms] to DataMap<#[id(registry="mineraculous:kamikotization", tags="allowed")] string, (
 	#[misode_member_name="Loot Table"] #[id="loot_table"] string |
@@ -460,22 +452,24 @@ struct AbilityConditionInstance {
 	...mineraculous:ability_condition[[type]],
 }
 
-struct AbilityInstance {
-	id: string,
-	ability: struct Ability {
+dispatch minecraft:resource[mineraculous:ability] to struct Ability {
+	conditions?: [AbilityConditionInstance],
+	branches: [struct AbilityBranch {
 		conditions?: [AbilityConditionInstance],
-		branches: [struct AbilityBranch {
-			conditions?: [AbilityConditionInstance],
-			actions: [struct AbilityActionInstance {
-				type: #[id="mineraculous:ability_action"] string,
-				...mineraculous:ability_action[[type]],
-			}],
+		actions: [struct AbilityActionInstance {
+			type: #[id="mineraculous:ability_action"] string,
+			...mineraculous:ability_action[[type]],
 		}],
-		customization_settings?: UnbakedCustomizationSettings,
-	},
+	}],
+	customization_settings?: UnbakedCustomizationSettings,
+}
+
+struct AbilityInstance {
+	ability: #[id="mineraculous:ability"] string,
 	continuous_ticks?: int,
-	start_sound?: string,
-	stop_sound?: string,
+	start_sound?: #[id="sound_event"] string,
+	stop_sound?: #[id="sound_event"] string,
+	customization_settings?: UnbakedCustomizationSettings,
 }
 
 // Ability Actions

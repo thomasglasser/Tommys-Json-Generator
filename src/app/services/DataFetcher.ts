@@ -6,6 +6,7 @@ import { checkVersion } from './Versions.js'
 
 export const MODS: Record<string, string> = {
 	'mineraculous': 'Mineraculous/Resources/main/mineraculous',
+	'mineraculouskamikotizations': 'Mineraculous/Resources/main/mineraculouskamikotizations',
 }
 
 const CACHE_NAME = 'misode-v2'
