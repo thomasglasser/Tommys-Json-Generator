@@ -95,9 +95,9 @@ export default defineConfig({
 		preact(),
 		viteStaticCopy({
 			targets: [
-				{ src: 'src/styles/giscus.css', dest: 'assets' },
-				{ src: 'src/styles/giscus-burn.css', dest: 'assets' },
-				{ src: 'src/guides/*', dest: 'guides' },
+				{ src: 'src/styles/giscus.css', dest: 'assets', rename: { stripBase: true } },
+				{ src: 'src/styles/giscus-burn.css', dest: 'assets', rename: { stripBase: true } },
+				{ src: 'src/guides/*', dest: 'guides', rename: { stripBase: true } },
 			],
 		}),
 		{
