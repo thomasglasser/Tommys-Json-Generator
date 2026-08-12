@@ -31,7 +31,7 @@ export function Guide({ id }: Props) {
 	const { changeTitle } = useTitle()
 
 	const { value: content, refresh } = useAsync(async () => {
-		const res = await fetch(`../../guides/${id}.md`)
+		const res = await fetch(import.meta.env.DEV ? `/src/guides/${id}.md` : `../../guides/${id}.md`)
 		return await res.text()
 	}, [id])
 
