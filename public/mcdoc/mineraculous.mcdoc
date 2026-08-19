@@ -33,6 +33,10 @@ dispatch minecraft:entity_sub_predicate[mineraculous:cat_staff] to struct CatSta
 	perching?: boolean,
 }
 
+dispatch minecraft:entity_sub_predicate[mineraculous:kamiko] to struct KamikoPredicate {
+	is_replica?: boolean,
+}
+
 dispatch minecraft:data_component_predicate[mineraculous:active] to boolean
 
 dispatch minecraft:data_component_predicate[mineraculous:lucky_charm] to struct ItemLuckyCharmPredicate {
@@ -279,6 +283,8 @@ dispatch minecraft:data_component[mineraculous:miraculous_id] to UUID
 dispatch minecraft:data_component[mineraculous:tool_id] to int @ 0..
 
 dispatch minecraft:data_component[mineraculous:kamikotization] to #[id="mineraculous:kamikotization"] string
+
+dispatch minecraft:data_component[mineraculous:kamikotized] to boolean
 
 // Looks
 struct LookAssets {

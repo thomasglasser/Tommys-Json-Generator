@@ -27,7 +27,7 @@ For each context, you assign **Assets** (`mineraculous:look_asset_type`). You ca
 - **`mineraculous:texture`**: Standard 2D or armor texture path.
 - **`mineraculous:geckolib_model`**: Path to a GeckoLib `.geo.json` model file.
 - **`mineraculous:geckolib_animations`**: Path to a GeckoLib `.animation.json` file.
-- **`mineraculous:item_transforms`**: Custom third-person/first-person item transform formatting.
+- **`mineraculous:item_transforms`**: Custom third-person/first-person item transform formatting. Points either to a standalone `ItemTransforms` JSON or directly to a standard vanilla item/block model JSON containing a `"display"` block.
 - **`mineraculous:transformation_textures`** & **`mineraculous:countdown_textures`**: Multi-frame texture sequences for transformations and timers.
 
 ### Shorthand vs. Full Contexts (Conditional Overrides)
@@ -62,7 +62,8 @@ Built-in looks are bundled inside a standard Minecraft Resource Pack and must be
 
 ### 2. Loaded Looks (Server-Synced / Standalone)
 Loaded looks are placed directly into a special folder on the server or client and can be dynamically loaded and synced to players without needing a traditional resource pack!
-- **File Location**: Place your look JSON and all associated texture/model files directly inside the `mineraculous/looks` directory located in your **root Minecraft game directory** (outside of any world folders).
+- **File Location**: Place your look JSON files directly inside the `mineraculous/looks` directory (or a subfolder/zip) in your **root Minecraft game directory** (outside of any world folders).
+- **Folder Validation**: Only valid Look JSON definitions (containing `"parent"`, `"metadata"`, `"contexts"`, or shorthand context maps) are allowed in the root folder of a look pack. All other files (models, textures, animations) **must** be stored inside subdirectories (e.g., `textures/`, `models/`).
 - **Asset Paths**: Asset paths inside the JSON must be **relative file paths** from the root of your look archive/folder (e.g., `textures/butterfly_hidden.png` or `models/suit.geo.json`).
 - **Why use Loaded Looks?**: Perfect for players adding custom skins locally or servers that want to distribute custom cosmetics automatically to joining players without forcing a resource pack download.
 

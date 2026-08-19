@@ -70,4 +70,4 @@ Every kamikotization must have a **Default Look** JSON file that links your suit
 > In your Default Look (and any alternative looks you create), include a metadata block with **`mineraculous:valid_kamikotizations`** containing your kamikotization. This ensures your custom suit aesthetics cannot be equipped onto other transformations!
 
 > [WARNING]
-> If your tool is a custom look-based item, your Java class **must** implement `KamikotizationBackedItem` and provide your kamikotization key for the default look, otherwise the game will crash when rendering it.
+> If your tool is a custom look-based item, your Java class **must** implement `KamikotizationBoundItem` and provide your kamikotization key for the default look, otherwise the game will crash when rendering it.

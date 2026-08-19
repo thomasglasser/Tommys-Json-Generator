@@ -97,4 +97,4 @@ Every miraculous requires a **Default Look** JSON file to link your suit and ite
 > In your Default Look (and any alternative custom looks), add a metadata block with **`mineraculous:valid_miraculouses`** containing your miraculous. This prevents other miraculouses from accidentally using your visuals!
 
 > [WARNING]
-> If your tool is a custom look-based item, your Java class **must** implement `MiraculousBackedItem` and provide your miraculous key for the default look, otherwise the game will crash when rendering it.
+> If your tool is a custom look-based item, your Java class **must** implement `MiraculousBoundItem` and provide your miraculous key for the default look, otherwise the game will crash when rendering it.

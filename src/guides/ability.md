@@ -46,6 +46,9 @@ Ability Instances are designed to be concise:
 - **String Format**: If your instance uses all the default settings of the ability and has no overrides, you can just supply the ability's ID as a string! (e.g., `"mineraculous:venom"`)
 - **Object Format**: If you need to supply `customization_settings`, `continuous_ticks`, or sound overrides, provide it as an object with `ability` and `customization_settings`.
 
+> [NOTE]
+> When providing `customization_settings` on an Ability Instance, ensure every setting ID corresponds to a required or optional property defined by the underlying `Ability` and its actions. Unused extra customization settings will generate a warning during data loading.
+
 ## Translations
 In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translations for:
 - Ability Names: `ability.<namespace>.<ability_id>`
