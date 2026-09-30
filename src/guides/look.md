@@ -40,12 +40,13 @@ When configuring a context, you can choose between two modes:
 
 ---
 
-## Restricting Looks with Metadata
+## Look Metadata
+ 
+ You can add a `metadata` block to your look JSON to configure display properties and equipment restrictions:
 
-To prevent players from equipping a look onto the wrong miraculous or kamikotization, you should add a `metadata` block to your look JSON.
-
-- Use **`mineraculous:valid_miraculouses`** to specify an array of Miraculouses that can use this look.
-- Use **`mineraculous:valid_kamikotizations`** to specify an array of Kamikotizations that can use this look.
+- **`mineraculous:name`**: Define a display name for the look, either as a raw text string or a localizable text component (e.g., `{"translate": "look.<namespace>.<look_id>"}`).
+- **`mineraculous:valid_miraculouses`**: Specify an array of Miraculouses that can use this look.
+- **`mineraculous:valid_kamikotizations`**: Specify an array of Kamikotizations that can use this look.
 
 ---
 

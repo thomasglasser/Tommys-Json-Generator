@@ -92,6 +92,11 @@ dispatch minecraft:trigger[mineraculous:performed_ability] to TriggerConditions<
 	target?: AbilityTargetPredicate,
 }>
 
+dispatch minecraft:trigger[mineraculous:killed_with_override] to TriggerConditions<struct KilledWithOverride {
+	...TriggerBase,
+	entity?: CompositeEntity,
+}>
+
 dispatch minecraft:trigger[mineraculous:transformed_miraculous] to TriggerConditions<struct TransformedMiraculous {
 	...TriggerBase,
 	miraculous?: #[id="mineraculous:miraculous"] string,
@@ -165,8 +170,8 @@ dispatch mineraculous:customization_setting_type[mineraculous:string] to struct 
 	default_value?: StringCustomizationSettingType,
 }
 
-struct UnbakedCustomizationSettings {
-	[string]: struct UnbakedCustomizationSetting {
+struct CustomizationSettingDefinitions {
+	[string]: struct CustomizationSettingDefinition {
 		type: #[id="mineraculous:customization_setting_type"] string,
 		...mineraculous:customization_setting_type[[type]],
 		optional?: boolean,
@@ -326,6 +331,8 @@ dispatch minecraft:resource[mineraculous:look] to (
 )
 
 // Look Metadata
+dispatch mineraculous:look_metadata[mineraculous:name] to Text
+
 dispatch mineraculous:look_metadata[mineraculous:valid_miraculouses] to (
 	[#[id="mineraculous:miraculous"] string] |
 )
@@ -467,16 +474,24 @@ dispatch minecraft:resource[mineraculous:ability] to struct Ability {
 			...mineraculous:ability_action[[type]],
 		}],
 	}],
-	customization_settings?: UnbakedCustomizationSettings,
+	continuous_ticks?: int,
+	start_sound?: (#[id="sound_event"] string | string),
+	stop_sound?: (#[id="sound_event"] string | string),
+	customization_setting_definitions?: CustomizationSettingDefinitions,
 }
 
 struct AbilityInstance {
 	ability: #[id="mineraculous:ability"] string,
 	continuous_ticks?: int,
-	start_sound?: #[id="sound_event"] string,
-	stop_sound?: #[id="sound_event"] string,
-	customization_settings?: UnbakedCustomizationSettings,
+	start_sound?: (#[id="sound_event"] string | string),
+	stop_sound?: (#[id="sound_event"] string | string),
+	customization_setting_definitions?: CustomizationSettingDefinitions,
 }
+
+type AbilityInstanceOrRef = (
+	#[misode_member_name="Reference"] #[id="mineraculous:ability"] string |
+	#[misode_member_name="Full"] AbilityInstance |
+)
 
 // Ability Actions
 struct EffectSettings {
@@ -495,6 +510,8 @@ dispatch mineraculous:ability_action[mineraculous:apply_effects_or_destroy] to s
 	additive?: boolean,
 	override_kill_credit?: boolean,
 	allow_blocking?: boolean,
+	restore_health_on_reversion?: boolean,
+	set_last_hurt?: boolean,
 	drop_item?: SingleItem,
 	apply_sound?: string,
 }
@@ -654,15 +671,16 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 		type: #[id="mineraculous:kamikotization_condition"] string,
 		...mineraculous:kamikotization_condition[[type]],
 	}],
+	customization_setting_definitions?: CustomizationSettingDefinitions,
 	customization_settings?: struct KamikotizationCustomizationSettings {
 		...NameCustomizationSetting,
 		[#[id] string]: any,
 	},
 	power_source: (
 		#[misode_member_name="Item"] ItemStack |
-		#[misode_member_name="Ability"] AbilityInstance |
+		#[misode_member_name="Ability"] AbilityInstanceOrRef |
 	),
-	passive_abilities?: [AbilityInstance],
+	passive_abilities?: [AbilityInstanceOrRef],
 }
 
 // Miraculous
@@ -674,6 +692,7 @@ dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 	acceptable_slot: string,
 	tool: SingleItem,
 	tool_slot?: string,
+	customization_setting_definitions?: CustomizationSettingDefinitions,
 	customization_settings?: struct MiraculousCustomizationSettings {
 		...NameCustomizationSetting,
 		...TransformationFramesCustomizationSetting,
@@ -683,6 +702,6 @@ dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 		...TimerEndCustomizationSetting,
 		[#[id] string]: any,
 	},
-	active_ability: AbilityInstance,
-	passive_abilities?: [AbilityInstance],
+	active_ability: AbilityInstanceOrRef,
+	passive_abilities?: [AbilityInstanceOrRef],
 }

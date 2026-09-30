@@ -22,16 +22,17 @@ Miraculouses are core items that players wear to transform, gain buffs, and acti
 - **Tool**: Configure the weapon or tool granted upon transforming (e.g., cane, yo-yo, staff). You can specify a single item and an optional tool slot.
 
 ### Abilities
-- **Active Ability**: Configure the primary activated power (`active_ability`). You define this by supplying an **Ability Instance**, which points to a data-driven Ability and configures its properties and custom settings to fit this miraculous.
-- **Passive Abilities**: Optionally add a list of passive ability instances (`passive_abilities`) that run continuously while transformed.
+- **Active Ability**: Configure the primary activated power (`active_ability`). You can specify this as a simple ability ID string reference (e.g., `"mineraculous:cataclysm"`) if using defaults, or provide an **Ability Instance** object to override properties (such as `continuous_ticks`, `start_sound`, `stop_sound`) and define extra settings.
+- **Passive Abilities**: Optionally add a list of passive abilities (`passive_abilities`) that run continuously while transformed. Each entry can also be a simple string reference or an Ability Instance object.
 
 For a complete breakdown of how to create the Abilities referenced by these instances, check out the [Creating an Ability](/guides/ability) guide!
 
-### Customization Settings
-The `customization_settings` block allows you to define default parameters and sounds for your miraculous:
-- **Name**: Default display name (`mineraculous:name`).
-- **Transformation Frames**: Duration of animation frames (`mineraculous:transformation_frames`).
-- **Audio**: Custom sound events for transforming (`mineraculous:transform_sound`), detransforming (`mineraculous:detransform_sound`), timer warnings (`mineraculous:timer_warning_sound`), and timer expiration (`mineraculous:timer_end_sound`).
+### Customization Setting Definitions vs. Customization Settings
+- **Customization Setting Definitions (`customization_setting_definitions`)**: Declare unbaked template schemas (specifying `type`, `optional`, and optional `default_value`) at the root level of your miraculous. These definitions are automatically baked and inherited as shared settings across all child abilities (e.g., face mask textures or shader preferences).
+- **Customization Settings (`customization_settings`)**: A map of concrete default values assigned to static or baked customization settings:
+  - **Name**: Default display name (`mineraculous:name`).
+  - **Transformation Frames**: Duration of animation frames (`mineraculous:transformation_frames`).
+  - **Audio**: Custom sound events for transforming (`mineraculous:transform_sound`), detransforming (`mineraculous:detransform_sound`), timer warnings (`mineraculous:timer_warning_sound`), and timer expiration (`mineraculous:timer_end_sound`).
 
 Once completed, save your file to your data pack at:
 `data/<namespace>/mineraculous/miraculous/<id>.json`
@@ -76,7 +77,7 @@ In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translat
 - Miraculous Name: `miraculous.<namespace>.<id>`
 - Ability Names: `ability.<namespace>.<miraculous_id>.<ability_id>`
 - Dietary Tags: `tag.item.<namespace>.kwami_preferred_foods.<id>` and `tag.item.<namespace>.kwami_treats.<id>`
-- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<miraculous_id>.<ability_id>.<setting_id>`
+- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<miraculous_id>.<setting_id>` (for miraculous container settings) or `customization_setting.<namespace>.<miraculous_id>.<ability_id>.<setting_id>` (for child ability settings)
 
 ### 3D Models & Kwami Assets
 Create GeckoLib models using [Blockbench](https://www.blockbench.net/) and the [Mineraculous Templates](https://github.com/Mineraculous/Templates).

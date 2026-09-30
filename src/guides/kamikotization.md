@@ -19,16 +19,17 @@ When creating a kamikotization file in the generator, you will configure its tri
 ### Power Source (Items vs. Abilities)
 Every kamikotization requires a `power_source` that fuels or triggers the transformation. You can choose between two power source types:
 - **Item**: An item (such as a specific token, weapon, or charged object) that grants the transformation abilities.
-- **Ability**: An ability that grants the transformation abilities.
+- **Ability**: An ability that grants the transformation abilities. Can be specified as a direct ability ID string reference (e.g., `"mineraculous:kamikotization"`) or a full ability instance object.
 
 ### Abilities
-- **Passive Abilities**: Add a list of passive ability instances (`passive_abilities`) that remain active while the target is transformed. Each instance points to a data-driven Ability and configures its properties and custom settings to fit this kamikotization.
+- **Passive Abilities**: Add a list of passive ability instances (`passive_abilities`) that remain active while the target is transformed. Each instance can be specified as a direct ability ID string reference or a full ability instance object with property and setting overrides.
 
 For a complete breakdown of how to create the Abilities referenced by these instances, check out the [Creating an Ability](/guides/ability) guide!
 
-### Conditions & Customization Settings
+### Conditions, Setting Definitions & Settings
 - **Conditions**: Optional rules (`conditions`) that must be met for a target to be kamikotized (e.g., item checks or health thresholds).
-- **Customization Settings**: Define defaults such as the display name (`mineraculous:name`) or custom data values.
+- **Customization Setting Definitions (`customization_setting_definitions`)**: Declare unbaked template setting schemas (specifying `type`, `optional`, and optional `default_value`) at the root level of your kamikotization. These definitions are automatically baked and inherited as shared settings across all child abilities!
+- **Customization Settings (`customization_settings`)**: A map of concrete default values assigned to baked settings for the kamikotization, such as configuring the default transformed identity name (`"mineraculous:name": "Hawk Moth"`).
 
 Once configured, save your file to your data pack at:
 `data/<namespace>/mineraculous/kamikotization/<id>.json`
@@ -57,7 +58,7 @@ In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translat
 - Kamikotization Name: `kamikotization.<namespace>.<id>`
 - Ability Names: `ability.<namespace>.<kamikotization_id>.<ability_id>`
 - Tags: `tag.<type>.<namespace>.<id>`
-- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<kamikotization_id>.<ability_id>.<setting_id>`
+- Customization Settings: If adding custom settings, translate them using `customization_setting.<namespace>.<kamikotization_id>.<setting_id>` (for kamikotization container settings) or `customization_setting.<namespace>.<kamikotization_id>.<ability_id>.<setting_id>` (for child ability settings)
 
 ### Setting Up the Default Look
 Every kamikotization must have a **Default Look** JSON file that links your suit models and textures to the transformation.

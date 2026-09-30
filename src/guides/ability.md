@@ -14,18 +14,26 @@ You can create and configure your Ability using the [Ability Generator](https://
 
 ## Creating the Ability File
 
-When creating an ability file in the generator, you will configure its global conditions, branching logic, and the customization settings it exposes. 
+When creating an ability file in the generator, you will configure its root properties, customization setting definitions, global conditions, and branching logic.
 
-### Customization Settings
-Abilities use `customization_settings` as a schema to define customizable parameters like sounds, durations, or visual colors. 
-- You define the `type` (e.g., Sound Event, String, Integer) and an optional `default_value`.
-- When an ability is used by a Miraculous via an **Ability Instance**, the instance can provide its own `customization_settings` block to override these defaults!
+### Ability Properties
+Abilities support several optional properties configured at the root level:
+- **`continuous_ticks`**: An integer defining how many ticks the ability continues executing after activation.
+- **`start_sound`**: The sound played when continuous execution begins. Can be specified directly as a Sound Event ID (e.g., `"minecraft:entity.warden.sonic_boom"`) or as a key referencing a customization setting definition.
+- **`stop_sound`**: The sound played when continuous execution ends. Can be specified directly as a Sound Event ID or as a key referencing a customization setting definition.
+
+### Customization Setting Definitions vs. Customization Settings
+It is important to understand the distinction between **Setting Definitions** and **Settings (Values)**:
+- **Customization Setting Definitions (`customization_setting_definitions`)**: These are unbaked schemas/blueprints declared on the Ability. They define *what* parameters can be customized, including their `type` (e.g., Sound Event, String, Integer, Resource Location, Particle), whether they are `optional`, and an optional `default_value`. Conditions, actions, and root sound properties reference these definition keys by name.
+- **Customization Settings (`customization_settings`)**: These are the concrete *values* assigned to baked settings at runtime or configured as defaults in a parent Miraculous or Kamikotization. When an ability executes, it queries the player's active customization settings to resolve the current value for each definition.
+
+When an ability is assigned to a Miraculous or Kamikotization, its definitions are baked into unique settings namespaced under that container (e.g., `<namespace>:<miraculous_id>/<ability_name>/<setting_key>`), allowing players to customize them in the customization screen!
 
 ### Conditions
-You can specify a list of global `conditions` that must pass for the ability to run at all. Conditions also contain properties that map to the customization settings.
+You can specify a list of global `conditions` that must pass for the ability to run at all. Conditions can also reference customization setting definitions to compare dynamic setting values.
 
 ### Branches
-The core logic of the ability is defined in `branches`. When the ability is performed, it iterates through its branches in order.
+The core logic of the ability is defined in `branches`. When the ability is performed, it iterates through its branches in order:
 - **Conditions**: Each branch can have its own specific conditions.
 - **Actions**: If a branch's conditions pass, its list of `actions` will be executed (e.g., applying status effects, dealing damage, spawning entities).
 - If an action succeeds and triggers a `stop` signal, the ability stops executing subsequent actions and branches.
@@ -39,17 +47,17 @@ Once configured, save your file to your data pack at:
 
 Once your `Ability` is created, it must be assigned to a Miraculous or Kamikotization using an **Ability Instance**.
 
-An Ability Instance links to your ability and allows you to override default settings (like supplying a specific sound event for the start sound).
+An Ability Instance links to your ability and allows you to override properties or supply additional setting definitions.
 
 ### Either Codec Formatting
 Ability Instances are designed to be concise:
-- **String Format**: If your instance uses all the default settings of the ability and has no overrides, you can just supply the ability's ID as a string! (e.g., `"mineraculous:venom"`)
-- **Object Format**: If you need to supply `customization_settings`, `continuous_ticks`, or sound overrides, provide it as an object with `ability` and `customization_settings`.
+- **String Format**: If your instance uses all the defaults of the ability and needs no overrides, you can just supply the ability's ID as a shorthand string (e.g., `"mineraculous:venom"`).
+- **Object Format**: If you need to supply overrides, provide it as an object with `ability` along with overridden properties (`continuous_ticks`, `start_sound`, `stop_sound`) and/or extra `customization_setting_definitions`.
 
 > [NOTE]
-> When providing `customization_settings` on an Ability Instance, ensure every setting ID corresponds to a required or optional property defined by the underlying `Ability` and its actions. Unused extra customization settings will generate a warning during data loading.
+> When declaring `customization_setting_definitions` on an Ability or Ability Instance, ensure every defined key corresponds to a property used by the underlying `Ability`, its conditions, or its actions. Unused customization setting definitions will generate a warning during data loading.
 
 ## Translations
 In your language file (e.g., `assets/<namespace>/lang/en_us.json`), add translations for:
 - Ability Names: `ability.<namespace>.<ability_id>`
-- Customization Settings: `customization_setting.<namespace>.<ability_id>.<setting_id>`
+- Customization Settings: `customization_setting.<namespace>.<ability_id>.<setting_id>` (for standalone ability definitions) or `customization_setting.<namespace>.<container_id>.<ability_id>.<setting_id>` (when baked within a Miraculous or Kamikotization)
