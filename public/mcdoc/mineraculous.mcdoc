@@ -6,12 +6,12 @@ use ::java::assets::model::Predicates
 use ::java::data::advancement::predicate::ItemPredicate
 use ::java::data::advancement::predicate::EntityPredicate
 use ::java::util::text::TextColor
-use ::java::server::util::text::Text
+use ::java::util::text::Text
 use ::java::world::item::SingleItem
-use ::java::data::advancement::trigger::Conditions as TriggerConditions
-use ::java::data::advancement::trigger::TriggerBase
-use ::java::data::advancement::trigger::CompositeEntity
-use ::java::data::util::NumberProvider
+use ::java::data::advancement::trigger::AllOptional as TriggerConditions
+use ::java::data::advancement::trigger::PlayerConditions as TriggerBase
+use ::java::data::advancement::trigger::AdvancementEntityPredicate as CompositeEntity
+use ::java::data::number_provider::IntNumberProvider as NumberProvider
 use ::java::data::tag::Tag
 use ::java::data::recipe::Smelting
 use ::java::data::recipe::CookingBookCategory
