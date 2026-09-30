@@ -87,7 +87,7 @@ dispatch mineraculous:ability_target_predicate[mineraculous:passive] to struct P
 // Advancement Triggers
 dispatch minecraft:trigger[mineraculous:performed_ability] to TriggerConditions<struct PerformedAbility {
 	...TriggerBase,
-	id?: string,
+	id?: #[id="mineraculous:ability"] string,
 	source?: AbilitySourcePredicate,
 	target?: AbilityTargetPredicate,
 }>

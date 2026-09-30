@@ -193,7 +193,7 @@ function StringHead({ type, optional, excludeStrings, node, ctx }: Props<StringT
 		return values
 	}, [type, excludeStrings, node, ctx])
 
-	const datalistId = `mcdoc_completions_${hexId()}`
+	const datalistId = useMemo(() => `mcdoc_completions_${hexId()}`, [])
 
 	const gen = idRegistry ? config.generators.find(gen => gen.id === idRegistry) : undefined
 

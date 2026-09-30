@@ -5,8 +5,8 @@ import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
 
 export const MODS: Record<string, string> = {
-	'mineraculous': 'Mineraculous/Resources/main/mineraculous',
-	'mineraculouskamikotizations': 'Mineraculous/Resources/main/mineraculouskamikotizations',
+	mineraculous: 'Mineraculous/Resources/main/mineraculous',
+	mineraculouskamikotizations: 'Mineraculous/Resources/main/mineraculouskamikotizations',
 }
 
 const CACHE_NAME = 'misode-v2'
@@ -92,7 +92,15 @@ export async function fetchRegistries(versionId: VersionId) {
 			try {
 				const registries = await (await fetch(`${resourcesUrl}/reports/registries.json`)).json()
 				for (const [key, entryIds] of Object.entries(registries)) {
-					result.set(key, entryIds as string[])
+					const targetKey = key.startsWith('minecraft:') ? key.slice('minecraft:'.length) : key
+					const entries = entryIds as string[]
+
+					const list = result.get(targetKey)
+					if (list) {
+						list.push(...entries)
+					} else {
+						result.set(targetKey, [...entries])
+					}
 				}
 			} catch (e) { console.warn(`Failed to load ${modId} registries`) }
 
@@ -102,7 +110,7 @@ export async function fetchRegistries(versionId: VersionId) {
 				{ file: 'recipes.json', target: 'recipe' },
 				{ file: 'recipe_advancements.json', target: 'advancement' },
 				{ file: 'advancements.json', target: 'advancement' },
-				{ file: 'looks.json', target: `mineraculous:look` }
+				{ file: 'looks.json', target: 'mineraculous:look' },
 			]
 			for (const { file, target } of reloadables) {
 				try {

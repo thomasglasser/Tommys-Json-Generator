@@ -443,9 +443,10 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 	}
 
 	const versionChecksum = getVersionChecksum(version.id)
+	const summaryChecksum = sparkmd5.hash(`${versionChecksum}:${Object.entries(summary.registries).map(([k, v]) => `${k}:${v.length}`).join(',')}`)
 
 	meta.registerSymbolRegistrar('mcmeta-summary', {
-		checksum: versionChecksum,
+		checksum: summaryChecksum,
 		registrar: customSymbolRegistrar(summary, release),
 	})
 
@@ -473,7 +474,7 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 			{ file: 'recipes.json', target: 'recipe' },
 			{ file: 'recipe_advancements.json', target: 'advancement' },
 			{ file: 'advancements.json', target: 'advancement' },
-			{ file: 'looks.json', target: 'mineraculous:look' }
+			{ file: 'looks.json', target: 'mineraculous:look' },
 		]
 		for (const { file, target } of reloadables) {
 			try {
@@ -510,14 +511,15 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 	}
 
 	// Register all fetched symbols synchronously
+	const customModsChecksum = sparkmd5.hash(`${versionChecksum}:${customModSymbols.length}:${JSON.stringify(Object.keys(MODS))}`)
 	meta.registerSymbolRegistrar('custom-mods-summary', {
-		checksum: versionChecksum,
+		checksum: customModsChecksum,
 		registrar: (symbols) => {
 			for (const { uri, category, id } of customModSymbols) {
 				symbols.query(uri, category, core.ResourceLocation.lengthen(id))
 					.enter({ usage: { type: 'declaration' } })
 			}
-		}
+		},
 	})
 
 	registerAttributes(meta, release, versions)
@@ -584,13 +586,10 @@ function customSymbolRegistrar(summary: McmetaSummary, release: ReleaseVersion):
 	return (symbols, ctx) => {
 		je.dependency.symbolRegistrar(summary, release)(symbols, ctx)
 
-		// Temporary until spyglass core is updated
 		for (const [registryId, registry] of Object.entries(summary.registries)) {
-			if (['number_provider', 'worldgen/carver_type', 'worldgen/feature_type', 'worldgen/material_condition_type', 'worldgen/material_rule_type'].includes(registryId)) {
-				for (const entryId of registry) {
-					symbols.query(McmetaSummaryUri, registryId, core.ResourceLocation.lengthen(entryId))
-						.enter({ usage: { type: 'declaration' } })
-				}
+			for (const entryId of registry) {
+				symbols.query(McmetaSummaryUri, registryId, core.ResourceLocation.lengthen(entryId))
+					.enter({ usage: { type: 'declaration' } })
 			}
 		}
 	}
