@@ -466,6 +466,8 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		throw e
 	}
 
+	const versionChecksum = getVersionChecksum(version.id)
+
 	let summary: je.dependency.McmetaSummary
 	try {
 		summary = {	registries: Object.fromEntries((await fetchRegistries(version.id)).entries()),
@@ -475,7 +477,6 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		commands: { type: 'root', children: {} },
 	}
 
-	const versionChecksum = getVersionChecksum(version.id)
 	const summaryChecksum = sparkmd5.hash(`${versionChecksum}:${Object.entries(summary.registries).map(([k, v]) => `${k}:${v.length}`).join(',')}`)
 
 	meta.registerSymbolRegistrar('mcmeta-summary', {
