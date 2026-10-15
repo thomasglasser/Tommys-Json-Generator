@@ -17,7 +17,7 @@ You can create and configure your Miraculous using the [Miraculous Generator](ht
 Miraculouses are core items that players wear to transform, gain buffs, and activate special powers. When creating a miraculous in the generator, you will configure several key systems:
 
 ### Core Properties & Tool
-- **Color**: Set your miraculous's theme color using either an RGB hex code or a built-in text color.
+- **Palette**: Set your miraculous's three-tier `palette` (primary, secondary, tertiary) using RGB hex codes or built-in text colors. Primary is used for names, HUDs, and kwami colors; secondary for essence orbs and visual accents; tertiary for jewel transformation flashes and beams.
 - **Acceptable Slot**: The Curios slot ID where the miraculous can be equipped (e.g., `necklace`, `ring`, `bracelet`).
 - **Tool**: Configure the weapon or tool granted upon transforming (e.g., cane, yo-yo, staff). You can specify a single item and an optional tool slot.
 
@@ -89,7 +89,7 @@ Create GeckoLib models using [Blockbench](https://www.blockbench.net/) and the [
 Every miraculous requires a **Default Look** JSON file to link your suit and item textures/models to the item.
 - File Path: `assets/<namespace>/mineraculous/looks/mineraculous/miraculous/<id>.json`
 - Use the [Look Generator](https://beta-jsons.thomasglasser.dev/mineraculous/look/) and configure at least the following required contexts with GeckoLib models and textures:
-  1. `mineraculous:hidden_miraculous` (when worn normally)
+  1. `mineraculous:camouflaged_miraculous` (when worn normally)
   2. `mineraculous:powered_miraculous` (when charged/active)
   3. `mineraculous:miraculous_suit` (the transformed armor)
   4. `mineraculous:miraculous_tool` (if your tool is look-based)

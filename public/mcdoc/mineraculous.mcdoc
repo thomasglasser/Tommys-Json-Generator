@@ -210,8 +210,6 @@ dispatch minecraft:data_component[mineraculous:customization_data] to struct Cus
 	},
 }
 
-dispatch minecraft:data_component[mineraculous:powered] to Unit
-
 dispatch minecraft:data_component[mineraculous:charged] to boolean
 
 dispatch minecraft:data_component[mineraculous:kwami_id] to UUID
@@ -225,12 +223,14 @@ dispatch minecraft:data_component[mineraculous:transformation_state] to struct T
 dispatch minecraft:data_component[mineraculous:remaining_ticks] to int @ 0..
 
 dispatch minecraft:data_component[mineraculous:power_state] to enum(string) PowerState {
-	Hidden = "hidden",
+	Camouflaged = "camouflaged",
+	Charged = "charged",
 	Active = "active",
-	Powered_1 = "powered_1",
-	Powered_2 = "powered_2",
-	Powered_3 = "powered_3",
-	Powered_4 = "powered_4",
+	Countdown_0 = "countdown_0",
+	Countdown_1 = "countdown_1",
+	Countdown_2 = "countdown_2",
+	Countdown_3 = "countdown_3",
+	Countdown_4 = "countdown_4",
 	Powered = "powered",
 }
 
@@ -683,12 +683,24 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 	passive_abilities?: [AbilityInstanceOrRef],
 }
 
-// Miraculous
-dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
-	color: (
+struct ColorPalette {
+	primary: (
 		#[misode_member_name="RGB Hex"] #[color="hex_rgb"] string |
 		#[misode_member_name="Built-In"] #[color="named"] TextColor |
 	),
+	secondary: (
+		#[misode_member_name="RGB Hex"] #[color="hex_rgb"] string |
+		#[misode_member_name="Built-In"] #[color="named"] TextColor |
+	),
+	tertiary: (
+		#[misode_member_name="RGB Hex"] #[color="hex_rgb"] string |
+		#[misode_member_name="Built-In"] #[color="named"] TextColor |
+	),
+}
+
+// Miraculous
+dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
+	palette: ColorPalette,
 	acceptable_slot: string,
 	tool: SingleItem,
 	tool_slot?: string,

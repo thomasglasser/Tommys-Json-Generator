@@ -19,7 +19,7 @@ In Mineraculous, visuals are decoupled from gameplay logic. A **Look** is a conf
 ## Look Contexts & Assets
 
 When generating a look, you organize your visuals by **Contexts** (`mineraculous:look_context`). Each context represents an item state or armor piece:
-- **Miraculous Contexts**: `mineraculous:hidden_miraculous`, `mineraculous:powered_miraculous`, `mineraculous:miraculous_suit`, `mineraculous:miraculous_tool`
+- **Miraculous Contexts**: `mineraculous:camouflaged_miraculous`, `mineraculous:powered_miraculous`, `mineraculous:miraculous_suit`, `mineraculous:miraculous_tool`
 - **Kamikotization Contexts**: `mineraculous:kamikotization_suit`, `mineraculous:kamikotization_tool`
 
 ### Assigning Assets
@@ -58,14 +58,14 @@ There are two distinct ways to install and distribute looks in Minecraft:
 Built-in looks are bundled inside a standard Minecraft Resource Pack and must be installed on **all** viewing clients.
 - **File Location**: Save your generated look JSON inside your resource pack at `assets/<namespace>/mineraculous/looks/<look_id>.json`.
   - *Note*: Default looks require specific subfolder paths. For example, a default miraculous look goes in `assets/<namespace>/mineraculous/looks/mineraculous/miraculous/<id>.json`.
-- **Asset Paths**: All asset paths inside the JSON must be **fully qualified Resource Locations** pointing to resource pack assets (e.g., `<namespace>:textures/item/hidden_butterfly.png` or `<namespace>:geo/item/butterfly_cane.geo.json`).
+- **Asset Paths**: All asset paths inside the JSON must be **fully qualified Resource Locations** pointing to resource pack assets (e.g., `<namespace>:textures/item/miraculous/butterfly/camouflaged.png` or `<namespace>:geo/item/butterfly_cane.geo.json`).
 - **Why use Built-In?**: Offers the best performance and zero network overhead, making it ideal for full modpacks or official server resource packs.
 
 ### 2. Loaded Looks (Server-Synced / Standalone)
 Loaded looks are placed directly into a special folder on the server or client and can be dynamically loaded and synced to players without needing a traditional resource pack!
 - **File Location**: Place your look JSON files directly inside the `mineraculous/looks` directory (or a subfolder/zip) in your **root Minecraft game directory** (outside of any world folders).
 - **Folder Validation**: Only valid Look JSON definitions (containing `"parent"`, `"metadata"`, `"contexts"`, or shorthand context maps) are allowed in the root folder of a look pack. All other files (models, textures, animations) **must** be stored inside subdirectories (e.g., `textures/`, `models/`).
-- **Asset Paths**: Asset paths inside the JSON must be **relative file paths** from the root of your look archive/folder (e.g., `textures/butterfly_hidden.png` or `models/suit.geo.json`).
+- **Asset Paths**: Asset paths inside the JSON must be **relative file paths** from the root of your look archive/folder (e.g., `textures/butterfly_camouflaged.png` or `models/suit.geo.json`).
 - **Why use Loaded Looks?**: Perfect for players adding custom skins locally or servers that want to distribute custom cosmetics automatically to joining players without forcing a resource pack download.
 
 > [NOTE]
