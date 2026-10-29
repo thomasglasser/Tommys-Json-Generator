@@ -1,0 +1,89 @@
+name: Sync Upstream from Misode
+
+on:
+  schedule:
+    # Runs every Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-tracking:
+    name: Update misode-master tracking branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream and push misode-master
+        run: |
+          git remote add upstream https://github.com/misode/misode.github.io.git
+          git fetch upstream master
+          git checkout -B misode-master upstream/master
+          git push origin misode-master --force
+
+  create-pr:
+    name: Check & create PR for ${{ matrix.target }}
+    needs: update-tracking
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [release, beta]
+      fail-fast: false
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.target }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch tracking branch
+        run: |
+          git fetch origin misode-master
+
+      - name: Check for upstream commits ahead of ${{ matrix.target }}
+        id: check_upstream
+        run: |
+          COMMITS_BEHIND=$(git rev-list --count HEAD..origin/misode-master)
+          echo "behind=$COMMITS_BEHIND" >> "$GITHUB_OUTPUT"
+          echo "Upstream is $COMMITS_BEHIND commit(s) ahead of ${{ matrix.target }}."
+
+      - name: Create Pull Request
+        if: steps.check_upstream.outputs.behind > 0
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if an open PR already exists for misode-master -> target
+          EXISTING_PR=$(gh pr list --head misode-master --base "${{ matrix.target }}" --state open --json number --jq '.[0].number')
+
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --base "${{ matrix.target }}" \
+              --head misode-master \
+              --title "chore(upstream): sync misode/misode.github.io into ${{ matrix.target }}" \
+              --body "Automated weekly sync from [misode/misode.github.io](https://github.com/misode/misode.github.io) \`master\` branch.
+
+### Details
+- **Target Branch**: \`${{ matrix.target }}\`
+- **Upstream Commits Ahead**: \`${{ steps.check_upstream.outputs.behind }}\`
+
+> [!IMPORTANT]
+> When merging this pull request, always select **\"Create a merge commit\"** (never *Squash and merge* or *Rebase and merge*) to preserve the upstream Git ancestry so future automated sync checks work properly."
+          else
+            echo "PR #$EXISTING_PR is already open for ${{ matrix.target }}. It has automatically updated with the latest misode-master commits."
+          fi
