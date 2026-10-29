@@ -72,18 +72,22 @@ jobs:
           EXISTING_PR=$(gh pr list --head misode-master --base "${{ matrix.target }}" --state open --json number --jq '.[0].number')
 
           if [ -z "$EXISTING_PR" ]; then
+            {
+              echo "Automated weekly sync from [misode/misode.github.io](https://github.com/misode/misode.github.io) \`master\` branch."
+              echo ""
+              echo "### Details"
+              echo "- **Target Branch**: \`${{ matrix.target }}\`"
+              echo "- **Upstream Commits Ahead**: \`${{ steps.check_upstream.outputs.behind }}\`"
+              echo ""
+              echo "> [!IMPORTANT]"
+              echo "> When merging this pull request, always select **\"Create a merge commit\"** (never *Squash and merge* or *Rebase and merge*) to preserve the upstream Git ancestry so future automated sync checks work properly."
+            } > pr_body.md
+
             gh pr create \
               --base "${{ matrix.target }}" \
               --head misode-master \
               --title "chore(upstream): sync misode/misode.github.io into ${{ matrix.target }}" \
-              --body "Automated weekly sync from [misode/misode.github.io](https://github.com/misode/misode.github.io) \`master\` branch.
-
-### Details
-- **Target Branch**: \`${{ matrix.target }}\`
-- **Upstream Commits Ahead**: \`${{ steps.check_upstream.outputs.behind }}\`
-
-> [!IMPORTANT]
-> When merging this pull request, always select **\"Create a merge commit\"** (never *Squash and merge* or *Rebase and merge*) to preserve the upstream Git ancestry so future automated sync checks work properly."
+              --body-file pr_body.md
           else
             echo "PR #$EXISTING_PR is already open for ${{ matrix.target }}. It has automatically updated with the latest misode-master commits."
           fi
