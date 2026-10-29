@@ -31,6 +31,11 @@
       "mc": "fr_fr"
     },
     {
+      "code": "id",
+      "name": "Bahasa Indonesia",
+      "mc": "id_id"
+    },
+    {
       "code": "it",
       "name": "Italiano",
       "mc": "it_it"
@@ -220,9 +225,16 @@
     },
     {
       "id": "26.3",
-      "dynamic": true,
+      "ref": "26.3",
       "name": "26.3",
-      "pack_format": 119,
+      "pack_format": 121,
+      "show": true
+    },
+    {
+      "id": "26.4",
+      "dynamic": true,
+      "name": "26.4",
+      "pack_format": 125,
       "show": true
     }
   ],
@@ -467,6 +479,11 @@
       "id": "block_transformer",
       "url": "block-transformer",
       "minVersion": "26.3"
+    },
+    {
+      "id": "block_sound_set",
+      "url": "block-sound-set",
+      "minVersion": "26.4"
     },
     {
       "id": "text_component",
