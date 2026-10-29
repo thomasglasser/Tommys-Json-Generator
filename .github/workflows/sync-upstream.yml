@@ -68,15 +68,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Check if an open PR already exists for misode-master -> target
-          EXISTING_PR=$(gh pr list --head misode-master --base "${{ matrix.target }}" --state open --json number --jq '.[0].number')
+          SYNC_BRANCH="sync/upstream-into-${{ matrix.target }}"
+
+          # Check if an open PR already exists for SYNC_BRANCH -> target
+          EXISTING_PR=$(gh pr list --head "$SYNC_BRANCH" --base "${{ matrix.target }}" --state open --json number --jq '.[0].number')
 
           if [ -z "$EXISTING_PR" ]; then
+            # Create the dedicated sync branch from misode-master
+            git checkout -B "$SYNC_BRANCH" origin/misode-master
+            git push origin "$SYNC_BRANCH" --force
+
             {
               echo "Automated weekly sync from [misode/misode.github.io](https://github.com/misode/misode.github.io) \`master\` branch."
               echo ""
               echo "### Details"
               echo "- **Target Branch**: \`${{ matrix.target }}\`"
+              echo "- **Sync Branch**: \`$SYNC_BRANCH\`"
               echo "- **Upstream Commits Ahead**: \`${{ steps.check_upstream.outputs.behind }}\`"
               echo ""
               echo "> [!IMPORTANT]"
@@ -85,9 +92,9 @@ jobs:
 
             gh pr create \
               --base "${{ matrix.target }}" \
-              --head misode-master \
+              --head "$SYNC_BRANCH" \
               --title "chore(upstream): sync misode/misode.github.io into ${{ matrix.target }}" \
               --body-file pr_body.md
           else
-            echo "PR #$EXISTING_PR is already open for ${{ matrix.target }}. It has automatically updated with the latest misode-master commits."
+            echo "PR #$EXISTING_PR is already open for ${{ matrix.target }}. Leaving dedicated sync branch $SYNC_BRANCH intact for review/resolution."
           fi
