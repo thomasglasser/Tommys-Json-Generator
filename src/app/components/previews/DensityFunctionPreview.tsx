@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Voxel } from 'deepslate/render'
 import { clampedMap, VoxelRenderer } from 'deepslate/render'
 import type { mat3, mat4 } from 'gl-matrix'

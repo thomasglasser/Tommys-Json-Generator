@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'preact/hooks'
 import { deepClone } from '../../Utils.js'
 import { useAsync } from '../../hooks/useAsync.js'

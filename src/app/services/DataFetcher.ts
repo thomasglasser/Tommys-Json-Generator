@@ -4,6 +4,11 @@ import { message } from '../Utils.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
 
+export const MODS: Record<string, string> = {
+	mineraculous: 'Mineraculous/Resources/main/mineraculous',
+	mineraculouskamikotizations: 'Mineraculous/Resources/main/mineraculouskamikotizations',
+}
+
 const CACHE_NAME = 'misode-v2'
 const CACHE_LATEST_VERSION = 'cached_latest_version'
 const CACHE_PATCH = 'misode_cache_patch'
@@ -78,6 +83,81 @@ export async function fetchRegistries(versionId: VersionId) {
 		for (const id in data) {
 			result.set(id, data[id].map((e: string) => 'minecraft:' + e))
 		}
+
+		// Mods
+		for (const [modId, resourcePath] of Object.entries(MODS)) {
+			const resourcesUrl = `https://raw.githubusercontent.com/${resourcePath}`
+
+			// Registries
+			try {
+				const registries = await (await fetch(`${resourcesUrl}/reports/registries.json`)).json()
+				for (const [key, entryIds] of Object.entries(registries)) {
+					const targetKey = key.startsWith('minecraft:') ? key.slice('minecraft:'.length) : key
+					const entries = entryIds as string[]
+
+					const list = result.get(targetKey)
+					if (list) {
+						list.push(...entries)
+					} else {
+						result.set(targetKey, [...entries])
+					}
+				}
+			} catch (e) { console.warn(`Failed to load ${modId} registries`) }
+
+			// Reloadables
+			const reloadables = [
+				{ file: 'loot_tables.json', target: 'loot_table' },
+				{ file: 'recipes.json', target: 'recipe' },
+				{ file: 'recipe_advancements.json', target: 'advancement' },
+				{ file: 'advancements.json', target: 'advancement' },
+				{ file: 'looks.json', target: 'mineraculous:look' },
+			]
+			for (const { file, target } of reloadables) {
+				try {
+					const data = await (await fetch(`${resourcesUrl}/reports/${file}`)).json()
+					if (!result.has(target)) {
+						result.set(target, [])
+					}
+					result.get(target)?.push(...Object.values(data as Record<string, string>))
+				} catch (e) {}
+			}
+
+			// Tags Index
+			try {
+				const tagsIndexRes = await fetch(`${resourcesUrl}/reports/tags.json`)
+				if (tagsIndexRes.ok) {
+					const tagsList: string[] = await tagsIndexRes.json()
+
+					for (const tagId of tagsList) {
+						const [namespace, registry] = tagId.split(':')
+						// Dynamically resolve the URL from the target mod's resources folder
+						const tagUrl = `${resourcesUrl}/reports/tags/${namespace}/${registry}.json`
+
+						try {
+							const tagData = await (await fetch(tagUrl)).json()
+
+							// Clean 'worldgen/' out of the registry to match frontend keys (e.g. 'worldgen/biome' -> 'biome')
+							const cleanRegistry = registry.replace('worldgen/', '')
+							const targetKey = namespace === 'minecraft'
+								? `tag/${cleanRegistry}`
+								: `${namespace}:tag/${cleanRegistry}`
+
+							if (!result.has(targetKey)) {
+								result.set(targetKey, [])
+							}
+
+							// Push the array of tags into the registry map
+							result.get(targetKey)?.push(...Object.values(tagData as Record<string, string>))
+						} catch (e) {
+							console.warn(`Failed to fetch tag array at ${tagUrl}`)
+						}
+					}
+				}
+			} catch (e) {
+				console.warn(`Failed to load tags.json index for ${modId}`)
+			}
+		}
+
 		return result
 	} catch (e) {
 		throw new Error(`Error occurred while fetching registries: ${message(e)}`)
@@ -136,13 +216,35 @@ export async function fetchPreset(versionId: VersionId, registry: string, id: st
 	const version = config.versions.find(v => v.id === versionId)!
 	await validateCache(version)
 	try {
+		let namespace: string | null = null
+		let path = registry
+		if (registry.includes(':')) {
+			namespace = registry.substring(0, registry.indexOf(':'))
+			path = registry.substring(namespace.length + 1)
+		}
+
+		const modId = id.includes(':') ? id.split(':')[0] : null
+		const resourcePath = modId ? MODS[modId] : null
+
 		let url
-		if (id.startsWith('immersive_weathering:')) {
-			url = `https://raw.githubusercontent.com/AstralOrdana/Immersive-Weathering/main/src/main/resources/data/immersive_weathering/block_growths/${id.slice(21)}.json`
+		if (modId && resourcePath) {
+			// Mods
+			const resourcesUrl = `https://raw.githubusercontent.com/${resourcePath}`
+			const cleanId = id.substring(modId.length + 1)
+
+			if (path.includes('tag')) {
+				url = `${resourcesUrl}/data/${modId}/tags/${namespace ? `${namespace}/` : ''}${path.replace('tags/', '')}/${cleanId}.json`
+			} else if (registry.includes('mineraculous/look')) {
+				url = `${resourcesUrl}/assets/${modId}/mineraculous/looks/${cleanId}.json`
+			} else {
+				url = `${resourcesUrl}/data/${modId}/${namespace ? `${namespace}/` : ''}${path}/${cleanId}.json`
+			}
 		} else {
+			// Vanilla fallback
 			const type = ['atlases', 'blockstates', 'items', 'font', 'lang', 'models', 'equipment', 'post_effect'].includes(registry) ? 'assets' : 'data'
 			url = `${mcmeta(version, type)}/${type}/minecraft/${registry}/${id}.json`
 		}
+
 		const res = await fetch(url)
 		return await res.text()
 	} catch (e) {
@@ -206,11 +308,6 @@ export async function fetchVersions(): Promise<VersionMeta[]> {
 	} catch (e) {
 		throw new Error(`Error occured while fetching versions: ${message(e)}`)
 	}
-}
-
-export function getAssetUrl(versionId: VersionId, type: string, path: string): string {
-	const version = config.versions.find(v => v.id === versionId)!
-	return `${mcmeta(version, 'assets')}/assets/minecraft/${type}/${path}.png`
 }
 
 export async function fetchResources(versionId: VersionId) {

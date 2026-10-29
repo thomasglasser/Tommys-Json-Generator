@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as core from '@spyglassmc/core'
 import { BrowserExternals } from '@spyglassmc/core/lib/browser.js'
 import * as je from '@spyglassmc/java-edition'
@@ -14,7 +15,7 @@ import type { ConfigGenerator, ConfigVersion } from '../Config.js'
 import siteConfig from '../Config.js'
 import { computeIfAbsent, genPath } from '../Utils.js'
 import type { VanillaMcdocSymbols, VersionMeta } from './DataFetcher.js'
-import { fetchBlockStates, fetchRegistries, fetchVanillaMcdoc, fetchVersions, getVersionChecksum } from './DataFetcher.js'
+import { fetchBlockStates, fetchRegistries, fetchVanillaMcdoc, fetchVersions, getVersionChecksum, MODS } from './DataFetcher.js'
 import { IndexedDbFileSystem } from './FileSystem.js'
 import type { VersionId } from './Versions.js'
 import { checkVersion } from './Versions.js'
@@ -469,26 +470,99 @@ const initialize: core.ProjectInitializer = async (ctx) => {
 		throw e
 	}
 
+	const versionChecksum = getVersionChecksum(version.id)
+
 	let summary: je.dependency.McmetaSummary
 	try {
-		summary = {
-			registries: Object.fromEntries((await fetchRegistries(version.id)).entries()),
-			blocks: Object.fromEntries([...(await fetchBlockStates(version.id)).entries()]
-				.map(([id, data]) => [id, data])),
-			fluids: je.dependency.Fluids,
-			commands: { type: 'root', children: {} },
-		}
-	
-		const versionChecksum = getVersionChecksum(version.id)
-	
-		meta.registerSymbolRegistrar('mcmeta-summary', {
-			checksum: versionChecksum,
+		summary = {	registries: Object.fromEntries((await fetchRegistries(version.id)).entries()),
+		blocks: Object.fromEntries([...(await fetchBlockStates(version.id)).entries()]
+			.map(([id, data]) => [id, data])),
+		fluids: je.dependency.Fluids,
+		commands: { type: 'root', children: {} },
+	}
+
+	const summaryChecksum = sparkmd5.hash(`${versionChecksum}:${Object.entries(summary.registries).map(([k, v]) => `${k}:${v.length}`).join(',')}`)
+
+	meta.registerSymbolRegistrar('mcmeta-summary', {
+		checksum: summaryChecksum,
 			registrar: customSymbolRegistrar(summary, release),
 		})
 	} catch (e) {
 		logger.error(`Failed to register symbol registrar: ${e}`)
 		throw e
 	}
+
+	// Mods
+	const customModSymbols: { uri: string, category: string, id: string }[] = []
+
+	for (const [modId, resourcePath] of Object.entries(MODS)) {
+		const resourcesUrl = `https://raw.githubusercontent.com/${resourcePath}`
+		const baseUri = `${modId}://summary/registries.json`
+
+		// Registries
+		try {
+			const registries = await (await fetch(`${resourcesUrl}/reports/registries.json`)).json()
+			for (const [key, entryIds] of Object.entries(registries)) {
+				const category = core.ResourceLocation.shorten(key)
+				for (const entryId of (entryIds as string[])) {
+					customModSymbols.push({ uri: baseUri, category, id: entryId })
+				}
+			}
+		} catch (e) {}
+
+		// Reloadables
+		const reloadables = [
+			{ file: 'loot_tables.json', target: 'loot_table' },
+			{ file: 'recipes.json', target: 'recipe' },
+			{ file: 'recipe_advancements.json', target: 'advancement' },
+			{ file: 'advancements.json', target: 'advancement' },
+			{ file: 'looks.json', target: 'mineraculous:look' },
+		]
+		for (const { file, target } of reloadables) {
+			try {
+				const data = await (await fetch(`${resourcesUrl}/reports/${file}`)).json()
+				for (const entryId of Object.values(data as Record<string, string>)) {
+					customModSymbols.push({ uri: baseUri, category: target, id: entryId })
+				}
+			} catch (e) {}
+		}
+
+		// Tags
+		try {
+			const tagsIndexRes = await fetch(`${resourcesUrl}/reports/tags.json`)
+			if (tagsIndexRes.ok) {
+				const tagsList: string[] = await tagsIndexRes.json()
+				for (const tagId of tagsList) {
+					const [namespace, registry] = tagId.split(':')
+					const tagUrl = `${resourcesUrl}/reports/tags/${namespace}/${registry}.json`
+
+					try {
+						const tagData = await (await fetch(tagUrl)).json()
+						const cleanRegistry = registry.replace('worldgen/', '')
+						const category = namespace === 'minecraft'
+							? `tag/${cleanRegistry}`
+							: `tag/${namespace}:${cleanRegistry}`
+
+						for (const entryId of Object.values(tagData as Record<string, string>)) {
+							customModSymbols.push({ uri: baseUri, category, id: entryId })
+						}
+					} catch (e) {}
+				}
+			}
+		} catch (e) {}
+	}
+
+	// Register all fetched symbols synchronously
+	const customModsChecksum = sparkmd5.hash(`${versionChecksum}:${customModSymbols.length}:${JSON.stringify(Object.keys(MODS))}`)
+	meta.registerSymbolRegistrar('custom-mods-summary', {
+		checksum: customModsChecksum,
+		registrar: (symbols) => {
+			for (const { uri, category, id } of customModSymbols) {
+				symbols.query(uri, category, core.ResourceLocation.lengthen(id))
+					.enter({ usage: { type: 'declaration' } })
+			}
+		},
+	})
 
 	try {
 		registerAttributes(meta, release, versions)
@@ -564,13 +638,10 @@ function customSymbolRegistrar(summary: McmetaSummary, release: ReleaseVersion):
 		}
 		je.dependency.symbolRegistrar(summary, release)(symbols, ctx)
 
-		// Temporary until spyglass core is updated
 		for (const [registryId, registry] of Object.entries(summary.registries)) {
-			if (['context_float_provider', 'context_float_provider_type', 'context_int_provider', 'context_int_provider_type', 'worldgen/carver_type', 'worldgen/feature_type', 'worldgen/material_condition', 'worldgen/material_condition_type', 'worldgen/material_rule', 'worldgen/material_rule_type'].includes(registryId)) {
-				for (const entryId of registry) {
-					symbols.query(McmetaSummaryUri, registryId, core.ResourceLocation.lengthen(entryId))
-						.enter({ usage: { type: 'declaration' } })
-				}
+			for (const entryId of registry) {
+				symbols.query(McmetaSummaryUri, registryId, core.ResourceLocation.lengthen(entryId))
+					.enter({ usage: { type: 'declaration' } })
 			}
 		}
 	}

@@ -193,7 +193,7 @@ function StringHead({ type, optional, excludeStrings, node, ctx }: Props<StringT
 		return values
 	}, [type, excludeStrings, node, ctx])
 
-	const datalistId = `mcdoc_completions_${hexId()}`
+	const datalistId = useMemo(() => `mcdoc_completions_${hexId()}`, [])
 
 	const gen = idRegistry ? config.generators.find(gen => gen.id === idRegistry) : undefined
 
@@ -445,10 +445,15 @@ function formatUnionMember(type: SimplifiedMcdocTypeNoUnion, others: SimplifiedM
 		return formatIdentifier(type.kind === 'struct' ? 'object' : type.kind)
 	}
 	if (type.kind === 'struct') {
-		// Show the first literal key
-		const firstKey = type.fields.find(f => f.key.kind === 'literal')?.key
-		if (firstKey) {
-			return formatUnionMember(firstKey, [])
+		const firstField = type.fields.find(f => f.key.kind === 'literal')
+		const fieldName = firstField?.attributes?.find(a => a.name === 'misode_member_name')?.value ??
+			firstField?.key.attributes?.find(a => a.name === 'misode_member_name')?.value ??
+			firstField?.type.attributes?.find(a => a.name === 'misode_member_name')?.value
+		if (fieldName?.kind === 'literal' && fieldName.value.kind === 'string') {
+			return fieldName.value.value
+		}
+		if (firstField) {
+			return formatUnionMember(firstField.key, [])
 		}
 	}
 	return formatIdentifier(type.kind === 'struct' ? 'object' : type.kind)
