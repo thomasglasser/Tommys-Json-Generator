@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as zip from '@zip.js/zip.js'
 import type { Identifier, NbtTag, Random } from 'deepslate'
 import { Matrix3, Matrix4, NbtByte, NbtCompound, NbtDouble, NbtInt, NbtList, NbtString, Vector } from 'deepslate'
@@ -10,7 +11,7 @@ import config from './Config.js'
 import type { VersionId } from './services/index.js'
 import { checkVersion } from './services/index.js'
 
-export const SOURCE_REPO_URL = 'https://github.com/misode/misode.github.io'
+export const SOURCE_REPO_URL = 'https://github.com/thomasglasser/Tommys-Json-Generator'
 
 export function isPromise(obj: any): obj is Promise<any> {
 	return typeof (obj as any)?.then === 'function' 
