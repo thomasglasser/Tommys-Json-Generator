@@ -29,7 +29,7 @@ For a complete breakdown of how to create the Abilities referenced by these inst
 ### Conditions, Setting Definitions & Settings
 - **Conditions**: Optional rules (`conditions`) that must be met for a target to be kamikotized (e.g., item checks or health thresholds).
 - **Customization Setting Definitions (`customization_setting_definitions`)**: Declare unbaked template setting schemas (specifying `type`, `optional`, and optional `default_value`) at the root level of your kamikotization. These definitions are automatically baked and inherited as shared settings across all child abilities!
-- **Customization Settings (`customization_settings`)**: A map of concrete default values assigned to baked settings for the kamikotization, such as configuring the default transformed identity name (`"mineraculous:name": "Hawk Moth"`).
+- **Customization Settings (`customization_settings`)**: A map of concrete default values assigned to baked settings for the kamikotization, such as configuring the default transformed identity name (`"mineraculous:kamikotization_name": "Hawk Moth"`).
 
 Once configured, save your file to your data pack at:
 `data/<namespace>/mineraculous/kamikotization/<id>.json`

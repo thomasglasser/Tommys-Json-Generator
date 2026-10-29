@@ -170,6 +170,14 @@ dispatch mineraculous:customization_setting_type[mineraculous:string] to struct 
 	default_value?: StringCustomizationSettingType,
 }
 
+dispatch mineraculous:customization_setting_type[mineraculous:transformation_animation] to struct TransformationAnimationCustomizationSettingTypeDefinition {
+	default_value?: TransformationAnimation,
+}
+
+dispatch mineraculous:customization_setting_type[mineraculous:detransformation_animation] to struct DetransformationAnimationCustomizationSettingTypeDefinition {
+	default_value?: TransformationAnimation,
+}
+
 struct CustomizationSettingDefinitions {
 	[string]: struct CustomizationSettingDefinition {
 		type: #[id="mineraculous:customization_setting_type"] string,
@@ -178,13 +186,80 @@ struct CustomizationSettingDefinitions {
 	},
 }
 
-// Built-In Customization Setting Keys
-struct NameCustomizationSetting {
-	"mineraculous:name"?: StringCustomizationSettingType,
+// Transformation Animations
+struct TransformationAnimation {
+	origin: struct TransformationOrigin {
+		type: #[id="mineraculous:transformation_origin"] string,
+		...mineraculous:transformation_origin[[type]],
+	},
+	spread: struct TransformationSpread {
+		type: #[id="mineraculous:transformation_spread"] string,
+		...mineraculous:transformation_spread[[type]],
+	},
+	edge_shape?: struct TransformationEdgeShape {
+		type: #[id="mineraculous:transformation_edge_shape"] string,
+		...mineraculous:transformation_edge_shape[[type]],
+	},
+	edge_width?: struct TransformationEdgeWidth {
+		narrow_width?: double @ 0..3,
+		wide_width?: double @ 0..3,
+	},
+	edge_appearance: struct TransformationEdgeAppearance {
+		type: #[id="mineraculous:transformation_edge_appearance"] string,
+		...mineraculous:transformation_edge_appearance[[type]],
+	},
+	duration?: int @ 10..600,
 }
 
-struct TransformationFramesCustomizationSetting {
-	"mineraculous:transformation_frames"?: PositiveNumberCustomizationSettingType,
+// Transformation Origins
+dispatch mineraculous:transformation_origin[mineraculous:body] to struct BodyTransformationOrigin {
+	height?: float @ 0..1,
+}
+
+dispatch mineraculous:transformation_origin[mineraculous:source] to struct SourceTransformationOrigin {}
+
+// Transformation Spreads
+dispatch mineraculous:transformation_spread[mineraculous:linear] to struct LinearTransformationSpread {}
+
+dispatch mineraculous:transformation_spread[mineraculous:radial] to struct RadialTransformationSpread {}
+
+dispatch mineraculous:transformation_spread[mineraculous:limb_radial] to struct LimbRadialTransformationSpread {}
+
+// Transformation Edge Shapes
+dispatch mineraculous:transformation_edge_shape[mineraculous:straight] to struct StraightTransformationEdgeShape {}
+
+dispatch mineraculous:transformation_edge_shape[mineraculous:waves] to struct WavesTransformationEdgeShape {
+	amplitude?: double @ 0..8,
+	frequency?: double @ 1..30,
+}
+
+dispatch mineraculous:transformation_edge_shape[mineraculous:spikes] to struct SpikesTransformationEdgeShape {
+	height?: double @ 0..16,
+	spacing?: double @ 1..20,
+	shortest?: double @ 0..1,
+	sharpness?: double @ 0.5..5,
+}
+
+// Transformation Edge Appearances
+dispatch mineraculous:transformation_edge_appearance[mineraculous:glowing] to struct GlowingTransformationEdgeAppearance {
+	sparks?: boolean,
+}
+
+// Built-In Customization Setting Keys
+struct MiraculousNameCustomizationSetting {
+	"mineraculous:miraculous_name"?: StringCustomizationSettingType,
+}
+
+struct KamikotizationNameCustomizationSetting {
+	"mineraculous:kamikotization_name"?: StringCustomizationSettingType,
+}
+
+struct TransformationAnimationCustomizationSetting {
+	"mineraculous:transformation_animation"?: TransformationAnimation,
+}
+
+struct DetransformationAnimationCustomizationSetting {
+	"mineraculous:detransformation_animation"?: TransformationAnimation,
 }
 
 struct TransformSoundCustomizationSetting {
@@ -673,7 +748,7 @@ dispatch minecraft:resource[mineraculous:kamikotization] to struct Kamikotizatio
 	}],
 	customization_setting_definitions?: CustomizationSettingDefinitions,
 	customization_settings?: struct KamikotizationCustomizationSettings {
-		...NameCustomizationSetting,
+		...KamikotizationNameCustomizationSetting,
 		[#[id] string]: any,
 	},
 	power_source: (
@@ -706,8 +781,9 @@ dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 	tool_slot?: string,
 	customization_setting_definitions?: CustomizationSettingDefinitions,
 	customization_settings?: struct MiraculousCustomizationSettings {
-		...NameCustomizationSetting,
-		...TransformationFramesCustomizationSetting,
+		...MiraculousNameCustomizationSetting,
+		...TransformationAnimationCustomizationSetting,
+		...DetransformationAnimationCustomizationSetting,
 		...TransformSoundCustomizationSetting,
 		...DetransformSoundCustomizationSetting,
 		...TimerWarningSoundCustomizationSetting,

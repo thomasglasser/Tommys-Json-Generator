@@ -30,8 +30,8 @@ For a complete breakdown of how to create the Abilities referenced by these inst
 ### Customization Setting Definitions vs. Customization Settings
 - **Customization Setting Definitions (`customization_setting_definitions`)**: Declare unbaked template schemas (specifying `type`, `optional`, and optional `default_value`) at the root level of your miraculous. These definitions are automatically baked and inherited as shared settings across all child abilities (e.g., face mask textures or shader preferences).
 - **Customization Settings (`customization_settings`)**: A map of concrete default values assigned to static or baked customization settings:
-  - **Name**: Default display name (`mineraculous:name`).
-  - **Transformation Frames**: Duration of animation frames (`mineraculous:transformation_frames`).
+  - **Name**: Default display name (`mineraculous:miraculous_name`).
+  - **Transformation Animations**: Procedural suit reveal (`mineraculous:transformation_animation`) and dissolve (`mineraculous:detransformation_animation`).
   - **Audio**: Custom sound events for transforming (`mineraculous:transform_sound`), detransforming (`mineraculous:detransform_sound`), timer warnings (`mineraculous:timer_warning_sound`), and timer expiration (`mineraculous:timer_end_sound`).
 
 Once completed, save your file to your data pack at:
