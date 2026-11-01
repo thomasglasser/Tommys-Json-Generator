@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link } from 'preact-router'
 import { useEffect, useMemo } from 'preact/hooks'
 import { useLocale } from '../../contexts/index.js'

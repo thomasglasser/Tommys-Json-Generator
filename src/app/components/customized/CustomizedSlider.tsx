@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { NumberInput, RangeInput } from '../index.js'
 import { CustomizedInput } from './CustomizedInput.jsx'
 

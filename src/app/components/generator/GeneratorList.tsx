@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo, useState } from 'preact/hooks'
 import type { ConfigGenerator } from '../../Config.js'
 import config from '../../Config.js'

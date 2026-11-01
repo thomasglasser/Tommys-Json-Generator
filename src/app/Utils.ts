@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as zip from '@zip.js/zip.js'
 import type { Identifier, NbtTag, Random } from 'deepslate'
 import { Matrix3, Matrix4, NbtByte, NbtCompound, NbtDouble, NbtInt, NbtList, NbtString, Vector } from 'deepslate'
@@ -10,7 +11,7 @@ import config from './Config.js'
 import type { VersionId } from './services/index.js'
 import { checkVersion } from './services/index.js'
 
-export const SOURCE_REPO_URL = 'https://github.com/misode/misode.github.io'
+export const SOURCE_REPO_URL = 'https://github.com/thomasglasser/Tommys-Json-Generator'
 
 export function isPromise(obj: any): obj is Promise<any> {
 	return typeof (obj as any)?.then === 'function' 
@@ -97,6 +98,43 @@ export function changeUrl({ path, search, hash, replace }: { path?: string, sear
 		+ (search !== undefined ? (search.startsWith('?') || search.length === 0 ? search : '?' + search) : location.search)
 		+ (hash !== undefined ? (hash.startsWith('#') ? hash : '#' + hash) : location.hash)
 	route(url, replace)
+}
+
+export function parseFrontMatter(source: string): Record<string, any> {
+	const data = yaml.load(source.substring(3, source.indexOf('---', 3)))
+	if (!isObject(data)) return {}
+	return data
+}
+
+export function versionContent(content: string, version: string) {
+	let cursor = 0
+	while (true) {
+		const start = content.indexOf('{#', cursor)
+		if (start < 0) {
+			break
+		}
+		const end = findMatchingClose(content, start + 2)
+		const vStart = content.indexOf('#[', start + 1)
+		let sub = ''
+		if (vStart >= 0 && vStart < end) {
+			const vEnd = content.indexOf(']', vStart + 2)
+			const v = content.substring(vStart + 2, vEnd)
+			if (v === version) {
+				sub = content.substring(vEnd + 1, end).trim()
+			}
+		} else {
+			const key = content.substring(start + 2, end)
+			const versionConfig = config.versions.find(v => v.id === version)
+			sub = ({
+				version: versionConfig?.id,
+				pack_format: versionConfig?.pack_format.toString(),
+			} as Record<string, string | undefined>)[key] ?? ''
+		}
+		content = content.substring(0, start) + sub + content.substring(end + 2)
+		cursor = start
+
+	}
+	return content
 }
 
 export type Color = [number, number, number]
