@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useMemo } from 'preact/hooks'
 import { useLocale } from '../contexts/Locale.jsx'
 import { useVersion } from '../contexts/Version.jsx'

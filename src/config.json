@@ -826,6 +826,42 @@
       "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
     },
     {
+      "id": "tag/villager_trade",
+      "url": "tags/villager-trade",
+      "tags": ["tags"],
+      "path": "tags/villager_trade",
+      "minVersion": "26.1",
+      "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
+    },
+    {
+      "id": "tag/trade_set",
+      "url": "tags/trade-set",
+      "tags": ["tags"],
+      "path": "tags/trade_set",
+      "minVersion": "26.1",
+      "wiki": "https://minecraft.wiki/w/Tag_(Java_Edition)"
+    },
+    {
+      "id": "mineraculous:tag/miraculous",
+      "url": "mineraculous/tags/miraculous",
+      "path": "mineraculous/tags/miraculous",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
+    },
+    {
+      "id": "mineraculous:tag/kamikotization",
+      "url": "mineraculous/tags/kamikotization",
+      "path": "mineraculous/tags/kamikotization",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/tags/"
+    },
+    {
       "id": "block_definition",
       "url": "assets/blockstate",
       "path": "blockstates",
@@ -902,38 +938,104 @@
       "wiki": "https://minecraft.wiki/w/Sounds.json"
     },
     {
-      "id": "ad_astra:planets",
-      "url": "ad-astra/planets",
-      "path": "planets",
+      "id": "mineraculous:look",
+      "url": "mineraculous/look",
+      "path": "mineraculous/look",
       "tags": ["partners"],
-      "dependency": "ad_astra",
-      "minVersion": "1.20",
-      "maxVersion": "1.20.3",
-      "wiki": "https://ad-astra.terrarium.wiki/datapack.html"
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/looks/"
     },
     {
-      "id": "fabric:fabric_mod_json",
-      "url": "fabric/fabric-mod-json",
-      "noPath": true,
+      "id": "mineraculous:data_map_kamikotization_lucky_charms",
+      "url": "mineraculous/data-map-kamikotization-lucky-charms",
+      "path": "mineraculous/data_map_kamikotization_lucky_charms",
       "tags": ["partners"],
-      "dependency": "fabric",
-      "wiki": "https://wiki.fabricmc.net/documentation:fabric_mod_json"
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
-      "id": "fabric:dependency_overrides",
-      "url": "fabric/dependency-overrides",
-      "noPath": true,
+      "id": "mineraculous:data_map_miraculous_lucky_charms",
+      "url": "mineraculous/data-map-miraculous-lucky-charms",
+      "path": "mineraculous/data_map_miraculous_lucky_charms",
       "tags": ["partners"],
-      "dependency": "fabric",
-      "wiki": "https://wiki.fabricmc.net/tutorial:dependency_overrides"
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
     },
     {
-      "id": "immersive_weathering:block_growth",
-      "url": "immersive-weathering/block-growth",
-      "path": "block_growths",
+      "id": "mineraculous:data_map_entity_lucky_charms",
+      "url": "mineraculous/data-map-entity-lucky-charms",
+      "path": "mineraculous/data_map_entity_lucky_charms",
       "tags": ["partners"],
-      "dependency": "immersive_weathering",
-      "minVersion": "1.18.2"
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "mineraculous:data_map_miraculous_effects",
+      "url": "mineraculous/data-map-miraculous-effects",
+      "path": "mineraculous/data_map_miraculous_effects",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "mineraculous:data_map_miraculous_attribute_modifiers",
+      "url": "mineraculous/data-map-miraculous-attribute-modifiers",
+      "path": "mineraculous/data_map_miraculous_attribute_modifiers",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "mineraculous:data_map_ageables",
+      "url": "mineraculous/data-map-ageables",
+      "path": "mineraculous/data_map_ageables",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/data_maps/"
+    },
+    {
+      "id": "mineraculous:ability",
+      "url": "mineraculous/ability",
+      "path": "mineraculous:ability",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/abilities/"
+    },
+    {
+      "id": "mineraculous:kamikotization",
+      "url": "mineraculous/kamikotization",
+      "path": "mineraculous:kamikotization",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/kamikotization/"
+    },
+    {
+      "id": "mineraculous:miraculous",
+      "url": "mineraculous/miraculous",
+      "path": "mineraculous:miraculous",
+      "tags": ["partners"],
+      "dependency": "mineraculous",
+      "minVersion": "1.21",
+      "maxVersion": "1.21",
+      "wiki": "https://mineraculous-beta.wiki.thomasglasser.dev/category/apis/entry/miraculous/"
     },
     {
       "id": "neoforge:biome_modifier",
@@ -1053,225 +1155,11 @@
       "wiki": "https://github.com/neoforged/NeoForge/blob/1.21.x/src/main/java/net/neoforged/neoforge/common/world/StructureModifiers.java"
     },
     {
-      "id": "ohthetreesyoullgrow:configured_feature",
-      "url": "ohthetreesyoullgrow/feature",
-      "path": "ohthetreesyoullgrow/configured_feature",
-      "tags": ["partners"],
-      "dependency": "ohthetreesyoullgrow",
-      "minVersion": "1.20",
-      "wiki": "https://github.com/CorgiTaco/Oh-The-Trees-Youll-Grow/wiki/Generating-Your-Tree-With-Data-Packs!"
-    },
-    {
-      "id": "sky_aesthetics:sky",
-      "url": "sky-aesthetics/sky",
-      "path": "sky_aesthetics",
-      "tags": ["partners", "assets"],
-      "dependency": "sky_aesthetics",
-      "minVersion": "1.21.1",
-      "wiki": "https://github.com/TathanDev/SkyAesthetics/wiki/Custom-Sky"
-    },
-    {
-      "id": "create:recipes",
-      "url": "create/recipes",
-      "path": "create",
-      "tags": ["partners"],
-      "dependency": "create"
-    },
-    {
       "id": "loot-table-modifier:loot_modifier",
       "url": "loot-table-modifier/loot_modifier",
       "path": "loot-table-modifier/loot_modifier",
       "tags": ["partners"],
       "dependency": "loot-table-modifier"
-    },
-    {
-      "id": "thermoo:environment_provider",
-      "url": "thermoo/environment_provider",
-      "path": "thermoo/environment_provider",
-      "tags": ["partners"],
-      "dependency": "thermoo",
-      "wiki": "https://thermoo.thedeathlycow.com/datapacks/environment_provider_definition/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "thermoo:environment",
-      "url": "thermoo/environment",
-      "path": "thermoo/environment",
-      "tags": ["partners"],
-      "dependency": "thermoo",
-      "wiki": "https://thermoo.thedeathlycow.com/datapacks/environment_definition/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "thermoo:temperature_effect",
-      "url": "thermoo/temperature_effect",
-      "path": "thermoo/temperature_effect",
-      "tags": ["partners"],
-      "dependency": "thermoo",
-      "wiki": "https://thermoo.thedeathlycow.com/datapacks/temperature_effect_definition/",
-      "minVersion": "1.20.1"
-    },
-    {
-      "id": "thermoo:predicate",
-      "url": "thermoo/predicate",
-      "path": "thermoo/predicate",
-      "tags": ["partners"],
-      "dependency": "thermoo",
-      "wiki": "https://thermoo.thedeathlycow.com/datapacks/loot_condition/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:raid_ally_set",
-      "url": "pixelmon/raid/ally",
-      "path": "pixelmon/raid/ally",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:raid_spawn_set",
-      "url": "pixelmon/raid/spawn",
-      "path": "pixelmon/raid/spawn",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:growth",
-      "url": "pixelmon/growth",
-      "path": "pixelmon/growth",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:type",
-      "url": "pixelmon/battle/type",
-      "path": "pixelmon/battle/type",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:spawn_replacement",
-      "url": "pixelmon/spawn_replacement",
-      "path": "pixelmon/spawn_replacement",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:interaction_event",
-      "url": "pixelmon/interaction_event",
-      "path": "pixelmon/interaction_event",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:research",
-      "url": "pixelmon/research/research",
-      "path": "pixelmon/research/research",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:research_trigger",
-      "url": "pixelmon/research/trigger",
-      "path": "pixelmon/research/trigger",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:npc_preset",
-      "url": "pixelmon/npc/preset",
-      "path": "pixelmon/npc/preset",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:pokedex_trigger",
-      "url": "pixelmon/pokemon/pokedex/trigger",
-      "path": "pixelmon/pokemon/pokedex/trigger",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:pokedex_region",
-      "url": "pixelmon/pokemon/pokedex/region",
-      "path": "pixelmon/pokemon/pokedex/region",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "pixelmon:pokedex",
-      "url": "pixelmon/pokemon/pokedex/pokedex",
-      "path": "pixelmon/pokemon/pokedex/pokedex",
-      "tags": ["partners"],
-      "dependency": "pixelmon",
-      "wiki": "https://pixelmonmod.com/wiki/",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "lychee:recipe",
-      "url": "lychee/recipe",
-      "path": "lychee",
-      "tags": ["partners"],
-      "dependency": "lychee",
-      "wiki": "https://lycheetweaker.readthedocs.io/",
-      "minVersion": "1.20"
-    },
-    {
-      "id": "starexpress:guidebook_entry",
-      "url": "starexpress/guidebook-entry",
-      "path": "guidebook_entries",
-      "tags": ["partners"],
-      "dependency": "starexpress",
-      "wiki": "https://github.com/AussieBox/StarryExpress/wiki/The-Guidebook",
-      "minVersion": "1.21.1"
-    },
-    {
-      "id": "treeplacer:sapling_overrides",
-      "url": "treeplacer/sapling_overrides",
-      "path": "sapling_overrides/minecraft",
-      "tags": ["partners"],
-      "dependency": "treeplacer",
-      "minVersion": "1.20.1",
-      "wiki": "https://github.com/OutrightWings/treeplacer_mod/wiki"
-    },
-    {
-      "id": "jsg_core:recipes",
-      "url": "jsg_core/recipes",
-      "path": "jsg_core/recipes",
-      "tags": ["partners"],
-      "minVersion": "1.20.1",
-      "dependency": "tauridev",
-      "wiki": "https://docs.tauridev.eu/jsg-core/"
-    },
-    {
-      "id": "jsg:rig_waves",
-      "url": "jsg/rig_waves",
-      "path": "jsg/rig_waves",
-      "tags": ["partners"],
-      "minVersion": "1.20.1",
-      "dependency": "tauridev",
-      "wiki": "https://docs.tauridev.eu/jsg/"
     }
   ],
   "legacyGuides": [

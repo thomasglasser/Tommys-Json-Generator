@@ -1,0 +1,6 @@
+dispatch minecraft:data_component[mineraculouskamikotizations:weather_control_parasol_mode] to enum(string) WeatherControlParasolMode {
+    Ice = "ice",
+    Lightning = "lightning",
+    Weather = "weather",
+    Wind = "wind",
+}

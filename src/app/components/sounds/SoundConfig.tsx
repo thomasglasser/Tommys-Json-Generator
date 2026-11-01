@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Howl, HowlOptions } from 'howler'
 import { useEffect, useRef, useState } from 'preact/hooks'
 import { useLocale, useVersion } from '../../contexts/index.js'

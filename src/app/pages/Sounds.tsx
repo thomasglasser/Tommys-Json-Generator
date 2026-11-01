@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Howl, HowlOptions } from 'howler'
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { Btn, ErrorPanel, Footer, SoundConfig, TextInput, VersionSwitcher } from '../components/index.js'

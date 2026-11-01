@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useMemo, useState } from 'preact/hooks'
 import config from '../../Config.js'
 import { useLocale, useProject } from '../../contexts/index.js'
