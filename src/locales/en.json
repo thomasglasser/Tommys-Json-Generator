@@ -190,6 +190,7 @@
   "generator.mineraculous:data_map_miraculous_attribute_modifiers": "Miraculous Attribute Modifiers Data Map",
   "generator.mineraculous:data_map_ageables": "Ageables Data Map",
   "generator.mineraculous:ability": "Ability",
+  "generator.mineraculous:butterfly_variant": "Butterfly Variant",
   "generator.mineraculous:miraculous": "Miraculous",
   "generator.mineraculous:kamikotization": "Kamikotization",
   "generators.all": "All generators",

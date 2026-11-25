@@ -697,6 +697,11 @@ dispatch minecraft:loot_function[mineraculous:dye_randomly] <F, C>to struct DyeR
 	...LootConditions<C>,
 }
 
+dispatch minecraft:loot_function[mineraculous:set_kamikotization_randomly] <F, C>to struct SetKamikotizationRandomly {
+	kamikotized?: boolean,
+	...LootConditions<C>,
+}
+
 dispatch minecraft:loot_function[mineraculous:set_miraculous_randomly] <F, C>to struct SetMiraculousRandomly {
 	...LootConditions<C>,
 }
@@ -705,6 +710,11 @@ dispatch minecraft:loot_function[mineraculous:set_miraculous_randomly] <F, C>to 
 dispatch minecraft:loot_condition[mineraculous:has_item] to struct HasItem {
 	predicate: ItemPredicate,
 	invert?: boolean,
+}
+
+dispatch minecraft:loot_condition[mineraculous:nearby_block] to struct NearbyBlock {
+	predicate: BlockPredicate,
+	radius?: int,
 }
 
 // Number Providers
@@ -736,7 +746,7 @@ dispatch mineraculous:kamikotization_condition[mineraculous:item] to struct Item
 	message?: Text,
 }
 
-dispatch mineraculous:kamikotization_condition[mineraculous:minimum_power_level] to struct MinimumPowerLevelKamikotizationCondition {
+dispatch mineraculous:kamikotization_condition[mineraculous:minimum_giver_power_level] to struct MinimumGiverPowerLevelKamikotizationCondition {
 	level: int @ 0..,
 }
 
@@ -792,4 +802,14 @@ dispatch minecraft:resource[mineraculous:miraculous] to struct Miraculous {
 	},
 	active_ability: AbilityInstanceOrRef,
 	passive_abilities?: [AbilityInstanceOrRef],
+}
+
+// Butterfly Variants
+dispatch minecraft:resource[mineraculous:butterfly_variant] to struct ButterflyVariant {
+	texture: string,
+	caterpillar_texture?: string,
+	biomes?: (
+		#[misode_member_name="Biome or Tag"] #[id(registry="worldgen/biome", tags="allowed")] string |
+		#[misode_member_name="Biome List"] [#[id="worldgen/biome"] string] |
+	),
 }
